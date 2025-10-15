@@ -48,7 +48,7 @@ public class Grabbable : MonoBehaviour, IInteractable
 
     public void OnHoverEnter()
     {
-        if (CurrentState == GrabbableState.Idle)
+        if (CurrentState == GrabbableState.Idle || CurrentState == GrabbableState.Snapped)
         {
             HighLight();
         }
