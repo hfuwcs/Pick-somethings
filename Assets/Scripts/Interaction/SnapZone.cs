@@ -1,125 +1,99 @@
-﻿using UnityEditor;
+﻿using System;
 using UnityEngine;
 
+/// <summary>
+/// Định nghĩa một vùng có thể tiếp nhận một Connector để tạo kết nối.
+/// Sử dụng một Collider ở chế độ Trigger để phát hiện.
+/// </summary>
 [RequireComponent(typeof(Collider))]
-public class SnapZone : MonoBehaviour, IInteractable
+public class SnapZone : MonoBehaviour
 {
-    [Header("Snapping Configuration")]
-    [Tooltip("Prefab hoặc GameObject cụ thể mà vùng này chấp nhận. Nếu để trống, nó sẽ chấp nhận bất kỳ đối tượng Grabbable nào.")]
-    [SerializeField] private Grabbable _acceptedObject;
+    [Tooltip("ID của Connector mà vùng này chấp nhận.")]
+    [SerializeField] private string acceptedID = "Default";
 
-    [Header("Visual Feedback")]
-    [Tooltip("Material sẽ được áp dụng cho SnapZone khi một đối tượng hợp lệ đang hover trên nó.")]
-    [SerializeField] private Material _highlightMaterial;
+    public static event Action<SnapZone, Grabbable> OnSnapZoneEnter;
+    public static event Action<SnapZone> OnSnapZoneExit;
 
-    private Renderer _renderer;
+    [SerializeField] private Material highlightMaterial;
     private Material _originalMaterial;
-
-    //flag occupied
-    private bool _isOccupied = false;
-
+    private Renderer _renderer;
+    private bool _isHighlighted = false;
     private Grabbable _snappedObject = null;
 
     private void Awake()
     {
-        GetComponent<Collider>().isTrigger = true;
+        var col = GetComponent<Collider>();
+        if (!col.isTrigger)
+        {
+            col.isTrigger = true;
+        }
+
         _renderer = GetComponent<Renderer>();
-        if(_renderer != null)
+        if (_renderer != null)
         {
             _originalMaterial = _renderer.material;
         }
     }
 
-    /// <summary>
-    /// Kiểm tra xem đối tượng được cung cấp có được SnapZone này chấp nhận hay không.
-    /// Check if the provided object is accepted by this SnapZone.
-    /// </summary>
-    public bool IsObjectAccepted(Grabbable grabbable)
+    private void OnTriggerEnter(Collider other)
     {
-        //
-        return !_isOccupied && (_acceptedObject == null || grabbable == _acceptedObject);
-    }
-    /// <summary>
-    /// Thực hiện hành động snap. Khóa đối tượng vào vị trí và tạo Joint.
-    /// Snap action: Lock the object in place and create a Joint.
-    /// </summary>
-    public void SnapObject(Grabbable grabbable)
-    {
-        if (!IsObjectAccepted(grabbable)) return;
-        
-        grabbable.enabled = false; // Disable Grabbable script to prevent further interaction
 
-        grabbable.transform.SetLocalPositionAndRotation(transform.position, transform.rotation);
+        Connector connector = other.GetComponent<Connector>();
+        if (connector == null || _snappedObject != null) return;
 
-        FixedJoint joint = grabbable.gameObject.AddComponent<FixedJoint>();
-        Rigidbody zoneRb = GetComponent<Rigidbody>();
-        if(zoneRb == null)
+        if (connector.ConnectionID == this.acceptedID)
         {
-            zoneRb = gameObject.AddComponent<Rigidbody>();
-            zoneRb.isKinematic = true; // Make the SnapZone's Rigidbody kinematic
+            Debug.Log($"Connector hợp lệ '{other.name}' đã đi vào SnapZone '{this.name}'.");
+            Highlight();
+            OnSnapZoneEnter?.Invoke(this, connector.ParentGrabbable);
         }
-        joint.connectedBody = zoneRb;
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        Connector connector = other.GetComponent<Connector>();
+        if (connector == null) return;
+        if (connector.ParentGrabbable == null) return;
+        if (_snappedObject != connector.ParentGrabbable)
+        {
+            Debug.Log($"Connector '{other.name}' đã rời khỏi SnapZone '{this.name}'.");
+            Unhighlight();
 
 
-        _isOccupied = true;
+            if (OnSnapZoneExit != null)
+            {
+                OnSnapZoneExit.Invoke(this);
+            }
+        }
+    }
+    public void SetSnappedObject(Grabbable grabbable)
+    {
         _snappedObject = grabbable;
-        Highlight(false);
+        Highlight();
     }
 
-    private void UnSnapObject()
+    public void ClearSnappedObject()
     {
-        if (!_isOccupied && _snappedObject == null) return;
-        // Remove the FixedJoint
-        FixedJoint joint = _snappedObject.GetComponent<FixedJoint>();
-        if (joint != null)
-        {
-            Destroy(joint);
-        }
-        _snappedObject.enabled = true; // Re-enable Grabbable script
-        _snappedObject.OnSelectStart(); //
-        _isOccupied = false;
         _snappedObject = null;
+        Unhighlight();
     }
 
-    /// <summary>
-    /// Kích hoạt hoặc vô hiệu hóa hiệu ứng highlight.
-    /// activate or deactivate highlight effect.
-    /// </summary>
-    public void Highlight(bool state)
+
+    private void Highlight()
     {
-        if (_renderer != null && _highlightMaterial != null)
+        if (_renderer != null && highlightMaterial != null && !_isHighlighted)
         {
-            _renderer.material = state ? _highlightMaterial : _originalMaterial;
+            _renderer.material = highlightMaterial;
+            _isHighlighted = true;
         }
     }
 
-    #region IInteractable Implementation
-    public void OnHoverEnter()
+    private void Unhighlight()
     {
-        if (_isOccupied && _snappedObject != null)
+        if (_renderer != null && _isHighlighted)
         {
-            //Highlight(true);
-            _snappedObject.HighlightObject(true);
+            _renderer.material = _originalMaterial;
+            _isHighlighted = false;
         }
     }
-    public void OnHoverExit()
-    {
-        if (_isOccupied && _snappedObject != null)
-        {
-            Highlight(false);
-            _snappedObject.HighlightObject(false);
-        }
-    }
-    public void OnSelectStart()
-    {
-        if (_isOccupied)
-        {
-            UnSnapObject();
-        }
-    }
-    public void OnSelectEnd()
-    {
-        
-    }
-    #endregion
 }

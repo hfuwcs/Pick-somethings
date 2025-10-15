@@ -1,153 +1,162 @@
 ﻿using UnityEngine;
 
+public enum GrabbableState
+{
+    Idle,
+    Grabbed,
+    Snapped
+}
+
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Collider))]
 public class Grabbable : MonoBehaviour, IInteractable
 {
-    [Header("Visuals")]
-    [SerializeField] private Material _highlightMaterial;
-    private Material _originalMaterialRef;
-
-    private Color _originalColor;
+    #region Variables
     private Renderer _renderer;
+    private Color _originalColor;
+
     private bool _isGrabbed = false;
     private Transform _grabberTransform;
     private Rigidbody _rigidbody;
+
     private int _originalLayer;
-    private SnapZone _currentSnapZone;
+    private Connector _connector;
+    private FixedJoint _joint;
+    #endregion
+
+    public GrabbableState CurrentState { get; private set; } = GrabbableState.Idle;
+    public SnapZone CurrentSnapZone { get; private set; }
 
     private void Awake()
     {
-        _renderer  = GetComponent<Renderer>();
-        if(_renderer != null)
-        {
-            _originalMaterialRef = _renderer.material;
-            _originalColor = _renderer.material.color;
-        }
+        _renderer = GetComponent<Renderer>();
+        if (_renderer != null) _originalColor = _renderer.material.color;
+
         _rigidbody = GetComponent<Rigidbody>();
         _originalLayer = gameObject.layer;
+
+        _connector = GetComponentInChildren<Connector>();
     }
-    //private void Update()
-    //{
-    //    if(_isGrabbed && _grabberTransform != null)
-    //    {
-    //        transform.position = _grabberTransform.position;
-    //        transform.rotation = _grabberTransform.rotation;
-    //    }
-    //}
+
     private void FixedUpdate()
     {
-        if (!_isGrabbed || _grabberTransform == null)
+        if (_isGrabbed && _grabberTransform != null)
         {
-            return;
-        } 
-            Debug.Log("GRABBABLE FixedUpdate: Executing...");
-
-            //1 tính toán vị trí mục tiêu
-            Vector3 currentPosition = _rigidbody.position;
-            Vector3 targetPosition = _grabberTransform.position;
-            Vector3 movementVector = targetPosition - currentPosition;
-            float distance = movementVector.magnitude;
-            Debug.Log($"currentPosition: {currentPosition}, targetPosition: {targetPosition}, Distance: {distance}");
-            //Không sweeptest nếu không đi chuyển
-            //Not sweeptest if not moving
-        if (Vector3.Distance(currentPosition, targetPosition) < 0.001f)
-            {
-                return;
-            }
-    
-            //2 Sweeeptest
-            RaycastHit hitInfo;
-            if (_rigidbody.SweepTest(movementVector.normalized, out hitInfo, distance, QueryTriggerInteraction.Ignore))
-            {
-                Debug.LogError($"SweepTest HIT '{hitInfo.collider.name}' at distance {hitInfo.distance}");
-            //Move object tới vị trí va chạm
-            //Move object to hit position
-            _rigidbody.MovePosition(currentPosition + movementVector.normalized * hitInfo.distance);
-            }
-            else
-            {
-                Debug.Log("SweepTest NO HIT, moving to target.");
-                //Không có va chạm, move thẳng tới vị trí mục tiêu
-                _rigidbody.MovePosition(targetPosition);
-            }
-        
+            MoveToGrabber();
+        }
     }
+
     public void OnHoverEnter()
     {
-        HighlightObject(true);
+        if (CurrentState == GrabbableState.Idle)
+        {
+            HighLight();
+        }
     }
+
     public void OnHoverExit()
     {
-        HighlightObject(false);
+        if (_renderer != null) UnHighlight();
     }
-    public void HighlightObject(bool state)
-    {
-        if (_renderer != null && _highlightMaterial != null)
-        {
-            _renderer.material = state ? _highlightMaterial : _originalMaterialRef;
-        }
+
+    private void HighLight() 
+    { 
+        if (_renderer != null) _renderer.material.color = Color.yellow;
+    }
+    private void UnHighlight() 
+    { 
+        if (_renderer != null) _renderer.material.color = _originalColor;
     }
     public void OnSelectStart()
     {
         Debug.Log($"Object {gameObject.name} selected.");
         _isGrabbed = true;
-
+        CurrentState = GrabbableState.Grabbed;
         _rigidbody.useGravity = false;
         _rigidbody.isKinematic = true;
         gameObject.layer = LayerMask.NameToLayer("GrabbedObject");
     }
+
     public void OnSelectEnd()
     {
         Debug.Log($"Object {gameObject.name} released.");
         _isGrabbed = false;
         _grabberTransform = null;
-
-        /// <sumary>
-        /// Check xem có đang ở trong SnapZone hợp lệ không.
-        /// Check if currently in a valid SnapZone.
-        ///</sumary>
-        if (_currentSnapZone != null && _currentSnapZone.IsObjectAccepted(this))
-        {
-            _currentSnapZone.SnapObject(this);
-        }
-        else
-        {
-            _rigidbody.useGravity = true;
-            _rigidbody.isKinematic = false;
-            gameObject.layer = _originalLayer;
-        }
-        _currentSnapZone?.Highlight(false);
-        HighlightObject(false);
+        CurrentState = GrabbableState.Idle;
+        _rigidbody.useGravity = true;
+        _rigidbody.isKinematic = false;
+        gameObject.layer = _originalLayer;
     }
+
+    // --- Logic Gắn/Tháo ---
+    public void SnapTo(Transform snapPoint)
+    {
+        if (_connector == null) return;
+
+        Debug.Log($"Snapping {gameObject.name} to {snapPoint.name}");
+
+        CurrentState = GrabbableState.Snapped;
+        _isGrabbed = false;
+        _grabberTransform = null;
+
+        CurrentSnapZone = snapPoint.GetComponent<SnapZone>();
+
+        _rigidbody.isKinematic = true;
+        _rigidbody.useGravity = false;
+
+        Collider connectorCollider = _connector.GetComponent<Collider>();
+        if (connectorCollider != null) connectorCollider.enabled = false;
+
+        transform.rotation = snapPoint.rotation * Quaternion.Inverse(_connector.transform.localRotation);
+        transform.position = snapPoint.position - (transform.rotation * _connector.transform.localPosition);
+
+        if (connectorCollider != null) connectorCollider.enabled = true;
+
+        _joint = gameObject.AddComponent<FixedJoint>();
+        if (snapPoint.TryGetComponent<Rigidbody>(out var snapZoneRigidbody))
+        {
+            _joint.connectedBody = snapZoneRigidbody;
+        }
+        gameObject.layer = _originalLayer;
+    }
+
+    public void Unsnap()
+    {
+        Debug.Log($"Unsnapping {gameObject.name}");
+        if (_joint != null)
+        {
+            Destroy(_joint);
+        }
+        CurrentSnapZone = null;
+    }
+
     public void SetGrabber(Transform grabber)
     {
         _grabberTransform = grabber;
     }
+
     public Rigidbody GetRigidbody()
     {
         return _rigidbody;
     }
 
-    #region SnapZone Interaction
-    //Snapzone trigger events
-    private void OnTriggerEnter(Collider other)
+    private void MoveToGrabber()
     {
-        SnapZone snapZone = other.GetComponent<SnapZone>();
-        if(snapZone != null && snapZone.IsObjectAccepted(this))
+        Vector3 currentPosition = _rigidbody.position;
+        Vector3 targetPosition = _grabberTransform.position;
+        Vector3 movementVector = targetPosition - currentPosition;
+        float distance = movementVector.magnitude;
+
+        if (distance <= 0) return;
+
+        RaycastHit hitInfo;
+        if (_rigidbody.SweepTest(movementVector.normalized, out hitInfo, distance, QueryTriggerInteraction.Ignore))
         {
-            _currentSnapZone = snapZone;
-            snapZone.Highlight(true);
+            _rigidbody.MovePosition(currentPosition + movementVector.normalized * hitInfo.distance);
+        }
+        else
+        {
+            _rigidbody.MovePosition(targetPosition);
         }
     }
-    private void OnTriggerExit(Collider other)
-    {
-        SnapZone snapZone = other.GetComponent<SnapZone>();
-        if(snapZone !=null && other.gameObject == _currentSnapZone?.gameObject)
-        {
-            _currentSnapZone.Highlight(false);
-            _currentSnapZone = null;
-        }
-    }
-    #endregion
 }

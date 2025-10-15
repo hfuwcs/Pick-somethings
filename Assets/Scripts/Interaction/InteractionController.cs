@@ -19,7 +19,39 @@ public class InteractionController : MonoBehaviour
     private Camera _mainCamera;
     private IInteractable _currentHoveredInteractable;
     private IInteractable _currentSelectedInteractable;
+    private SnapZone _potentialSnapZone;
 
+    #region SnapZone Events
+    private void OnEnable()
+    {
+        SnapZone.OnSnapZoneEnter += HandleSnapZoneEnter;
+        SnapZone.OnSnapZoneExit += HandleSnapZoneExit;
+    }
+
+    private void OnDisable()
+    {
+        SnapZone.OnSnapZoneEnter -= HandleSnapZoneEnter;
+        SnapZone.OnSnapZoneExit -= HandleSnapZoneExit;
+    }
+    private void HandleSnapZoneEnter(SnapZone zone, Grabbable grabbable)
+    {
+        if ((Object)_currentSelectedInteractable == (Object)grabbable)
+        {
+            Debug.Log($"InteractionController detected potential snap for {grabbable.name} at {zone.name}");
+            _potentialSnapZone = zone;
+        }
+    }
+
+    private void HandleSnapZoneExit(SnapZone zone)
+    {
+        if (_potentialSnapZone == zone)
+        {
+            Debug.Log("InteractionController lost potential snap zone.");
+            _potentialSnapZone = null;
+        }
+    }
+    #endregion
+    
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -62,7 +94,7 @@ public class InteractionController : MonoBehaviour
     private void HandleHoverDetection()
     {
         // If currently holding an object, skip hover detection.
-        if (_currentHoveredInteractable != null && _currentSelectedInteractable != null)
+        if (_currentSelectedInteractable != null)
         {
             return;
         }
@@ -91,21 +123,53 @@ public class InteractionController : MonoBehaviour
     }
     public void OnInteract(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (!context.performed) return;
+
+        if (_currentSelectedInteractable is Grabbable selectedGrabbable)
         {
-            //If currently holding an object, release it.
-            if (_currentSelectedInteractable != null)
+            if (_potentialSnapZone != null)
             {
-                _currentSelectedInteractable.OnSelectEnd();
+                selectedGrabbable.SnapTo(_potentialSnapZone.transform);
+                _potentialSnapZone.SetSnappedObject(selectedGrabbable);
+                _currentSelectedInteractable = null;
+                _potentialSnapZone = null;
+            }
+            else
+            {
+                selectedGrabbable.OnSelectEnd();
                 _currentSelectedInteractable = null;
             }
-            //else, if hovering over an interactable, select it and picking it.
-            else if (_currentHoveredInteractable != null)
+        }
+        else if (_currentHoveredInteractable is Grabbable hoveredGrabbable)
+        {
+            if (hoveredGrabbable.CurrentState == GrabbableState.Snapped)
             {
-                _currentSelectedInteractable = _currentHoveredInteractable;
-                _currentSelectedInteractable.OnSelectStart();
+                //SnapZone parentZone = hoveredGrabbable.GetComponentInParent<SnapZone>();
+                //if (parentZone != null)
+                //{
+                //    parentZone.ClearSnappedObject();
+                //}
+                if (hoveredGrabbable.CurrentSnapZone != null)
+                {
+                    // Ra lệnh cho đúng SnapZone mà Grabbable đã ghi nhớ.
+                    hoveredGrabbable.CurrentSnapZone.ClearSnappedObject();
+                }
 
-                if (_currentSelectedInteractable is Grabbable grabbable)
+                hoveredGrabbable.Unsnap();
+                _currentSelectedInteractable = hoveredGrabbable; 
+                hoveredGrabbable.OnSelectStart(); 
+
+                if (hoveredGrabbable is Grabbable grabbable)
+                {
+                    grabbable.SetGrabber(_grabAttachPoint);
+                }
+            }
+            else if (hoveredGrabbable.CurrentState == GrabbableState.Idle)
+            {
+                _currentSelectedInteractable = hoveredGrabbable;
+                hoveredGrabbable.OnSelectStart();
+
+                if (hoveredGrabbable is Grabbable grabbable)
                 {
                     grabbable.SetGrabber(_grabAttachPoint);
                 }
