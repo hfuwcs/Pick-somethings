@@ -1,6 +1,14 @@
 ﻿using System;
 using UnityEngine;
 
+public enum JointType
+{
+    Fixed,
+    Hinge,
+    Configurable
+}
+
+
 /// <summary>
 /// Định nghĩa một vùng có thể tiếp nhận một Connector để tạo kết nối.
 /// Sử dụng một Collider ở chế độ Trigger để phát hiện.
@@ -14,7 +22,10 @@ public class SnapZone : MonoBehaviour
     public static event Action<SnapZone, Grabbable> OnSnapZoneEnter;
     public static event Action<SnapZone> OnSnapZoneExit;
 
+    [Tooltip("Loại Joint sẽ được tạo khi một đối tượng được gắn vào.")]
+    [SerializeField] private JointType jointType = JointType.Fixed;
     [SerializeField] private Material highlightMaterial;
+    public JointType DesiredJointType => jointType;
     private Material _originalMaterial;
     private Renderer _renderer;
     private bool _isHighlighted = false;

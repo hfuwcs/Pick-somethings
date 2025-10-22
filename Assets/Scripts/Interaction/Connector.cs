@@ -1,5 +1,4 @@
-﻿// File: Assets/_Project/Scripts/Interaction/Connector.cs
-using UnityEngine;
+﻿using UnityEngine;
 public class Connector : MonoBehaviour
 {
     [Tooltip("ID định danh loại kết nối. SnapZone sẽ chỉ chấp nhận Connector có cùng ID.")]

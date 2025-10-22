@@ -107,7 +107,7 @@ public class InteractionController : MonoBehaviour
 
         if(Physics.Raycast(ray, out hit, _interactionDistance, _interactionLayerMask))
         {
-            newHoveredInteractable = hit.collider.GetComponent<IInteractable>();
+            newHoveredInteractable = hit.collider.GetComponentInParent<IInteractable>();
         }
 
         
@@ -129,7 +129,7 @@ public class InteractionController : MonoBehaviour
         {
             if (_potentialSnapZone != null)
             {
-                selectedGrabbable.SnapTo(_potentialSnapZone.transform);
+                selectedGrabbable.SnapTo(_potentialSnapZone);
                 _potentialSnapZone.SetSnappedObject(selectedGrabbable);
                 _currentSelectedInteractable = null;
                 _potentialSnapZone = null;
@@ -144,14 +144,8 @@ public class InteractionController : MonoBehaviour
         {
             if (hoveredGrabbable.CurrentState == GrabbableState.Snapped)
             {
-                //SnapZone parentZone = hoveredGrabbable.GetComponentInParent<SnapZone>();
-                //if (parentZone != null)
-                //{
-                //    parentZone.ClearSnappedObject();
-                //}
                 if (hoveredGrabbable.CurrentSnapZone != null)
                 {
-                    // Ra lệnh cho đúng SnapZone mà Grabbable đã ghi nhớ.
                     hoveredGrabbable.CurrentSnapZone.ClearSnappedObject();
                 }
 
