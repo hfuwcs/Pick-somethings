@@ -124,50 +124,100 @@ public class InteractionController : MonoBehaviour
     public void OnInteract(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
-
-        if (_currentSelectedInteractable is Grabbable selectedGrabbable)
+        if (_currentSelectedInteractable != null)
         {
-            if (_potentialSnapZone != null)
+            // Nếu đang cầm/giữ một vật
+            if (_potentialSnapZone != null && _currentSelectedInteractable is Grabbable grabbable && grabbable.CurrentState == GrabbableState.Grabbed)
             {
-                selectedGrabbable.SnapTo(_potentialSnapZone);
-                _potentialSnapZone.SetSnappedObject(selectedGrabbable);
+                // Ưu tiên Snap nếu có thể
+                grabbable.SnapTo(_potentialSnapZone);
+                _potentialSnapZone.SetSnappedObject(grabbable);
                 _currentSelectedInteractable = null;
                 _potentialSnapZone = null;
             }
             else
             {
-                selectedGrabbable.OnSelectEnd();
+                // Nếu không, chỉ đơn giản là thả ra (Release/Let go)
+                _currentSelectedInteractable.OnSelectEnd();
                 _currentSelectedInteractable = null;
             }
         }
-        else if (_currentHoveredInteractable is Grabbable hoveredGrabbable)
+        else if (_currentHoveredInteractable != null)
         {
-            if (hoveredGrabbable.CurrentState == GrabbableState.Snapped)
+            // Nếu đang trỏ vào một vật
+            _currentSelectedInteractable = _currentHoveredInteractable;
+            _currentSelectedInteractable.OnSelectStart();
+
+            if (_currentSelectedInteractable is Grabbable grabbable)
             {
-                if (hoveredGrabbable.CurrentSnapZone != null)
-                {
-                    hoveredGrabbable.CurrentSnapZone.ClearSnappedObject();
-                }
-
-                hoveredGrabbable.Unsnap();
-                _currentSelectedInteractable = hoveredGrabbable; 
-                hoveredGrabbable.OnSelectStart(); 
-
-                if (hoveredGrabbable is Grabbable grabbable)
-                {
-                    grabbable.SetGrabber(_grabAttachPoint);
-                }
+                grabbable.SetGrabber(_grabAttachPoint);
             }
-            else if (hoveredGrabbable.CurrentState == GrabbableState.Idle)
+        }
+        //if (_currentSelectedInteractable is Grabbable selectedGrabbable)
+        //{
+        //    if (_potentialSnapZone != null)
+        //    {
+        //        selectedGrabbable.SnapTo(_potentialSnapZone);
+        //        _potentialSnapZone.SetSnappedObject(selectedGrabbable);
+        //        _currentSelectedInteractable = null;
+        //        _potentialSnapZone = null;
+        //    }
+        //    else
+        //    {
+        //        selectedGrabbable.OnSelectEnd();
+        //        _currentSelectedInteractable = null;
+        //    }
+        //}
+        //else if (_currentHoveredInteractable is Grabbable hoveredGrabbable)
+        //{
+        //    if (hoveredGrabbable.CurrentState == GrabbableState.Snapped)
+        //    {
+        //        if (hoveredGrabbable.CurrentSnapZone != null)
+        //        {
+        //            hoveredGrabbable.CurrentSnapZone.ClearSnappedObject();
+        //        }
+
+        //        hoveredGrabbable.Unsnap();
+        //        _currentSelectedInteractable = hoveredGrabbable; 
+        //        hoveredGrabbable.OnSelectStart(); 
+
+        //        if (hoveredGrabbable is Grabbable grabbable)
+        //        {
+        //            grabbable.SetGrabber(_grabAttachPoint);
+        //        }
+        //    }
+        //    else if (hoveredGrabbable.CurrentState == GrabbableState.Idle)
+        //    {
+        //        _currentSelectedInteractable = hoveredGrabbable;
+        //        hoveredGrabbable.OnSelectStart();
+
+        //        if (hoveredGrabbable is Grabbable grabbable)
+        //        {
+        //            grabbable.SetGrabber(_grabAttachPoint);
+        //        }
+        //    }
+        //}
+    }
+    public void OnUnsnap(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+
+        // Chỉ cho phép unsnap khi đang trỏ vào một vật đã được gắn
+        if (_currentHoveredInteractable is Grabbable hoveredGrabbable &&
+            hoveredGrabbable.CurrentState == GrabbableState.Snapped &&
+            _currentSelectedInteractable == null) // Và không đang cầm/giữ vật nào khác
+        {
+            if (hoveredGrabbable.CurrentSnapZone != null)
             {
-                _currentSelectedInteractable = hoveredGrabbable;
-                hoveredGrabbable.OnSelectStart();
-
-                if (hoveredGrabbable is Grabbable grabbable)
-                {
-                    grabbable.SetGrabber(_grabAttachPoint);
-                }
+                hoveredGrabbable.CurrentSnapZone.ClearSnappedObject();
             }
+
+            hoveredGrabbable.Unsnap();
+
+            // Tự động cầm vật lên ngay sau khi tháo
+            _currentSelectedInteractable = hoveredGrabbable;
+            hoveredGrabbable.OnSelectStart();
+            hoveredGrabbable.SetGrabber(_grabAttachPoint);
         }
     }
 }
