@@ -72,7 +72,7 @@ public class PendulumExperimentManager : ExperimentManagerBase
         }
 
         // Tắt các thuộc tính vật lý.
-        _bobRigidbody.isKinematic = true;
+        _bobRigidbody.isKinematic = true
         _bobRigidbody.useGravity = false;
         _bobRigidbody.linearVelocity = Vector3.zero;
         _bobRigidbody.angularVelocity = Vector3.zero;
