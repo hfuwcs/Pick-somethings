@@ -763,7 +763,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SnapZone
   acceptedID: PendulumConnector
-  jointType: 1
+  jointType: 0
   highlightMaterial: {fileID: 2100000, guid: 53bca8729f1c728489410ea11ed6d25c, type: 2}
 --- !u!1001 &1348180126
 PrefabInstance:

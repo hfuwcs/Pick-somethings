@@ -109,12 +109,10 @@ public class PendulumExperimentManager : ExperimentManagerBase
     private void OnPendulumAssembled()
     {
         _isAssembled = true;
-        // Kích hoạt lại vật lý cho quả lắc.
         _bobRigidbody.isKinematic = false;
         _bobRigidbody.useGravity = true;
         Debug.Log("Con lắc đã được lắp ráp. Bắt đầu mô phỏng vật lý.");
 
-        // Reset lại bộ đếm để bắt đầu đo từ lần dao động đầu tiên.
         ResetPeriodCalculation();
     }
 
