@@ -15,7 +15,6 @@ public abstract class ExperimentManagerBase : MonoBehaviour
     }
 
     #region Events
-    // Các sự kiện tĩnh để các hệ thống khác (UI, Audio, Assessment) có thể lắng nghe.
     public static event Action<ExperimentManagerBase> OnExperimentStarted;
     public static event Action<ExperimentManagerBase> OnExperimentEnded;
     public static event Action<ExperimentManagerBase> OnExperimentReset;

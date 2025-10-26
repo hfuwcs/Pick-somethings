@@ -202,6 +202,15 @@ public class InteractionController : MonoBehaviour
     {
         if (!context.performed) return;
 
+        var experimentManager = FindFirstObjectByType<PendulumExperimentManager>();
+
+        // Nếu có một Experiment Manager và nó đang chạy, thì không cho phép Unsnap.
+        if (experimentManager != null && experimentManager.CurrentState == ExperimentManagerBase.ExperimentState.Running)
+        {
+            Debug.LogWarning("Không thể tháo vật thể khi thí nghiệm đang chạy. Vui lòng Reset thí nghiệm trước.");
+            return;
+        }
+
         // Chỉ cho phép unsnap khi đang trỏ vào một vật đã được gắn
         if (_currentHoveredInteractable is Grabbable hoveredGrabbable &&
             hoveredGrabbable.CurrentState == GrabbableState.Snapped &&

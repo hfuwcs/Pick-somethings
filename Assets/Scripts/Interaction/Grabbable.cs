@@ -9,7 +9,6 @@ public enum GrabbableState
 }
 
 [RequireComponent(typeof(Rigidbody))]
-//[RequireComponent(typeof(Collider))]
 public class Grabbable : MonoBehaviour, IInteractable
 {
     #region Variables
@@ -23,6 +22,7 @@ public class Grabbable : MonoBehaviour, IInteractable
     private int _originalLayer;
     private Connector _connector;
     private Joint _joint;
+    public bool WasJustReleased { get; private set; } = false;
     #endregion
 
     [Header("Configuration")]
@@ -125,6 +125,7 @@ public class Grabbable : MonoBehaviour, IInteractable
         {
             _grabberTransform = null;
             CurrentState = GrabbableState.Snapped;
+            WasJustReleased = true;
             _rigidbody.WakeUp();
         }
     }
@@ -186,7 +187,6 @@ public class Grabbable : MonoBehaviour, IInteractable
             case JointType.Hinge:
                 HingeJoint hingeJoint = gameObject.AddComponent<HingeJoint>();
                 hingeJoint.connectedBody = connectedBody;
-                // Anchor là vị trí của khớp nối trong không gian local của đối tượng này
                 hingeJoint.anchor = transform.InverseTransformPoint(snapZone.transform.position);
                 // Axis là trục xoay, ví dụ trục Z (0, 0, 1) cho phép xoay qua lại
                 hingeJoint.axis = new Vector3(0, 0, 1);
@@ -262,5 +262,9 @@ public class Grabbable : MonoBehaviour, IInteractable
         {
             _rigidbody.MovePosition(targetPosition);
         }
+    }
+    public void ConsumeReleaseFlag()
+    {
+        WasJustReleased = false;
     }
 }
