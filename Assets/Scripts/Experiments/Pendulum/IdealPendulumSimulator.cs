@@ -2,79 +2,67 @@
 
 public class IdealPendulumSimulator : MonoBehaviour
 {
-    // --- State Variables ---
-    private float _angle;           // Góc hiện tại (radian) so với phương thẳng đứng
-    private float _angularVelocity; // Vận tốc góc hiện tại
+    private float _angle;
+    private float _angularVelocity;
+    private float _length;
+    private Transform _pivot;
+    private Transform _bobRoot;
 
-    // --- Configuration (Set on Start) ---
-    private float _length;          // Chiều dài con lắc
-    private Transform _pivot;       // Điểm treo
-    private Transform _bobRoot;     // Transform gốc của đối tượng con lắc
-    private Transform _bobModel;    // Transform của model con (để xác định khối tâm)
-    private Vector3 _modelOffset;   // Vector offset từ gốc đến model (local space)
-
-    private const float GRAVITY = 9.81f;
+    private readonly float _gravity = 9.81f;
 
     /// <summary>
     /// Khởi tạo và bắt đầu mô phỏng script-driven.
     /// </summary>
+    /// <param name="pivotPoint">Transform của điểm treo.</param>
+    /// <param name="bobRootTransform">Transform của đối tượng gốc của con lắc.</param>
+    /// <param name="bobModelTransform">Transform của model con để xác định chiều dài.</param>
     public void StartSimulation(Transform pivotPoint, Transform bobRootTransform, Transform bobModelTransform)
     {
         _pivot = pivotPoint;
         _bobRoot = bobRootTransform;
-        _bobModel = bobModelTransform;
 
-        _length = Vector3.Distance(_pivot.position, _bobModel.position);
+        _length = Vector3.Distance(_pivot.position, bobModelTransform.position);
         if (_length < 0.1f)
         {
-            Debug.LogError("Chiều dài con lắc quá nhỏ, có thể gây lỗi tính toán.", this);
-            _length = 1f; // Giá trị an toàn
+            Debug.LogError("Chiều dài con lắc quá nhỏ, có thể gây lỗi tính toán.");
+            _length = 1f;
         }
 
-        _modelOffset = _bobRoot.InverseTransformPoint(_bobModel.position);
+        Vector3 initialVector = bobModelTransform.position - _pivot.position;
+        _angle = Vector3.SignedAngle(Vector3.down, initialVector, Vector3.forward) * Mathf.Deg2Rad;
 
-        Vector3 initialVector = _bobModel.position - _pivot.position;
-        Vector3 projectedVector = Vector3.ProjectOnPlane(initialVector, _pivot.forward);
-
-        _angle = Vector3.SignedAngle(Vector3.down, projectedVector, _pivot.forward) * Mathf.Deg2Rad;
         _angularVelocity = 0f;
-
         this.enabled = true;
-        Debug.Log($"Ideal Simulation Started. Length: {_length:F2}m, Initial Angle: {_angle * Mathf.Rad2Deg:F2} deg");
+        Debug.Log($"Ideal Simulation Started. Length: {_length}, Initial Angle: {_angle * Mathf.Rad2Deg} deg");
     }
 
     public void StopSimulation()
     {
         this.enabled = false;
+        _pivot = null;
+        _bobRoot = null;
     }
 
     private void FixedUpdate()
     {
         if (_pivot == null || _bobRoot == null) return;
 
-        float angularAcceleration = -(GRAVITY / _length) * Mathf.Sin(_angle);
+        float angularAcceleration = -(_gravity / _length) * Mathf.Sin(_angle);
         _angularVelocity += angularAcceleration * Time.fixedDeltaTime;
         _angle += _angularVelocity * Time.fixedDeltaTime;
 
-        UpdateBobTransform();
+        UpdateBobPosition();
     }
 
-    private void UpdateBobTransform()
+    private void UpdateBobPosition()
     {
-
         float x = _length * Mathf.Sin(_angle);
         float y = -_length * Mathf.Cos(_angle);
-        Vector3 localModelPosition = new Vector3(x, y, 0);
-
-        Vector3 worldModelTargetPosition = _pivot.TransformPoint(localModelPosition);
+        Vector3 bobModelTargetPosition = _pivot.position + new Vector3(x, y, 0);
 
 
-        Vector3 upDirection = (_pivot.position - worldModelTargetPosition).normalized;
-        Quaternion targetRotation = Quaternion.LookRotation(_pivot.forward, upDirection);
+        Vector3 offset = _bobRoot.position - _bobRoot.GetComponentInChildren<Renderer>().transform.position;
 
-        _bobRoot.rotation = targetRotation;
-
-        Vector3 worldOffset = _bobRoot.rotation * _modelOffset;
-        _bobRoot.position = worldModelTargetPosition - worldOffset;
+        _bobRoot.position = bobModelTargetPosition + offset;
     }
 }

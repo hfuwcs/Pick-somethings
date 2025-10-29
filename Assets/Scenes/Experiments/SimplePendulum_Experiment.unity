@@ -280,12 +280,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45fcdbbe233dc844492f2fe0d680be85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PendulumExperimentManager
-  mode: 1
+  dampingFactor: 0.05
+  mode: 0
   pendulumBob: {fileID: 1261244005}
   pivotPoint: {fileID: 1331864703}
   resetPoint: {fileID: 1997139573}
-  cyclesToAverage: 1
-  averagePeriod: 0
+  cyclesToAverage: 2
+  calculatedPeriod: 0
+  minimumValidPeriod: 0.25
 --- !u!4 &546589787
 Transform:
   m_ObjectHideFlags: 0
