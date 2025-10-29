@@ -110,26 +110,38 @@ public class PendulumExperimentManager : ExperimentManagerBase
     {
         if (CurrentState != ExperimentState.Running) return;
 
-        // 1. Kiểm tra trạng thái lắp ráp
         bool wasJustAssembled = !_isAssembled && pendulumBob.CurrentState == GrabbableState.Snapped;
         if (wasJustAssembled)
         {
             _isAssembled = true;
             Debug.Log("Con lắc đã được lắp ráp.");
             _visualizer.StartVisualizing(_bobModelTransform);
+
+            //Injection of pendulum hold strategy
+            float length = Vector3.Distance(pivotPoint.transform.position, _bobModelTransform.position);
+            var pendulumStrategy = new PendulumHoldStrategy(pivotPoint.transform, length);
+            Debug.Log($"[TEST] Đã inject PendulumHoldStrategy với chiều dài: {length}");
+            pendulumBob.SetHoldStrategy(pendulumStrategy);
+            //
             ApplySimulationMode();
         }
 
-        // 2. Kiểm tra nếu người dùng vừa thả con lắc ra
-        if (_isAssembled && pendulumBob.WasJustReleased)
+        if (pendulumBob.CurrentState == GrabbableState.Snapped && pendulumBob.WasJustReleased)
         {
             pendulumBob.ConsumeReleaseFlag();
-            Debug.Log("Người dùng vừa thả con lắc.");
+            Debug.Log("Người dùng vừa thả con lắc. Kích hoạt lại mô phỏng.");
             ApplySimulationMode();
             ResetMeasurement();
         }
 
-        // 3. Thực hiện đo đạc nếu ở chế độ Realistic và đã lắp ráp
+        if (pendulumBob.CurrentState == GrabbableState.ConstrainedGrab)
+        {
+            if (_idealSimulator.enabled)
+            {
+                _idealSimulator.StopSimulation();
+                Debug.Log("Tạm dừng IdealSimulator vì người chơi đang cầm.");
+            }
+        }
         if (mode == SimulationMode.Realistic && _isAssembled)
         {
             MeasurePeriod();
@@ -138,20 +150,26 @@ public class PendulumExperimentManager : ExperimentManagerBase
 
     private void ApplySimulationMode()
     {
-        if (mode == SimulationMode.Ideal)
+
+        bool isIdealMode = (mode == SimulationMode.Ideal);
+        _idealSimulator.enabled = isIdealMode;
+
+        if (isIdealMode)
         {
-            _bobRootRigidbody.isKinematic = true;
             _idealSimulator.StartSimulation(
-            pivotPoint.transform,
-            pendulumBob.transform, // Transform của đối tượng cha
-            _bobModelTransform     // Transform của model con
-        );
+                pivotPoint.transform,
+                pendulumBob.transform,
+                _bobModelTransform
+            );
         }
-        else // Realistic
+        else
         {
             _idealSimulator.StopSimulation();
-            _bobRootRigidbody.isKinematic = false;
         }
+
+        pendulumBob.ConfigureSnappedPhysics(isIdealMode);
+
+        Debug.Log($"Áp dụng chế độ {mode}. Rigidbody.isKinematic = {isIdealMode}");
     }
 
     #region Period Measurement Logic

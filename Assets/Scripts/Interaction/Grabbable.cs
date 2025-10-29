@@ -2,47 +2,41 @@
 
 public enum GrabbableState
 {
-    Idle,
-    Grabbed,
-    Snapped,
-    HoldingSnapped
+    Idle,           // Trạng thái nghỉ, tuân theo vật lý thông thường
+    Grabbed,        // Đang được cầm tự do
+    Snapped,        // Đã được gắn vào một SnapZone
+    ConstrainedGrab // Đang được cầm trong khi vẫn bị ràng buộc (gắn vào SnapZone)
 }
 
 [RequireComponent(typeof(Rigidbody))]
 public class Grabbable : MonoBehaviour, IInteractable
 {
-    #region Variables
-    private Renderer _renderer;
-    private Color _originalColor;
-
-    //private bool _isGrabbed = false;
-    private Transform _grabberTransform;
-    private Rigidbody _rigidbody;
-
-    private int _originalLayer;
-    private Connector _connector;
-    private Joint _joint;
-    public bool WasJustReleased { get; private set; } = false;
-    #endregion
-
     [Header("Configuration")]
     [Tooltip("Transform của khối lượng vật lý chính. Đây là điểm sẽ di chuyển đến vị trí cầm nắm. Nếu để trống, sẽ dùng transform của chính GameObject này.")]
     [SerializeField] private Transform _centerOfMassTransform;
 
     public GrabbableState CurrentState { get; private set; } = GrabbableState.Idle;
     public SnapZone CurrentSnapZone { get; private set; }
+    public bool WasJustReleased { get; private set; } = false;
 
+    // --- References ---
+    private Renderer _renderer;
+    private Color _originalColor;
+    private Transform _grabberTransform;
+    private Rigidbody _rigidbody;
+    private int _originalLayer;
+    private Connector _connector;
+    private Joint _joint;
+
+    // --- Strategy Pattern ---
+    public IHoldStrategy HoldStrategy { get; private set; }
+
+    #region Unity Methods
     private void Awake()
     {
         _renderer = GetComponentInChildren<Renderer>();
-        if (_renderer != null)
-        {
-            _originalColor = _renderer.material.color;
-        }
-        else
-        {
-            Debug.LogWarning($"Grabbable '{gameObject.name}' không tìm thấy Renderer trên chính nó hoặc các đối tượng con. Chức năng highlight sẽ không hoạt động.", this);
-        }
+        if (_renderer != null) _originalColor = _renderer.material.color;
+        else Debug.LogWarning($"Grabbable '{gameObject.name}' không tìm thấy Renderer. Highlight sẽ không hoạt động.", this);
 
         _rigidbody = GetComponent<Rigidbody>();
         _originalLayer = gameObject.layer;
@@ -50,62 +44,44 @@ public class Grabbable : MonoBehaviour, IInteractable
 
         if (_centerOfMassTransform == null)
         {
-            if (_renderer != null)
-            {
-                _centerOfMassTransform = _renderer.transform;
-            }
-            else
-            {
-                _centerOfMassTransform = transform;
-            }
+            _centerOfMassTransform = _renderer != null ? _renderer.transform : transform;
         }
+
+        SetHoldStrategy(new FreeHoldStrategy());
     }
 
     private void FixedUpdate()
     {
-        if (CurrentState == GrabbableState.Grabbed)
+        if ((CurrentState == GrabbableState.Grabbed || CurrentState == GrabbableState.ConstrainedGrab) && _grabberTransform != null)
         {
-            MoveToGrabber();
-        }
-        else if (CurrentState == GrabbableState.HoldingSnapped)
-        {
-            HoldSnappedObject();
+            HoldStrategy.Hold(_rigidbody, _grabberTransform, _centerOfMassTransform);
         }
     }
+    #endregion
 
+    #region IInteractable Implementation
     public void OnHoverEnter()
     {
         if (CurrentState == GrabbableState.Idle || CurrentState == GrabbableState.Snapped)
         {
-            HighLight();
+            Highlight();
         }
     }
 
     public void OnHoverExit()
     {
-        if (_renderer != null) UnHighlight();
+        UnHighlight();
     }
 
-    private void HighLight() 
-    { 
-        if (_renderer != null) _renderer.material.color = Color.yellow;
-    }
-    private void UnHighlight() 
-    { 
-        if (_renderer != null) _renderer.material.color = _originalColor;
-    }
     public void OnSelectStart()
     {
         if (CurrentState == GrabbableState.Snapped)
         {
-            CurrentState = GrabbableState.HoldingSnapped;
+            SetState(GrabbableState.ConstrainedGrab);
         }
-        else
+        else if (CurrentState == GrabbableState.Idle)
         {
-            CurrentState = GrabbableState.Grabbed;
-            _rigidbody.useGravity = false;
-            _rigidbody.isKinematic = true;
-            gameObject.layer = LayerMask.NameToLayer("GrabbedObject");
+            SetState(GrabbableState.Grabbed);
         }
     }
 
@@ -113,67 +89,81 @@ public class Grabbable : MonoBehaviour, IInteractable
     {
         if (CurrentState == GrabbableState.Grabbed)
         {
-            _grabberTransform = null;
-            CurrentState = GrabbableState.Idle;
-            _rigidbody.useGravity = true;
-            _rigidbody.isKinematic = false;
+            SetState(GrabbableState.Idle);
+            // Reset velocity để tránh vật bay đi khi thả
             _rigidbody.linearVelocity = Vector3.zero;
             _rigidbody.angularVelocity = Vector3.zero;
-            gameObject.layer = _originalLayer;
         }
-        else if (CurrentState == GrabbableState.HoldingSnapped)
+        else if (CurrentState == GrabbableState.ConstrainedGrab)
         {
-            _grabberTransform = null;
-            CurrentState = GrabbableState.Snapped;
+            SetState(GrabbableState.Snapped);
             WasJustReleased = true;
             _rigidbody.WakeUp();
         }
+        _grabberTransform = null;
     }
+    #endregion
 
-    // --- Logic Gắn/Tháo ---
+    #region Public API
     public void SnapTo(SnapZone snapZone)
     {
         if (_connector == null) return;
-
         Debug.Log($"Snapping {gameObject.name} to {snapZone.name} with {snapZone.DesiredJointType} joint.");
 
-        CurrentState = GrabbableState.Snapped;
-        //_isGrabbed = false;
         _grabberTransform = null;
-
         CurrentSnapZone = snapZone;
-
-        _rigidbody.isKinematic = false;
-        _rigidbody.useGravity = true;
 
         transform.rotation = snapZone.transform.rotation * Quaternion.Inverse(_connector.transform.localRotation);
         transform.position = snapZone.transform.position - (transform.rotation * _connector.transform.localPosition);
 
         CreateJoint(snapZone);
 
-        gameObject.layer = _originalLayer;
+        SetState(GrabbableState.Snapped);
     }
-    private void HoldSnappedObject()
+
+    public void Unsnap()
     {
-        if (_grabberTransform == null) return;
-
-
-        Vector3 targetPosition;
-        if (_centerOfMassTransform != transform)
+        Debug.Log($"Unsnapping {gameObject.name}");
+        if (_joint != null)
         {
-            Vector3 offset = transform.position - _centerOfMassTransform.position;
-            targetPosition = _grabberTransform.position + offset;
+            Destroy(_joint);
+            _joint = null;
         }
-        else
-        {
-            targetPosition = _grabberTransform.position;
-        }
+        CurrentSnapZone = null;
+        SetHoldStrategy(new FreeHoldStrategy());
 
-        _rigidbody.MovePosition(targetPosition);
+        SetState(GrabbableState.Idle);
     }
+    /// <summary>
+    /// Cho phép một hệ thống bên ngoài (như ExperimentManager) cấu hình
+    /// trạng thái vật lý của đối tượng khi nó đang ở trạng thái Snapped.
+    /// </summary>
+    /// <param name="isKinematic">Rigidbody có nên là kinematic hay không.</param>
+    public void ConfigureSnappedPhysics(bool isKinematic)
+    {
+        if (CurrentState != GrabbableState.Snapped)
+        {
+            Debug.LogWarning("Chỉ có thể cấu hình vật lý khi đối tượng đang ở trạng thái Snapped.", this);
+            return;
+        }
+        _rigidbody.isKinematic = isKinematic;
+    }
+    public void SetGrabber(Transform grabber) => _grabberTransform = grabber;
+    public Rigidbody GetRigidbody() => _rigidbody;
+    public void ConsumeReleaseFlag() => WasJustReleased = false;
+
+    /// <summary>
+    /// Cho phép các hệ thống bên ngoài thay đổi chiến lược cầm/giữ.
+    /// </summary>
+    public void SetHoldStrategy(IHoldStrategy strategy)
+    {
+        HoldStrategy = strategy;
+    }
+    #endregion
+
+    #region Private Methods
     private void CreateJoint(SnapZone snapZone)
     {
-        // Lấy Rigidbody của điểm gắn, nếu có
         Rigidbody connectedBody = snapZone.GetComponent<Rigidbody>();
 
         switch (snapZone.DesiredJointType)
@@ -211,60 +201,44 @@ public class Grabbable : MonoBehaviour, IInteractable
         }
     }
 
-    public void Unsnap()
+    private void SetState(GrabbableState newState)
     {
-        Debug.Log($"Unsnapping {gameObject.name}");
-        if (_joint != null)
-        {
-            Destroy(_joint);
-            _joint = null;
-        }
-        CurrentSnapZone = null;
-        CurrentState = GrabbableState.Idle;
+        if (CurrentState == newState) return;
+
+        CurrentState = newState;
+        ApplyPhysicsProfile(CurrentState);
     }
 
-    public void SetGrabber(Transform grabber)
+    private void ApplyPhysicsProfile(GrabbableState state)
     {
-        _grabberTransform = grabber;
-    }
-
-    public Rigidbody GetRigidbody()
-    {
-        return _rigidbody;
-    }
-
-    private void MoveToGrabber()
-    {
-        Vector3 targetPosition;
-
-        if (_centerOfMassTransform != transform)
+        switch (state)
         {
+            case GrabbableState.Idle:
+                _rigidbody.isKinematic = false;
+                _rigidbody.useGravity = true;
+                gameObject.layer = _originalLayer;
+                break;
 
-            Vector3 offset = transform.position - _centerOfMassTransform.position;
-            targetPosition = _grabberTransform.position + offset;
-        }
-        else
-        {
-            targetPosition = _grabberTransform.position;
-        }
-        Vector3 currentPosition = _rigidbody.position;
-        Vector3 movementVector = targetPosition - currentPosition;
-        float distance = movementVector.magnitude;
+            case GrabbableState.Grabbed:
+                _rigidbody.isKinematic = true;
+                _rigidbody.useGravity = false;
+                gameObject.layer = LayerMask.NameToLayer("GrabbedObject");
+                break;
 
-        if (distance <= 0) return;
+            case GrabbableState.ConstrainedGrab:
+                _rigidbody.isKinematic = true;
+                _rigidbody.useGravity = false;
+                break;
 
-        RaycastHit hitInfo;
-        if (_rigidbody.SweepTest(movementVector.normalized, out hitInfo, distance, QueryTriggerInteraction.Ignore))
-        {
-            _rigidbody.MovePosition(currentPosition + movementVector.normalized * hitInfo.distance);
-        }
-        else
-        {
-            _rigidbody.MovePosition(targetPosition);
+            case GrabbableState.Snapped:
+
+                _rigidbody.useGravity = true;
+                gameObject.layer = _originalLayer;
+                break;
         }
     }
-    public void ConsumeReleaseFlag()
-    {
-        WasJustReleased = false;
-    }
+
+    private void Highlight() { if (_renderer != null) _renderer.material.color = Color.yellow; }
+    private void UnHighlight() { if (_renderer != null) _renderer.material.color = _originalColor; }
+    #endregion
 }
