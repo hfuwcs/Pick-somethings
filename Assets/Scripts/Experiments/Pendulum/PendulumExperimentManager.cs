@@ -52,6 +52,19 @@ public class PendulumExperimentManager : ExperimentManagerBase
             ApplySimulationMode();
         }
     }
+    public void StartPendulumExperiment()
+    {
+        Debug.Log("[DEBUG] ExperimentState: " + CurrentState.ToString());
+        Debug.Log("[DEBUG] _isAssembled: " + _isAssembled.ToString());
+        if (CurrentState == ExperimentState.PreExperiment && _isAssembled)
+        {
+            BeginExperiment();
+        }
+        else
+        {
+            Debug.LogWarning("Không thể bắt đầu thí nghiệm. Hãy chắc chắn rằng con lắc đã được lắp ráp.");
+        }
+    }
     #endregion
 
     #region Experiment Lifecycle
@@ -77,7 +90,7 @@ public class PendulumExperimentManager : ExperimentManagerBase
         }
 
         //ResetExperimentLogic();
-        BeginExperiment();
+        //BeginExperiment();
     }
 
     protected override void ResetExperimentLogic()
@@ -97,18 +110,25 @@ public class PendulumExperimentManager : ExperimentManagerBase
         _bobRootRigidbody.isKinematic = true;
         pendulumBob.transform.SetPositionAndRotation(resetPoint.position, resetPoint.rotation);
 
+        _idealSimulator.StopSimulation();
+        pendulumBob.GetRigidbody().isKinematic = false;
         _isAssembled = false;
         _visualizer.StopVisualizing();
         ResetMeasurement();
     }
 
-    protected override void StartExperimentLogic() { }
-    protected override void EndExperimentLogic() { }
+    protected override void StartExperimentLogic()
+    {
+        Debug.Log("Bắt đầu logic thí nghiệm con lắc.");
+        ResetMeasurement();
+        ApplySimulationMode();
+    }
+    protected override void EndExperimentLogic() { _idealSimulator.StopSimulation(); }
     #endregion
 
     private void FixedUpdate()
     {
-        if (CurrentState != ExperimentState.Running) return;
+        //if (CurrentState != ExperimentState.Running) return;
 
         bool wasJustAssembled = !_isAssembled && pendulumBob.CurrentState == GrabbableState.Snapped;
         if (wasJustAssembled)
@@ -123,7 +143,7 @@ public class PendulumExperimentManager : ExperimentManagerBase
             Debug.Log($"[TEST] Đã inject PendulumHoldStrategy với chiều dài: {length}");
             pendulumBob.SetHoldStrategy(pendulumStrategy);
             //
-            ApplySimulationMode();
+            //ApplySimulationMode();
         }
 
         if (pendulumBob.CurrentState == GrabbableState.Snapped && pendulumBob.WasJustReleased)

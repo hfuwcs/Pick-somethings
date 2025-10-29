@@ -20,6 +20,7 @@ public class InteractionController : MonoBehaviour
     private IInteractable _currentHoveredInteractable;
     private IInteractable _currentSelectedInteractable;
     private SnapZone _potentialSnapZone;
+    private bool _isUIMode = false;
 
     #region SnapZone Events
     private void OnEnable()
@@ -54,8 +55,7 @@ public class InteractionController : MonoBehaviour
     
     private void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        ToggleCursorLock(false);
     }
     private void Awake()
     {
@@ -68,8 +68,38 @@ public class InteractionController : MonoBehaviour
 
     private void Update()
     {
+        if (_isUIMode)
+        {
+            if (_currentHoveredInteractable != null)
+            {
+                _currentHoveredInteractable.OnHoverExit();
+                _currentHoveredInteractable = null;
+            }
+            return;
+        }
         HandleHoverDetection();
         CheckForGrabbedObjectBreak();
+    }
+    public void OnToggleCursor(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            _isUIMode = !_isUIMode;
+            ToggleCursorLock(_isUIMode);
+        }
+    }
+    private void ToggleCursorLock(bool isUIMode)
+    {
+        if (isUIMode)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
     }
     private void CheckForGrabbedObjectBreak()
     {
@@ -123,7 +153,7 @@ public class InteractionController : MonoBehaviour
     }
     public void OnInteract(InputAction.CallbackContext context)
     {
-        if (!context.performed) return;
+        if (!context.performed || _isUIMode) return;
         if (_currentSelectedInteractable != null)
         {
             // Nếu đang cầm/giữ một vật
@@ -153,54 +183,10 @@ public class InteractionController : MonoBehaviour
                 grabbable.SetGrabber(_grabAttachPoint);
             }
         }
-        //if (_currentSelectedInteractable is Grabbable selectedGrabbable)
-        //{
-        //    if (_potentialSnapZone != null)
-        //    {
-        //        selectedGrabbable.SnapTo(_potentialSnapZone);
-        //        _potentialSnapZone.SetSnappedObject(selectedGrabbable);
-        //        _currentSelectedInteractable = null;
-        //        _potentialSnapZone = null;
-        //    }
-        //    else
-        //    {
-        //        selectedGrabbable.OnSelectEnd();
-        //        _currentSelectedInteractable = null;
-        //    }
-        //}
-        //else if (_currentHoveredInteractable is Grabbable hoveredGrabbable)
-        //{
-        //    if (hoveredGrabbable.CurrentState == GrabbableState.Snapped)
-        //    {
-        //        if (hoveredGrabbable.CurrentSnapZone != null)
-        //        {
-        //            hoveredGrabbable.CurrentSnapZone.ClearSnappedObject();
-        //        }
-
-        //        hoveredGrabbable.Unsnap();
-        //        _currentSelectedInteractable = hoveredGrabbable; 
-        //        hoveredGrabbable.OnSelectStart(); 
-
-        //        if (hoveredGrabbable is Grabbable grabbable)
-        //        {
-        //            grabbable.SetGrabber(_grabAttachPoint);
-        //        }
-        //    }
-        //    else if (hoveredGrabbable.CurrentState == GrabbableState.Idle)
-        //    {
-        //        _currentSelectedInteractable = hoveredGrabbable;
-        //        hoveredGrabbable.OnSelectStart();
-
-        //        if (hoveredGrabbable is Grabbable grabbable)
-        //        {
-        //            grabbable.SetGrabber(_grabAttachPoint);
-        //        }
-        //    }
-        //}
     }
     public void OnUnsnap(InputAction.CallbackContext context)
     {
-        if (!context.performed) return;
+        if (!context.performed || _isUIMode) return;
 
         var experimentManager = FindFirstObjectByType<PendulumExperimentManager>();
 
