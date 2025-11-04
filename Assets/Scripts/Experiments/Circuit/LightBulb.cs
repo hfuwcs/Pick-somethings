@@ -39,7 +39,6 @@ public class LightBulb : CircuitComponent
 
         if (bulbRenderer != null)
         {
-            // Tạo một instance của material để tránh thay đổi asset gốc.
             _bulbMaterialInstance = bulbRenderer.material;
         }
         else
@@ -70,7 +69,7 @@ public class LightBulb : CircuitComponent
         }
 
         // Cập nhật ánh sáng và vật liệu
-        pointLight.intensity = intensity * 2.0f; // Khuếch đại để nhìn rõ hơn
+        pointLight.intensity = intensity * 2.0f;
         _bulbMaterialInstance.SetColor(EmissionColorID, emissionColor * intensity);
     }
 }

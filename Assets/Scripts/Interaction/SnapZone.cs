@@ -43,6 +43,13 @@ public class SnapZone : MonoBehaviour
             col.isTrigger = true;
         }
 
+        // ✓ Kiểm tra xem SnapZone có Rigidbody không
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb == null)
+        {
+            Debug.LogWarning($"SnapZone '{gameObject.name}' không có Rigidbody component. Các vật được snap vào sẽ không hoạt động đúng. Vui lòng thêm Rigidbody vào GameObject này.", this);
+        }
+
         _renderer = GetComponent<Renderer>();
         if (_renderer != null)
         {
@@ -52,16 +59,19 @@ public class SnapZone : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        // Nếu đã có object snap rồi, không cho phép snap thêm
+        if (_snappedObject != null) return;
 
         Connector connector = other.GetComponent<Connector>();
-        if (connector == null || _snappedObject != null) return;
+        if (connector == null) return;
 
-        if (connector.ConnectionID == this.acceptedID)
-        {
-            Debug.Log($"Connector hợp lệ '{other.name}' đã đi vào SnapZone '{this.name}'.");
-            Highlight();
-            OnSnapZoneEnter?.Invoke(this, connector.ParentGrabbable);
-        }
+        // Verify connector ID phù hợp và parent Grabbable tồn tại
+        if (connector.ConnectionID != this.acceptedID) return;
+        if (connector.ParentGrabbable == null) return;
+
+        Debug.Log($"Connector hợp lệ '{other.name}' đã đi vào SnapZone '{this.name}'.");
+        Highlight();
+        OnSnapZoneEnter?.Invoke(this, connector.ParentGrabbable);
     }
 
     private void OnTriggerExit(Collider other)
@@ -69,11 +79,15 @@ public class SnapZone : MonoBehaviour
         Connector connector = other.GetComponent<Connector>();
         if (connector == null) return;
         if (connector.ParentGrabbable == null) return;
+
+        // Chỉ xử lý nếu là connector phù hợp
+        if (connector.ConnectionID != this.acceptedID) return;
+
+        // Nếu connector này không phải là object đang được snap, có thể unhighlight
         if (_snappedObject != connector.ParentGrabbable)
         {
             Debug.Log($"Connector '{other.name}' đã rời khỏi SnapZone '{this.name}'.");
             Unhighlight();
-
 
             if (OnSnapZoneExit != null)
             {
@@ -83,9 +97,17 @@ public class SnapZone : MonoBehaviour
     }
     public void SetSnappedObject(Grabbable grabbable)
     {
+        // Verify grabbable có effect
+        if (grabbable == null)
+        {
+            Debug.LogWarning($"SnapZone {name} nhận grabbable null.", this);
+            return;
+        }
+
+        // Nếu đã có object snap rồi, warning
         if (_snappedObject != null)
         {
-            Debug.LogWarning($"SnapZone {name} đã có đối tượng, không thể snap đối tượng mới.", this);
+            Debug.LogWarning($"SnapZone {name} đã có đối tượng {_snappedObject.name}, không thể snap đối tượng mới: {grabbable.name}.", this);
             return;
         }
 

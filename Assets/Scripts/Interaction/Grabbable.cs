@@ -131,6 +131,7 @@ public class Grabbable : MonoBehaviour, IInteractable
         }
         CurrentSnapZone = null;
         SetHoldStrategy(new FreeHoldStrategy());
+        WasJustReleased = false; // ✓ Reset flag
 
         SetState(GrabbableState.Idle);
     }
@@ -165,6 +166,13 @@ public class Grabbable : MonoBehaviour, IInteractable
     private void CreateJoint(SnapZone snapZone)
     {
         Rigidbody connectedBody = snapZone.GetComponent<Rigidbody>();
+        
+        // Nếu SnapZone không có Rigidbody, khuyến cáo và không tạo joint
+        if (connectedBody == null)
+        {
+            Debug.LogError($"SnapZone '{snapZone.name}' không có Rigidbody component. Joint không thể được tạo. Vui lòng thêm Rigidbody vào SnapZone.", snapZone);
+            return;
+        }
 
         switch (snapZone.DesiredJointType)
         {
@@ -186,7 +194,6 @@ public class Grabbable : MonoBehaviour, IInteractable
             case JointType.Configurable:
                 ConfigurableJoint configJoint = gameObject.AddComponent<ConfigurableJoint>();
                 configJoint.connectedBody = connectedBody;
-
 
                 configJoint.xMotion = ConfigurableJointMotion.Locked;
                 configJoint.yMotion = ConfigurableJointMotion.Locked;

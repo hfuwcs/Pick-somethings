@@ -323,6 +323,7 @@ GameObject:
   m_Component:
   - component: {fileID: 122531737}
   - component: {fileID: 122531738}
+  - component: {fileID: 122531739}
   m_Layer: 0
   m_Name: connector_2
   m_TagString: Untagged
@@ -366,6 +367,19 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &122531739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 122531736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb17260b4156a95469eee2784c5fe52a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Connector
+  connectionID: Default
 --- !u!1 &138059354
 GameObject:
   m_ObjectHideFlags: 0
@@ -1244,6 +1258,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1331022952}
   - component: {fileID: 1331022953}
+  - component: {fileID: 1331022954}
   m_Layer: 0
   m_Name: connector_1
   m_TagString: Untagged
@@ -1287,6 +1302,19 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1331022954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1331022951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb17260b4156a95469eee2784c5fe52a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Connector
+  connectionID: Default
 --- !u!1 &1337234633
 GameObject:
   m_ObjectHideFlags: 0

@@ -157,20 +157,23 @@ public class InteractionController : MonoBehaviour
         if (_currentSelectedInteractable != null)
         {
             // Nếu đang cầm/giữ một vật
-            if (_potentialSnapZone != null && _currentSelectedInteractable is Grabbable grabbable && grabbable.CurrentState == GrabbableState.Grabbed)
+            if (_potentialSnapZone != null && _currentSelectedInteractable is Grabbable grabbable)
             {
-                // Ưu tiên Snap nếu có thể
-                grabbable.SnapTo(_potentialSnapZone);
-                _potentialSnapZone.SetSnappedObject(grabbable);
-                _currentSelectedInteractable = null;
-                _potentialSnapZone = null;
+                // Cho phép snap nếu object ở trạng thái Grabbed hoặc ConstrainedGrab
+                if (grabbable.CurrentState == GrabbableState.Grabbed || grabbable.CurrentState == GrabbableState.ConstrainedGrab)
+                {
+                    // Ưu tiên Snap nếu có thể
+                    grabbable.SnapTo(_potentialSnapZone);
+                    _potentialSnapZone.SetSnappedObject(grabbable);
+                    _currentSelectedInteractable = null;
+                    _potentialSnapZone = null;
+                    return;
+                }
             }
-            else
-            {
-                // Nếu không, chỉ đơn giản là thả ra (Release/Let go)
-                _currentSelectedInteractable.OnSelectEnd();
-                _currentSelectedInteractable = null;
-            }
+
+            // Nếu không, chỉ đơn giản là thả ra (Release/Let go)
+            _currentSelectedInteractable.OnSelectEnd();
+            _currentSelectedInteractable = null;
         }
         else if (_currentHoveredInteractable != null)
         {
@@ -204,6 +207,7 @@ public class InteractionController : MonoBehaviour
         {
             if (hoveredGrabbable.CurrentSnapZone != null)
             {
+                // Clear SnapZone trước rồi mới Unsnap
                 hoveredGrabbable.CurrentSnapZone.ClearSnappedObject();
             }
 
