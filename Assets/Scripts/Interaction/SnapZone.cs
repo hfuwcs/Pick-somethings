@@ -19,8 +19,12 @@ public class SnapZone : MonoBehaviour
     [Tooltip("ID của Connector mà vùng này chấp nhận.")]
     [SerializeField] private string acceptedID = "Default";
 
+    #region Events
     public static event Action<SnapZone, Grabbable> OnSnapZoneEnter;
     public static event Action<SnapZone> OnSnapZoneExit;
+    public static event Action<CircuitComponent> OnComponentSnapped;
+    public static event Action<CircuitComponent> OnComponentUnsnapped;
+    #endregion
 
     [Tooltip("Loại Joint sẽ được tạo khi một đối tượng được gắn vào.")]
     [SerializeField] private JointType jointType = JointType.Fixed;
@@ -79,14 +83,34 @@ public class SnapZone : MonoBehaviour
     }
     public void SetSnappedObject(Grabbable grabbable)
     {
+        if (_snappedObject != null)
+        {
+            Debug.LogWarning($"SnapZone {name} đã có đối tượng, không thể snap đối tượng mới.", this);
+            return;
+        }
+
         _snappedObject = grabbable;
-        Highlight();
+        Debug.Log($"Đối tượng {grabbable.name} đã được snap vào {name}.");
+
+        if (_snappedObject.TryGetComponent<CircuitComponent>(out var component))
+        {
+            OnComponentSnapped?.Invoke(component);
+            Debug.Log($"Sự kiện OnComponentSnapped được phát cho linh kiện: {component.name}");
+        }
     }
 
     public void ClearSnappedObject()
     {
+        if (_snappedObject == null) return;
+
+        if (_snappedObject.TryGetComponent<CircuitComponent>(out var component))
+        {
+            OnComponentUnsnapped?.Invoke(component);
+            Debug.Log($"Sự kiện OnComponentUnsnapped được phát cho linh kiện: {component.name}");
+        }
+
+        Debug.Log($"Đối tượng {_snappedObject.name} đã được xóa khỏi {name}.");
         _snappedObject = null;
-        Unhighlight();
     }
 
 
