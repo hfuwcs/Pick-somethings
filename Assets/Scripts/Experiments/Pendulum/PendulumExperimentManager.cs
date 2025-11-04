@@ -46,7 +46,7 @@ public class PendulumExperimentManager : ExperimentManagerBase
     private float _swingStartTime;
     private bool _isTiming = false;
     private float _lastBobVelocityY = 0f;
-    private bool _isWaitingForRightwardPass = true;
+    //private bool _isWaitingForRightwardPass = true;
 
     #region Public Control
     public void SetSimulationMode(SimulationMode newMode)
@@ -209,9 +209,6 @@ public class PendulumExperimentManager : ExperimentManagerBase
         float currentVelocityY = _bobRootRigidbody.linearVelocity.y;
         float currentVelocityX = _bobRootRigidbody.linearVelocity.x;
 
-        // Phát hiện thời điểm đi qua điểm thấp nhất (khi vận tốc Y đổi từ âm sang dương)
-        // và CHỈ khi đang di chuyển sang phải (vận tốc X > 0).
-        // Đây là điểm đánh dấu sự kiện duy nhất và lặp lại của chúng ta.
         if (_lastBobVelocityY < 0 && currentVelocityY >= 0 && currentVelocityX > 0)
         {
             if (!_isTiming)
@@ -243,7 +240,6 @@ public class PendulumExperimentManager : ExperimentManagerBase
                     _measuredPeriods.Clear();
                 }
 
-                // Bắt đầu lại timer cho chu kỳ hoàn chỉnh tiếp theo
                 _swingStartTime = Time.fixedTime;
             }
         }
