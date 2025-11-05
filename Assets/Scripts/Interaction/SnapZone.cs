@@ -8,6 +8,19 @@ public enum JointType
     Configurable
 }
 
+public enum SnapType
+{
+    /// <summary>
+    /// Căn chỉnh tâm của Connector với tâm của SnapZone.
+    /// </summary>
+    AlignConnector,
+
+    /// <summary>
+    /// Căn chỉnh gốc (pivot) của Grabbable với tâm của SnapZone.
+    /// </summary>
+    AlignOrigin
+}
+
 
 /// <summary>
 /// Định nghĩa một vùng có thể tiếp nhận một Connector để tạo kết nối.
@@ -26,10 +39,16 @@ public class SnapZone : MonoBehaviour
     public static event Action<CircuitComponent> OnComponentUnsnapped;
     #endregion
 
+
+    [Header("Snapping Behavior")]
+    [Tooltip("Hành vi gắn kết khi một vật được snap vào vùng này.")]
+    [SerializeField] private SnapType snapBehavior = SnapType.AlignConnector;
+
     [Tooltip("Loại Joint sẽ được tạo khi một đối tượng được gắn vào.")]
     [SerializeField] private JointType jointType = JointType.Fixed;
     [SerializeField] private Material highlightMaterial;
     public JointType DesiredJointType => jointType;
+    public SnapType SnapBehavior => snapBehavior;
     private Material _originalMaterial;
     private Renderer _renderer;
     private bool _isHighlighted = false;

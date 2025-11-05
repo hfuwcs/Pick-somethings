@@ -1119,6 +1119,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SnapZone
   acceptedID: Default
+  snapBehavior: 1
   jointType: 0
   highlightMaterial: {fileID: 2100000, guid: 53bca8729f1c728489410ea11ed6d25c, type: 2}
 --- !u!65 &1084736036
@@ -1765,6 +1766,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SnapZone
   acceptedID: Default
+  snapBehavior: 1
   jointType: 0
   highlightMaterial: {fileID: 2100000, guid: 53bca8729f1c728489410ea11ed6d25c, type: 2}
 --- !u!1 &1713488799
@@ -1973,6 +1975,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SnapZone
   acceptedID: Default
+  snapBehavior: 1
   jointType: 0
   highlightMaterial: {fileID: 2100000, guid: 53bca8729f1c728489410ea11ed6d25c, type: 2}
 --- !u!4 &2019331671 stripped

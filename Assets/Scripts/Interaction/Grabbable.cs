@@ -107,17 +107,29 @@ public class Grabbable : MonoBehaviour, IInteractable
     #region Public API
     public void SnapTo(SnapZone snapZone)
     {
-        if (_connector == null) return;
-        Debug.Log($"Snapping {gameObject.name} to {snapZone.name} with {snapZone.DesiredJointType} joint.");
+        Debug.Log($"Snapping {gameObject.name} to {snapZone.name} using behavior: {snapZone.SnapBehavior}");
 
         _grabberTransform = null;
         CurrentSnapZone = snapZone;
 
-        transform.rotation = snapZone.transform.rotation * Quaternion.Inverse(_connector.transform.localRotation);
-        transform.position = snapZone.transform.position - (transform.rotation * _connector.transform.localPosition);
+        switch (snapZone.SnapBehavior)
+        {
+            case SnapType.AlignConnector:
+                if (_connector == null)
+                {
+                    Debug.LogError($"Grabbable '{name}' không có Connector, không thể sử dụng SnapType.AlignConnector.", this);
+                    goto case SnapType.AlignOrigin;
+                }
+                transform.rotation = snapZone.transform.rotation * Quaternion.Inverse(_connector.transform.localRotation);
+                transform.position = snapZone.transform.position - (transform.rotation * _connector.transform.localPosition);
+                break;
+
+            case SnapType.AlignOrigin:
+                transform.SetPositionAndRotation(snapZone.transform.position, snapZone.transform.rotation);
+                break;
+        }
 
         CreateJoint(snapZone);
-
         SetState(GrabbableState.Snapped);
     }
 
@@ -131,9 +143,9 @@ public class Grabbable : MonoBehaviour, IInteractable
         }
         CurrentSnapZone = null;
         SetHoldStrategy(new FreeHoldStrategy());
-        WasJustReleased = false; // ✓ Reset flag
+        WasJustReleased = false; // Reset flag
 
-        SetState(GrabbableState.Idle);
+        //SetState(GrabbableState.Idle);
     }
     /// <summary>
     /// Cho phép một hệ thống bên ngoài (như ExperimentManager) cấu hình
@@ -165,9 +177,13 @@ public class Grabbable : MonoBehaviour, IInteractable
     #region Private Methods
     private void CreateJoint(SnapZone snapZone)
     {
+        if (_joint != null)
+        {
+            Destroy(_joint);
+        }
+
         Rigidbody connectedBody = snapZone.GetComponent<Rigidbody>();
-        
-        // Nếu SnapZone không có Rigidbody, khuyến cáo và không tạo joint
+
         if (connectedBody == null)
         {
             Debug.LogError($"SnapZone '{snapZone.name}' không có Rigidbody component. Joint không thể được tạo. Vui lòng thêm Rigidbody vào SnapZone.", snapZone);

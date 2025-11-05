@@ -214,9 +214,9 @@ public class InteractionController : MonoBehaviour
             hoveredGrabbable.Unsnap();
 
             // Tự động cầm vật lên ngay sau khi tháo
-            _currentSelectedInteractable = hoveredGrabbable;
             hoveredGrabbable.OnSelectStart();
             hoveredGrabbable.SetGrabber(_grabAttachPoint);
+            _currentSelectedInteractable = hoveredGrabbable;
         }
     }
 }
