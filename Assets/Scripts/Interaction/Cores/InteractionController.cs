@@ -14,7 +14,7 @@ public class InteractionController : MonoBehaviour
 
     [Header("Grabbing Logic")]
     [Tooltip("Khoảng cách tối đa mà đối tượng có thể được giữ trước khi tự động thả.")]
-    [SerializeField] private float _maxGrabDistance = 3f; 
+    [SerializeField] private float _maxGrabDistance = 3f;
 
     private Camera _mainCamera;
     private IInteractable _currentHoveredInteractable;
@@ -52,7 +52,7 @@ public class InteractionController : MonoBehaviour
         }
     }
     #endregion
-    
+
     private void Start()
     {
         ToggleCursorLock(false);
@@ -135,13 +135,13 @@ public class InteractionController : MonoBehaviour
         RaycastHit hit;
         IInteractable newHoveredInteractable = null;
 
-        if(Physics.Raycast(ray, out hit, _interactionDistance, _interactionLayerMask))
+        if (Physics.Raycast(ray, out hit, _interactionDistance, _interactionLayerMask))
         {
             newHoveredInteractable = hit.collider.GetComponentInParent<IInteractable>();
         }
 
-        
-        if(newHoveredInteractable != _currentHoveredInteractable)
+
+        if (newHoveredInteractable != _currentHoveredInteractable)
         {
             // Hover exit on the previous interactable
             _currentHoveredInteractable?.OnHoverExit();
@@ -149,7 +149,7 @@ public class InteractionController : MonoBehaviour
             // Hover enter on the new interactable
             _currentHoveredInteractable = newHoveredInteractable;
             _currentHoveredInteractable?.OnHoverEnter();
-        }        
+        }
     }
     public void OnInteract(InputAction.CallbackContext context)
     {
@@ -205,17 +205,18 @@ public class InteractionController : MonoBehaviour
             hoveredGrabbable.CurrentState == GrabbableState.Snapped &&
             _currentSelectedInteractable == null) // Và không đang cầm/giữ vật nào khác
         {
-            if (hoveredGrabbable.CurrentSnapZone != null)
+            SnapZone previousSnapZone = hoveredGrabbable.CurrentSnapZone;
+
+            if (previousSnapZone != null)
             {
-                // Clear SnapZone trước rồi mới Unsnap
-                hoveredGrabbable.CurrentSnapZone.ClearSnappedObject();
+                previousSnapZone.ClearSnappedObject();
             }
 
+            hoveredGrabbable.SetGrabber(_grabAttachPoint);
             hoveredGrabbable.Unsnap();
 
             // Tự động cầm vật lên ngay sau khi tháo
             hoveredGrabbable.OnSelectStart();
-            hoveredGrabbable.SetGrabber(_grabAttachPoint);
             _currentSelectedInteractable = hoveredGrabbable;
         }
     }

@@ -144,14 +144,19 @@ public class SnapZone : MonoBehaviour
     {
         if (_snappedObject == null) return;
 
-        if (_snappedObject.TryGetComponent<CircuitComponent>(out var component))
+        // ✅ FIX: Lưu reference trước khi clear để đảm bảo event được phát đúng
+        var objectToUnsnap = _snappedObject;
+        Debug.Log($"Đối tượng {objectToUnsnap.name} đã được xóa khỏi {name}.");
+        
+        // Clear reference ngay để tránh race condition
+        _snappedObject = null;
+
+        // Phát event sau khi đã clear reference
+        if (objectToUnsnap.TryGetComponent<CircuitComponent>(out var component))
         {
             OnComponentUnsnapped?.Invoke(component);
             Debug.Log($"Sự kiện OnComponentUnsnapped được phát cho linh kiện: {component.name}");
         }
-
-        Debug.Log($"Đối tượng {_snappedObject.name} đã được xóa khỏi {name}.");
-        _snappedObject = null;
     }
 
 

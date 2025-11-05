@@ -75,6 +75,7 @@ public class Grabbable : MonoBehaviour, IInteractable
 
     public void OnSelectStart()
     {
+
         if (CurrentState == GrabbableState.Snapped)
         {
             SetState(GrabbableState.ConstrainedGrab);
@@ -105,6 +106,7 @@ public class Grabbable : MonoBehaviour, IInteractable
     #endregion
 
     #region Public API
+    //Snap vào 1 snapzone
     public void SnapTo(SnapZone snapZone)
     {
         Debug.Log($"Snapping {gameObject.name} to {snapZone.name} using behavior: {snapZone.SnapBehavior}");
@@ -145,7 +147,10 @@ public class Grabbable : MonoBehaviour, IInteractable
         SetHoldStrategy(new FreeHoldStrategy());
         WasJustReleased = false; // Reset flag
 
-        //SetState(GrabbableState.Idle);
+        SetState(GrabbableState.Idle);
+        _rigidbody.linearVelocity = Vector3.zero;
+        _rigidbody.angularVelocity = Vector3.zero;
+        _rigidbody.WakeUp();
     }
     /// <summary>
     /// Cho phép một hệ thống bên ngoài (như ExperimentManager) cấu hình
@@ -254,7 +259,7 @@ public class Grabbable : MonoBehaviour, IInteractable
                 break;
 
             case GrabbableState.Snapped:
-
+                _rigidbody.isKinematic = false;
                 _rigidbody.useGravity = true;
                 gameObject.layer = _originalLayer;
                 break;
