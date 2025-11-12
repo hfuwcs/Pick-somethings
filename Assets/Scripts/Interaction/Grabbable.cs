@@ -14,6 +14,7 @@ public class Grabbable : MonoBehaviour, IInteractable
     [Header("Configuration")]
     [Tooltip("Transform của khối lượng vật lý chính. Đây là điểm sẽ di chuyển đến vị trí cầm nắm. Nếu để trống, sẽ dùng transform của chính GameObject này.")]
     [SerializeField] private Transform _centerOfMassTransform;
+    [SerializeField] public bool allowConstrainedGrab = true;
 
     public GrabbableState CurrentState { get; private set; } = GrabbableState.Idle;
     public SnapZone CurrentSnapZone { get; private set; }

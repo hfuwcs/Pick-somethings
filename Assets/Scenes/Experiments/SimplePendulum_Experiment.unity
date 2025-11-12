@@ -281,7 +281,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PendulumExperimentManager
   dampingFactor: 0.05
-  mode: 0
+  mode: 1
   pendulumBob: {fileID: 1261244005}
   pivotPoint: {fileID: 1331864703}
   resetPoint: {fileID: 1997139573}
@@ -799,6 +799,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SnapZone
   acceptedID: PendulumConnector
+  snapBehavior: 0
   jointType: 1
   highlightMaterial: {fileID: 2100000, guid: 53bca8729f1c728489410ea11ed6d25c, type: 2}
 --- !u!114 &1331864704
