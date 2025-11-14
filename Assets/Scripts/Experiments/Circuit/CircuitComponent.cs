@@ -50,4 +50,47 @@ public abstract class CircuitComponent : MonoBehaviour
     /// </summary>
     /// <param name="current">Dòng điện phức chạy qua linh kiện.</param>
     public abstract void UpdateState(Complex current);
+    
+    #region IMultiPointSnappable Implementation
+    public void SnapPoint(Connector connector, SnapZone snapZone)
+    {
+        if (_connectorJoints.ContainsKey(connector)) return;
+
+        Rigidbody connectedBody = snapZone.GetComponent<Rigidbody>();
+        if (connectedBody == null)
+        {
+            Debug.LogError($"SnapZone '{snapZone.name}' không có Rigidbody để tạo Joint.", snapZone);
+            return;
+        }
+
+        // Sử dụng ConfigurableJoint để tạo một khớp nối cố định tại vị trí của connector
+        ConfigurableJoint joint = gameObject.AddComponent<ConfigurableJoint>();
+        joint.connectedBody = connectedBody;
+
+        // Đặt anchor tại vị trí của connector (trong không gian cục bộ của Grabbable)
+        joint.anchor = transform.InverseTransformPoint(connector.transform.position);
+
+        // Khóa tất cả các chuyển động và xoay, biến nó thành một FixedJoint tại điểm anchor
+        joint.xMotion = ConfigurableJointMotion.Locked;
+        joint.yMotion = ConfigurableJointMotion.Locked;
+        joint.zMotion = ConfigurableJointMotion.Locked;
+        joint.angularXMotion = ConfigurableJointMotion.Locked;
+        joint.angularYMotion = ConfigurableJointMotion.Locked;
+        joint.angularZMotion = ConfigurableJointMotion.Locked;
+
+        _connectorJoints.Add(connector, joint);
+        Debug.Log($"[MultiPoint] Đã tạo Joint cho {connector.name} tại SnapZone {snapZone.name}.");
+    }
+
+    public void UnsnapPoint(Connector connector)
+    {
+        if (_connectorJoints.TryGetValue(connector, out Joint joint))
+        {
+            Destroy(joint);
+            _connectorJoints.Remove(connector);
+            Debug.Log($"[MultiPoint] Đã hủy Joint cho {connector.name}.");
+        }
+    }
+
+    #endregion
 }
