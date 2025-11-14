@@ -191,6 +191,20 @@ public class PendulumExperimentManager : ExperimentManagerBase
         // ✅ Cho phép người dùng điều chỉnh góc trong giai đoạn Setup (CHỈ Ideal Mode)
         if (_isInSetupPhase && mode == SimulationMode.Ideal)
         {
+            // ✅ ĐẢM BẢO con lắc đứng yên trong setup phase
+            if (pendulumBob.CurrentState == GrabbableState.Snapped)
+            {
+                // Re-apply kinematic để đảm bảo không bị override
+                if (!_bobRootRigidbody.isKinematic)
+                {
+                    _bobRootRigidbody.isKinematic = true;
+                }
+                
+                // Reset velocity để đảm bảo đứng yên hoàn toàn
+                _bobRootRigidbody.linearVelocity = Vector3.zero;
+                _bobRootRigidbody.angularVelocity = Vector3.zero;
+            }
+            
             // Khi đang kéo hoặc đã thả ra, hiển thị góc hiện tại
             if (pendulumBob.CurrentState == GrabbableState.ConstrainedGrab || 
                 pendulumBob.CurrentState == GrabbableState.Snapped)

@@ -101,7 +101,16 @@ public class Grabbable : MonoBehaviour, IInteractable
         {
             SetState(GrabbableState.Snapped);
             WasJustReleased = true;
-            _rigidbody.WakeUp();
+            
+            // ✅ Reset velocity để tránh dao động khi thả ra
+            _rigidbody.linearVelocity = Vector3.zero;
+            _rigidbody.angularVelocity = Vector3.zero;
+            
+            // ✅ CHỈ WakeUp nếu không ở trạng thái kinematic (tránh kích hoạt physics khi đang setup)
+            if (!_rigidbody.isKinematic)
+            {
+                _rigidbody.WakeUp();
+            }
         }
         _grabberTransform = null;
     }
