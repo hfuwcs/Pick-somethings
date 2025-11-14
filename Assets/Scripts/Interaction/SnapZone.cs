@@ -188,12 +188,15 @@ public class SnapZone : MonoBehaviour
     {
         if (_snappedObject == null) return;
 
-        // ✅ FIX: Lưu reference trước khi clear để đảm bảo event được phát đúng
+        //  Lưu reference trước khi clear để đảm bảo event được phát đúng
         var objectToUnsnap = _snappedObject;
         Debug.Log($"Đối tượng {objectToUnsnap.name} đã được xóa khỏi {name}.");
 
         // Clear reference ngay để tránh race condition
         _snappedObject = null;
+
+        //  Unhighlight khi object bị xóa khỏi snap zone
+        Unhighlight();
 
         // Phát event sau khi đã clear reference
         if (objectToUnsnap.TryGetComponent<CircuitComponent>(out var component))
@@ -231,6 +234,9 @@ public class SnapZone : MonoBehaviour
 
         _connectedConnectors.Add(connector);
         connector.SetConnectedZone(this);
+
+        //  Sử dụng giá trị role từ SerializeField để kiểm tra đúng
+        Debug.Log($"[SnapZone.Connect] Role hiện tại: {role}, Connector: {connector.name}, ParentComponent: {connector.ParentComponent?.name ?? "NULL"}");
 
         if (role == SnapRole.DirectConnection && connector.ParentComponent != null)
         {

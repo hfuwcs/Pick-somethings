@@ -4,16 +4,22 @@ public class PendulumHoldStrategy : IHoldStrategy
 {
     private readonly Transform _pivotPoint;
     private readonly float _length;
+    private readonly float _maxAngleDegrees;
+    private readonly bool _enforceAngleLimit;
 
     /// <summary>
     /// Khởi tạo chiến lược với các tham số ràng buộc của con lắc.
     /// </summary>
     /// <param name="pivot">Transform của điểm treo.</param>
     /// <param name="length">Chiều dài của con lắc.</param>
-    public PendulumHoldStrategy(Transform pivot, float length)
+    /// <param name="maxAngleDegrees">Góc tối đa cho phép (độ). Mặc định là 90 độ (không giới hạn thực tế).</param>
+    /// <param name="enforceAngleLimit">Có áp dụng giới hạn góc hay không.</param>
+    public PendulumHoldStrategy(Transform pivot, float length, float maxAngleDegrees = 90f, bool enforceAngleLimit = false)
     {
         _pivotPoint = pivot;
         _length = length;
+        _maxAngleDegrees = maxAngleDegrees;
+        _enforceAngleLimit = enforceAngleLimit;
     }
 
     public void Hold(Rigidbody heldBody, Transform grabberTransform, Transform centerOfMassTransform)
@@ -24,13 +30,32 @@ public class PendulumHoldStrategy : IHoldStrategy
         Vector3 directionToGrabber = grabberPosition - pivotPosition;
         Vector3 projectedDirection = Vector3.ProjectOnPlane(directionToGrabber, _pivotPoint.forward);
 
-
         if (projectedDirection.sqrMagnitude < 0.001f)
         {
             return;
         }
 
-        Vector3 targetModelPosition = pivotPosition + projectedDirection.normalized * _length;
+        Vector3 desiredDirection = projectedDirection.normalized;
+
+        // ✅ Áp dụng giới hạn góc nếu được bật
+        if (_enforceAngleLimit)
+        {
+            float angleFromDown = Vector3.Angle(Vector3.down, desiredDirection);
+            
+            if (angleFromDown > _maxAngleDegrees)
+            {
+                // Giới hạn góc bằng cách xoay từ Vector3.down đến hướng mong muốn nhưng chỉ đến maxAngle
+                Vector3 axis = Vector3.Cross(Vector3.down, desiredDirection).normalized;
+                if (axis.sqrMagnitude < 0.001f)
+                {
+                    // Nếu hướng mong muốn là ngược hướng với down, chọn trục bất kỳ
+                    axis = _pivotPoint.forward;
+                }
+                desiredDirection = Quaternion.AngleAxis(_maxAngleDegrees, axis) * Vector3.down;
+            }
+        }
+
+        Vector3 targetModelPosition = pivotPosition + desiredDirection * _length;
 
         Vector3 offset = heldBody.transform.position - centerOfMassTransform.position;
         Vector3 targetRootPosition = targetModelPosition + offset;

@@ -549,6 +549,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20beb65d919e782418b04fc42e0ed31d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LightBulb
+  connectorA: {fileID: 0}
+  connectorB: {fileID: 0}
   resistance: 5
   pointLight: {fileID: 1337234634}
   bulbRenderer: {fileID: 138059356}
@@ -995,6 +997,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eea8e9050845ba244a472c24d40411d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Switch
+  connectorA: {fileID: 0}
+  connectorB: {fileID: 0}
   startsOpen: 1
   switchObjectVisual: {fileID: 749495807}
   openRotation: {x: 0, y: 0, z: 45}
@@ -1292,9 +1296,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2a879c877264f846ba37b7fbb48d0a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SnapZone
-  acceptedID: Default
+  role: 1
   snapBehavior: 1
   jointType: 0
+  acceptedID: Default
   highlightMaterial: {fileID: 2100000, guid: 53bca8729f1c728489410ea11ed6d25c, type: 2}
 --- !u!65 &1084736036
 BoxCollider:
@@ -1855,6 +1860,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36d62900329f4564482d7cb1702fca73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PowerSource
+  connectorA: {fileID: 0}
+  connectorB: {fileID: 0}
   voltage: 9
 --- !u!1001 &1541452224
 PrefabInstance:
@@ -2007,9 +2014,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2a879c877264f846ba37b7fbb48d0a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SnapZone
-  acceptedID: Default
+  role: 0
   snapBehavior: 1
   jointType: 0
+  acceptedID: Default
   highlightMaterial: {fileID: 2100000, guid: 53bca8729f1c728489410ea11ed6d25c, type: 2}
 --- !u!1 &1713488799
 GameObject:
@@ -2254,9 +2262,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2a879c877264f846ba37b7fbb48d0a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SnapZone
-  acceptedID: Default
+  role: 0
   snapBehavior: 1
   jointType: 0
+  acceptedID: Default
   highlightMaterial: {fileID: 2100000, guid: 53bca8729f1c728489410ea11ed6d25c, type: 2}
 --- !u!65 &1852457143
 BoxCollider:
@@ -2496,9 +2505,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2a879c877264f846ba37b7fbb48d0a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SnapZone
-  acceptedID: Default
+  role: 0
   snapBehavior: 1
   jointType: 0
+  acceptedID: Default
   highlightMaterial: {fileID: 2100000, guid: 53bca8729f1c728489410ea11ed6d25c, type: 2}
 --- !u!4 &2019331671 stripped
 Transform:
@@ -2674,6 +2684,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f6657501582a6d4bb8bb10df59454ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Resistor
+  connectorA: {fileID: 0}
+  connectorB: {fileID: 0}
   resistance: 10
 --- !u!1 &2107459946
 GameObject:

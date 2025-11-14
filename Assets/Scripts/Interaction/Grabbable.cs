@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 public enum GrabbableState
 {
@@ -26,7 +27,7 @@ public class Grabbable : MonoBehaviour, IInteractable
     private Transform _grabberTransform;
     private Rigidbody _rigidbody;
     private int _originalLayer;
-    private Connector _connector;
+    private Connector[] _connectors;
     private Joint _joint;
 
     // --- Strategy Pattern ---
@@ -41,7 +42,7 @@ public class Grabbable : MonoBehaviour, IInteractable
 
         _rigidbody = GetComponent<Rigidbody>();
         _originalLayer = gameObject.layer;
-        _connector = GetComponentInChildren<Connector>();
+        _connectors = GetComponentsInChildren<Connector>();
 
         if (_centerOfMassTransform == null)
         {
@@ -106,53 +107,83 @@ public class Grabbable : MonoBehaviour, IInteractable
     }
     #endregion
 
-    #region Public API
-    //Snap vào 1 snapzone
-    public void SnapTo(SnapZone snapZone)
+    #region Public API for Interaction
+
+    /// <summary>
+    /// Được gọi bởi InteractionController khi người dùng muốn snap vật đang cầm.
+    /// </summary>
+    public void AttemptSnap(SnapZone potentialZone)
     {
-        Debug.Log($"Snapping {gameObject.name} to {snapZone.name} using behavior: {snapZone.SnapBehavior}");
+        if (_connectors == null || _connectors.Length == 0) return;
 
-        _grabberTransform = null;
-        CurrentSnapZone = snapZone;
-
-        switch (snapZone.SnapBehavior)
+        Connector closestConnector = _connectors
+            .Where(c => c.ConnectedZone == null)
+            .OrderBy(c => Vector3.Distance(c.transform.position, potentialZone.transform.position))
+            .FirstOrDefault();
+        
+        if (closestConnector != null)
         {
-            case SnapType.AlignConnector:
-                if (_connector == null)
-                {
-                    Debug.LogError($"Grabbable '{name}' không có Connector, không thể sử dụng SnapType.AlignConnector.", this);
-                    goto case SnapType.AlignOrigin;
-                }
-                transform.rotation = snapZone.transform.rotation * Quaternion.Inverse(_connector.transform.localRotation);
-                transform.position = snapZone.transform.position - (transform.rotation * _connector.transform.localPosition);
-                break;
-
-            case SnapType.AlignOrigin:
-                transform.SetPositionAndRotation(snapZone.transform.position, snapZone.transform.rotation);
-                break;
+            SnapConnectorTo(closestConnector, potentialZone);
         }
-
-        CreateJoint(snapZone);
-        SetState(GrabbableState.Snapped);
     }
 
-    public void Unsnap()
+    /// <summary>
+    /// Được gọi bởi InteractionController khi người dùng muốn unsnap vật đang trỏ vào.
+    /// </summary>
+    public void AttemptUnsnap()
     {
-        Debug.Log($"Unsnapping {gameObject.name}");
+        if (CurrentState != GrabbableState.Snapped) return;
+
+        var connectedConnectors = _connectors.Where(c => c.ConnectedZone != null).ToList();
+        foreach (var connector in connectedConnectors)
+        {
+            connector.ConnectedZone.Disconnect(connector);
+        }
+
+        UnsnapInternalCleanup();
+    }
+    
+    #endregion
+
+    #region Internal Snap/Unsnap Logic
+
+    private void SnapConnectorTo(Connector connector, SnapZone snapZone)
+    {
+        _grabberTransform = null;
+        
+        transform.rotation = snapZone.transform.rotation * Quaternion.Inverse(connector.transform.localRotation);
+        transform.position = snapZone.transform.position - (transform.rotation * connector.transform.localPosition);
+
+        CreateJoint(snapZone);
+        
+        // ✅ FIX: Lưu reference của SnapZone để track kết nối
+        CurrentSnapZone = snapZone;
+        
+        SetState(GrabbableState.Snapped);
+
+        snapZone.Connect(connector);
+    }
+    
+    private void UnsnapInternalCleanup()
+    {
         if (_joint != null)
         {
             Destroy(_joint);
             _joint = null;
         }
+        
+        // ✅ FIX: Clear CurrentSnapZone reference để cho phép snap lại
         CurrentSnapZone = null;
+        
         SetHoldStrategy(new FreeHoldStrategy());
-        WasJustReleased = false; // Reset flag
-
         SetState(GrabbableState.Idle);
+        
         _rigidbody.linearVelocity = Vector3.zero;
         _rigidbody.angularVelocity = Vector3.zero;
         _rigidbody.WakeUp();
     }
+    
+    #endregion
     /// <summary>
     /// Cho phép một hệ thống bên ngoài (như ExperimentManager) cấu hình
     /// trạng thái vật lý của đối tượng khi nó đang ở trạng thái Snapped.
@@ -178,7 +209,6 @@ public class Grabbable : MonoBehaviour, IInteractable
     {
         HoldStrategy = strategy;
     }
-    #endregion
 
     #region Private Methods
     private void CreateJoint(SnapZone snapZone)
