@@ -6,7 +6,8 @@ public enum GrabbableState
     Idle,           // Trạng thái nghỉ, tuân theo vật lý thông thường
     Grabbed,        // Đang được cầm tự do
     Snapped,        // Đã được gắn vào một SnapZone
-    ConstrainedGrab // Đang được cầm trong khi vẫn bị ràng buộc (gắn vào SnapZone)
+    ConstrainedGrab, // Đang được cầm trong khi vẫn bị ràng buộc (gắn vào SnapZone)
+    Anchored //Object dành cho mạch điện.
 }
 
 [RequireComponent(typeof(Rigidbody))]
@@ -27,6 +28,7 @@ public class Grabbable : MonoBehaviour, IInteractable
     private Transform _grabberTransform;
     private Rigidbody _rigidbody;
     private int _originalLayer;
+    private IMultiPointSnappable _multiPointHandler;
     private Connector[] _connectors;
     private Joint _joint;
 
@@ -43,6 +45,7 @@ public class Grabbable : MonoBehaviour, IInteractable
         _rigidbody = GetComponent<Rigidbody>();
         _originalLayer = gameObject.layer;
         _connectors = GetComponentsInChildren<Connector>();
+        _multiPointHandler = GetComponent<IMultiPointSnappable>();
 
         if (_centerOfMassTransform == null)
         {
@@ -101,11 +104,11 @@ public class Grabbable : MonoBehaviour, IInteractable
         {
             SetState(GrabbableState.Snapped);
             WasJustReleased = true;
-            
+
             // ✅ Reset velocity để tránh dao động khi thả ra
             _rigidbody.linearVelocity = Vector3.zero;
             _rigidbody.angularVelocity = Vector3.zero;
-            
+
             // ✅ CHỈ WakeUp nếu không ở trạng thái kinematic (tránh kích hoạt physics khi đang setup)
             if (!_rigidbody.isKinematic)
             {
@@ -129,10 +132,23 @@ public class Grabbable : MonoBehaviour, IInteractable
             .Where(c => c.ConnectedZone == null)
             .OrderBy(c => Vector3.Distance(c.transform.position, potentialZone.transform.position))
             .FirstOrDefault();
-        
+
         if (closestConnector != null)
         {
-            SnapConnectorTo(closestConnector, potentialZone);
+            if (_multiPointHandler != null)
+            {
+                // Đối tượng mạch điện -> sử dụng logic multi-point
+                _multiPointHandler.SnapPoint(closestConnector, potentialZone);
+                potentialZone.Connect(closestConnector);
+
+                // THAY ĐỔI CỐT LÕI: Đặt trạng thái mới
+                SetState(GrabbableState.Anchored);
+            }
+            else
+            {
+                // Đối tượng con lắc -> sử dụng logic cũ
+                SnapObjectTo(closestConnector, potentialZone);
+            }
         }
     }
 
@@ -151,28 +167,27 @@ public class Grabbable : MonoBehaviour, IInteractable
 
         UnsnapInternalCleanup();
     }
-    
+
     #endregion
 
     #region Internal Snap/Unsnap Logic
 
-    private void SnapConnectorTo(Connector connector, SnapZone snapZone)
+    private void SnapObjectTo(Connector connector, SnapZone snapZone)
     {
         _grabberTransform = null;
-        
+
         transform.rotation = snapZone.transform.rotation * Quaternion.Inverse(connector.transform.localRotation);
         transform.position = snapZone.transform.position - (transform.rotation * connector.transform.localPosition);
 
         CreateJoint(snapZone);
-        
-        // ✅ FIX: Lưu reference của SnapZone để track kết nối
+
         CurrentSnapZone = snapZone;
-        
+
         SetState(GrabbableState.Snapped);
 
         snapZone.Connect(connector);
     }
-    
+
     private void UnsnapInternalCleanup()
     {
         if (_joint != null)
@@ -180,18 +195,18 @@ public class Grabbable : MonoBehaviour, IInteractable
             Destroy(_joint);
             _joint = null;
         }
-        
+
         // ✅ FIX: Clear CurrentSnapZone reference để cho phép snap lại
         CurrentSnapZone = null;
-        
+
         SetHoldStrategy(new FreeHoldStrategy());
         SetState(GrabbableState.Idle);
-        
+
         _rigidbody.linearVelocity = Vector3.zero;
         _rigidbody.angularVelocity = Vector3.zero;
         _rigidbody.WakeUp();
     }
-    
+
     #endregion
     /// <summary>
     /// Cho phép một hệ thống bên ngoài (như ExperimentManager) cấu hình
@@ -301,6 +316,12 @@ public class Grabbable : MonoBehaviour, IInteractable
             case GrabbableState.Snapped:
                 _rigidbody.isKinematic = false;
                 _rigidbody.useGravity = true;
+                gameObject.layer = _originalLayer;
+                break;
+
+            case GrabbableState.Anchored:
+                _rigidbody.isKinematic = true;
+                _rigidbody.useGravity = false;
                 gameObject.layer = _originalLayer;
                 break;
         }

@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Numerics;
 
 // Linh kiện: Nguồn điện.
-public class PowerSource : CircuitComponent
+public class PowerSource : CircuitComponent, IMultiPointSnappable
 {
     [Header("Thông số Nguồn điện")]
     [SerializeField]

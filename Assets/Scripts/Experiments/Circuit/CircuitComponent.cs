@@ -3,7 +3,7 @@ using System.Numerics;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(Grabbable))] //Lưu ý: Nhớ để ý Grabbable
-public abstract class CircuitComponent : MonoBehaviour
+public abstract class CircuitComponent : MonoBehaviour, IMultiPointSnappable
 {
     [Header("Cấu hình Kết nối")]
     [Tooltip("Connector đại diện cho điểm kết nối đầu tiên.")]
@@ -50,4 +50,61 @@ public abstract class CircuitComponent : MonoBehaviour
     /// </summary>
     /// <param name="current">Dòng điện phức chạy qua linh kiện.</param>
     public abstract void UpdateState(Complex current);
+    #region IMultiPointSnappable Implementation
+
+    public void SnapPoint(Connector connector, SnapZone snapZone)
+    {
+        if (_connectorJoints.ContainsKey(connector)) return;
+
+        // Lấy tham chiếu đến Rigidbody của chính linh kiện này
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            // BẮT BUỘC: Đặt thành kinematic để nó không bị ảnh hưởng bởi vật lý bên ngoài
+            rb.isKinematic = true;
+        }
+
+        Rigidbody connectedBody = snapZone.GetComponent<Rigidbody>();
+        if (connectedBody == null)
+        {
+            Debug.LogError($"SnapZone '{snapZone.name}' không có Rigidbody để tạo Joint.", snapZone);
+            return;
+        }
+
+        // ... code tạo ConfigurableJoint không đổi ...
+        ConfigurableJoint joint = gameObject.AddComponent<ConfigurableJoint>();
+        joint.connectedBody = connectedBody;
+        joint.anchor = transform.InverseTransformPoint(connector.transform.position);
+        joint.xMotion = ConfigurableJointMotion.Locked;
+        joint.yMotion = ConfigurableJointMotion.Locked;
+        joint.zMotion = ConfigurableJointMotion.Locked;
+        joint.angularXMotion = ConfigurableJointMotion.Locked;
+        joint.angularYMotion = ConfigurableJointMotion.Locked;
+        joint.angularZMotion = ConfigurableJointMotion.Locked;
+
+        _connectorJoints.Add(connector, joint);
+        Debug.Log($"[MultiPoint] Đã tạo Joint và đặt Rigidbody thành Kinematic cho {connector.name}.");
+    }
+
+    public void UnsnapPoint(Connector connector)
+    {
+        if (_connectorJoints.TryGetValue(connector, out Joint joint))
+        {
+            Destroy(joint);
+            _connectorJoints.Remove(connector);
+            Debug.Log($"[MultiPoint] Đã hủy Joint cho {connector.name}.");
+        }
+
+        // Nếu không còn khớp nối nào, trả lại quyền điều khiển cho vật lý
+        if (_connectorJoints.Count == 0)
+        {
+            Rigidbody rb = GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.isKinematic = false;
+            }
+        }
+    }
+
+    #endregion
 }

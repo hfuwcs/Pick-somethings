@@ -164,7 +164,7 @@ public class InteractionController : MonoBehaviour
                 {
                     // Ưu tiên Snap nếu có thể
                     grabbable.AttemptSnap(_potentialSnapZone);
-                    _potentialSnapZone.SetSnappedObject(grabbable);
+                    //_potentialSnapZone.SetSnappedObject(grabbable);
                     _currentSelectedInteractable = null;
                     _potentialSnapZone = null;
                     return;
