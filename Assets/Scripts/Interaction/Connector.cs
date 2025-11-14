@@ -1,6 +1,12 @@
 ﻿using UnityEngine;
-public class Connector : MonoBehaviour
+public class Connector : MonoBehaviour, IInteractable
 {
+    [Header("Wiring Configuration")]
+    [Tooltip("Đánh dấu nếu connector này cho phép bắt đầu/kết thúc một kết nối dây.")]
+    [SerializeField] private bool isInteractableForWiring = true;
+    public bool IsInteractableForWiring => isInteractableForWiring;
+
+
     [Tooltip("ID định danh loại kết nối. SnapZone sẽ chỉ chấp nhận Connector có cùng ID.")]
     [SerializeField] private string connectionID = "Default";
 
@@ -29,4 +35,25 @@ public class Connector : MonoBehaviour
     {
         ConnectedZone = null;
     }
+
+    #region IInteractable 
+    public void OnHoverEnter()
+    {
+        if (isInteractableForWiring)
+        {
+            // TODO: Thêm logic highlight cho connector (ví dụ: đổi màu, phóng to)
+        }
+    }
+
+    public void OnHoverExit()
+    {
+        if (isInteractableForWiring)
+        {
+            // TODO: Bỏ highlight
+        }
+    }
+
+    public void OnSelectStart() { }
+    public void OnSelectEnd() { }
+    #endregion
 }

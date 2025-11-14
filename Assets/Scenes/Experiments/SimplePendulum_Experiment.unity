@@ -288,6 +288,7 @@ MonoBehaviour:
   cyclesToAverage: 2
   calculatedPeriod: 0
   minimumValidPeriod: 0.25
+  maxSetupAngleDegrees: 30
 --- !u!4 &546589787
 Transform:
   m_ObjectHideFlags: 0
@@ -369,6 +370,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb17260b4156a95469eee2784c5fe52a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Connector
+  isInteractableForWiring: 0
   connectionID: PendulumConnector
 --- !u!1001 &701462320
 PrefabInstance:
@@ -644,6 +646,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Grabbable
   _centerOfMassTransform: {fileID: 1806011794}
+  allowConstrainedGrab: 1
 --- !u!1 &1331864697
 GameObject:
   m_ObjectHideFlags: 0
@@ -798,9 +801,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2a879c877264f846ba37b7fbb48d0a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SnapZone
-  acceptedID: PendulumConnector
+  role: 0
   snapBehavior: 0
   jointType: 1
+  acceptedID: PendulumConnector
   highlightMaterial: {fileID: 2100000, guid: 53bca8729f1c728489410ea11ed6d25c, type: 2}
 --- !u!114 &1331864704
 MonoBehaviour:

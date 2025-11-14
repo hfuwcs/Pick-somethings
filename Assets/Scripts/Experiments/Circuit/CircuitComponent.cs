@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Numerics;
+using System.Collections.Generic;
 
-[RequireComponent(typeof(Grabbable))]
+[RequireComponent(typeof(Grabbable))] //Lưu ý: Nhớ để ý Grabbable
 public abstract class CircuitComponent : MonoBehaviour
 {
     [Header("Cấu hình Kết nối")]
@@ -32,7 +33,7 @@ public abstract class CircuitComponent : MonoBehaviour
     /// Tham chiếu đến Grabbable component để quản lý trạng thái vật lý.
     /// </summary>
     protected Grabbable GrabbableComponent { get; private set; }
-
+    private readonly Dictionary<Connector, Joint> _connectorJoints = new Dictionary<Connector, Joint>();
     protected virtual void Awake()
     {
         GrabbableComponent = GetComponent<Grabbable>();
