@@ -1,13 +1,20 @@
 using UnityEngine;
 using System.Numerics;
 
-/// <summary>
-/// Lớp cơ sở trừu tượng cho tất cả các thành phần trong một mạch điện.
-/// Định nghĩa các thuộc tính vật lý cốt lõi sử dụng số phức cho cả mạch DC và AC.
-/// </summary>
 [RequireComponent(typeof(Grabbable))]
 public abstract class CircuitComponent : MonoBehaviour
 {
+    [Header("Cấu hình Kết nối")]
+    [Tooltip("Connector đại diện cho điểm kết nối đầu tiên.")]
+    [SerializeField] private Connector connectorA;
+
+    [Tooltip("Connector đại diện cho điểm kết nối thứ hai.")]
+    [SerializeField] private Connector connectorB;
+
+    // Public accessors để các hệ thống khác có thể đọc
+    public Connector ConnectorA => connectorA;
+    public Connector ConnectorB => connectorB;
+
     /// <summary>
     /// Trở kháng phức (Z) của linh kiện.
     /// Đối với điện trở thuần, phần ảo sẽ bằng 0.
@@ -29,6 +36,11 @@ public abstract class CircuitComponent : MonoBehaviour
     protected virtual void Awake()
     {
         GrabbableComponent = GetComponent<Grabbable>();
+
+        if (connectorA == null || connectorB == null)
+        {
+            Debug.LogError($"Linh kiện '{gameObject.name}' chưa được gán đủ 2 Connector trong Inspector.", this);
+        }
     }
 
     /// <summary>

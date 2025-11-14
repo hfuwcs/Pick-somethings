@@ -5,17 +5,28 @@ public class Connector : MonoBehaviour
     [SerializeField] private string connectionID = "Default";
 
     private Grabbable _parentGrabbable;
+    public CircuitComponent ParentComponent { get; private set; }
 
     public string ConnectionID => connectionID;
     public Grabbable ParentGrabbable => _parentGrabbable;
-
+    public SnapZone ConnectedZone { get; private set; }
     private void Awake()
     {
         _parentGrabbable = GetComponentInParent<Grabbable>();
+        ParentComponent = GetComponentInParent<CircuitComponent>();
 
         if (_parentGrabbable == null)
         {
-            Debug.LogError($"Connector trên '{gameObject.name}' không thể tìm thấy component Grabbable ở đối tượng cha hoặc chính nó.", this);
+            Debug.LogError($"Connector '{name}' không tìm thấy Grabbable cha.", this);
         }
+    }
+    public void SetConnectedZone(SnapZone zone)
+    {
+        ConnectedZone = zone;
+    }
+
+    public void ClearConnectedZone()
+    {
+        ConnectedZone = null;
     }
 }
