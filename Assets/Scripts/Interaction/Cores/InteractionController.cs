@@ -190,7 +190,7 @@ public class InteractionController : MonoBehaviour
     public void OnUnsnap(InputAction.CallbackContext context)
     {
         if (!context.performed || _isUIMode) return;
-
+        if (_currentSelectedInteractable != null) return;
         var experimentManager = FindFirstObjectByType<PendulumExperimentManager>();
 
         // Nếu có một Experiment Manager và nó đang chạy, thì không cho phép Unsnap.
@@ -200,26 +200,22 @@ public class InteractionController : MonoBehaviour
             return;
         }
 
-        // Chỉ cho phép unsnap khi đang trỏ vào một vật đã được gắn
-        if
-            (_currentHoveredInteractable is Grabbable hoveredGrabbable
-        &&
-            (hoveredGrabbable.CurrentState == GrabbableState.Snapped || hoveredGrabbable.CurrentState == GrabbableState.Anchored)
-        &&
-            _currentSelectedInteractable == null) // Và không đang cầm/giữ vật nào khác
+        if (_currentHoveredInteractable is Grabbable hoveredGrabbable)
         {
-            SnapZone previousSnapZone = hoveredGrabbable.CurrentSnapZone;
-
-            if (previousSnapZone != null)
+            if (hoveredGrabbable.CurrentState == GrabbableState.Snapped || hoveredGrabbable.CurrentState == GrabbableState.Anchored)
             {
-                previousSnapZone.ClearSnappedObject();
+                SnapZone previousSnapZone = hoveredGrabbable.CurrentSnapZone;
+
+                if (previousSnapZone != null)
+                {
+                    previousSnapZone.ClearSnappedObject();
+                }
+
+                hoveredGrabbable.AttemptUnsnap();
+                _currentSelectedInteractable = hoveredGrabbable;
+                hoveredGrabbable.OnSelectStart();
+                hoveredGrabbable.SetGrabber(_grabAttachPoint);
             }
-            
-            hoveredGrabbable.AttemptUnsnap();
-            _currentSelectedInteractable = hoveredGrabbable;
-            // Tự động cầm vật lên ngay sau khi tháo
-            hoveredGrabbable.OnSelectStart();
-            hoveredGrabbable.SetGrabber(_grabAttachPoint);
         }
     }
 }
