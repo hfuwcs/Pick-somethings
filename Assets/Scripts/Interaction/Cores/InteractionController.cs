@@ -201,8 +201,11 @@ public class InteractionController : MonoBehaviour
         }
 
         // Chỉ cho phép unsnap khi đang trỏ vào một vật đã được gắn
-        if (_currentHoveredInteractable is Grabbable hoveredGrabbable &&
-            hoveredGrabbable.CurrentState == GrabbableState.Snapped &&
+        if
+            (_currentHoveredInteractable is Grabbable hoveredGrabbable
+        &&
+            (hoveredGrabbable.CurrentState == GrabbableState.Snapped || hoveredGrabbable.CurrentState == GrabbableState.Anchored)
+        &&
             _currentSelectedInteractable == null) // Và không đang cầm/giữ vật nào khác
         {
             SnapZone previousSnapZone = hoveredGrabbable.CurrentSnapZone;
@@ -211,13 +214,12 @@ public class InteractionController : MonoBehaviour
             {
                 previousSnapZone.ClearSnappedObject();
             }
-
-            hoveredGrabbable.SetGrabber(_grabAttachPoint);
+            
             hoveredGrabbable.AttemptUnsnap();
-
+            _currentSelectedInteractable = hoveredGrabbable;
             // Tự động cầm vật lên ngay sau khi tháo
             hoveredGrabbable.OnSelectStart();
-            _currentSelectedInteractable = hoveredGrabbable;
+            hoveredGrabbable.SetGrabber(_grabAttachPoint);
         }
     }
 }

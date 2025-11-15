@@ -67,7 +67,7 @@ public class Grabbable : MonoBehaviour, IInteractable
     #region IInteractable Implementation
     public void OnHoverEnter()
     {
-        if (CurrentState == GrabbableState.Idle || CurrentState == GrabbableState.Snapped)
+        if (CurrentState == GrabbableState.Idle || CurrentState == GrabbableState.Snapped || CurrentState == GrabbableState.Anchored)
         {
             Highlight();
         }
