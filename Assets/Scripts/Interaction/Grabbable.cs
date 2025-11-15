@@ -80,19 +80,27 @@ public class Grabbable : MonoBehaviour, IInteractable
 
     public void OnSelectStart()
     {
-        if (CurrentState == GrabbableState.Snapped)
+        if (CurrentState == GrabbableState.Snapped && _multiPointHandler == null)
         {
             SetState(GrabbableState.ConstrainedGrab);
         }
-        else if (CurrentState == GrabbableState.Anchored)
-        {
-            // ✅ Anchored object chuyển trực tiếp sang Grabbed (không qua ConstrainedGrab)
-            SetState(GrabbableState.Grabbed);
-        }
+        // Logic cho phép cầm vật thể khi nó đang ở trạng thái nghỉ
         else if (CurrentState == GrabbableState.Idle)
         {
             SetState(GrabbableState.Grabbed);
         }
+        // if (CurrentState == GrabbableState.Snapped)
+        // {
+        //     SetState(GrabbableState.ConstrainedGrab);
+        // }
+        // else if (CurrentState == GrabbableState.Anchored)
+        // {
+        //     SetState(GrabbableState.Grabbed);
+        // }
+        // else if (CurrentState == GrabbableState.Idle)
+        // {
+        //     SetState(GrabbableState.Grabbed);
+        // }
     }
 
     public void OnSelectEnd()

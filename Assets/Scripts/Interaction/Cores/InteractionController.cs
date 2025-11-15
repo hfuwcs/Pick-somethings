@@ -154,6 +154,11 @@ public class InteractionController : MonoBehaviour
     public void OnInteract(InputAction.CallbackContext context)
     {
         if (!context.performed || _isUIMode) return;
+        if (_currentHoveredInteractable is Connector clickedConnector && clickedConnector.IsInteractableForWiring)
+        {
+            WiringManager.Instance.HandleConnectorClick(clickedConnector);
+            return;
+        }
         if (_currentSelectedInteractable != null)
         {
             // Nếu đang cầm/giữ một vật
@@ -187,6 +192,13 @@ public class InteractionController : MonoBehaviour
             }
         }
     }
+    public void OnSecondaryInteract(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+
+        WiringManager.Instance.CancelWiring();
+        // TODO: Thêm logic xóa dây đã hoàn thành ở đây
+    }
     public void OnUnsnap(InputAction.CallbackContext context)
     {
         if (!context.performed || _isUIMode) return;
@@ -206,7 +218,7 @@ public class InteractionController : MonoBehaviour
             {
                 SnapZone previousSnapZone = hoveredGrabbable.CurrentSnapZone;
                 if (hoveredGrabbable.CurrentSnapZone != null)
-                Debug.Log("[SnapZone]", hoveredGrabbable.CurrentSnapZone);
+                    Debug.Log("[SnapZone]", hoveredGrabbable.CurrentSnapZone);
 
                 if (previousSnapZone != null)
                 {

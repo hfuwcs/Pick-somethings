@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 public class Connector : MonoBehaviour, IInteractable
 {
     [Header("Wiring Configuration")]
@@ -16,6 +17,9 @@ public class Connector : MonoBehaviour, IInteractable
     public string ConnectionID => connectionID;
     public Grabbable ParentGrabbable => _parentGrabbable;
     public SnapZone ConnectedZone { get; private set; }
+
+    private readonly List<Wire> _connectedWires = new List<Wire>();
+    public IReadOnlyList<Wire> ConnectedWires => _connectedWires;
     private void Awake()
     {
         _parentGrabbable = GetComponentInParent<Grabbable>();
@@ -35,7 +39,21 @@ public class Connector : MonoBehaviour, IInteractable
     {
         ConnectedZone = null;
     }
+    public void AddWire(Wire wire)
+    {
+        if (!_connectedWires.Contains(wire))
+        {
+            _connectedWires.Add(wire);
+        }
+    }
 
+    public void RemoveWire(Wire wire)
+    {
+        if (_connectedWires.Contains(wire))
+        {
+            _connectedWires.Remove(wire);
+        }
+    }
     #region IInteractable 
     public void OnHoverEnter()
     {

@@ -27,18 +27,22 @@ public class CircuitManager : MonoBehaviour
 
     private void OnEnable()
     {
-        // Đăng ký lắng nghe các sự kiện từ SnapZone
         SnapZone.OnComponentSnapped += RegisterComponent;
         SnapZone.OnComponentUnsnapped += UnregisterComponent;
+        WiringManager.OnWireConnected += HandleWireConnection;
     }
 
     private void OnDisable()
     {
-        // Hủy đăng ký để tránh memory leak và lỗi tham chiếu
         SnapZone.OnComponentSnapped -= RegisterComponent;
         SnapZone.OnComponentUnsnapped -= UnregisterComponent;
+        WiringManager.OnWireConnected -= HandleWireConnection;
     }
-
+    private void HandleWireConnection(Connector start, Connector end)
+    {
+        Debug.Log("[CircuitManager] Nhận được sự kiện kết nối dây. Tính toán lại mạch.");
+        RecalculateCircuit();
+    }
     private void RegisterComponent(CircuitComponent component)
     {
         if (!_components.Contains(component))
@@ -97,7 +101,7 @@ public class CircuitManager : MonoBehaviour
             if (!hasPowerSource) Debug.LogWarning("[CircuitManager] Mạch hở hoặc không có nguồn điện.");
             if (isShortCircuit) Debug.LogWarning("[CircuitManager] Cảnh báo: Ngắn mạch! Tổng trở kháng gần bằng 0.");
         }
-        
+
         Debug.Log($"[CircuitManager] Dòng điện tính được: {current.Magnitude:F3}A, Phase: {current.Phase * Mathf.Rad2Deg:F2} deg");
 
         // Thông báo kết quả cho từng linh kiện để chúng cập nhật trạng thái
