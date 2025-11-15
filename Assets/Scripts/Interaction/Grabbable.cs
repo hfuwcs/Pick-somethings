@@ -80,10 +80,14 @@ public class Grabbable : MonoBehaviour, IInteractable
 
     public void OnSelectStart()
     {
-
         if (CurrentState == GrabbableState.Snapped)
         {
             SetState(GrabbableState.ConstrainedGrab);
+        }
+        else if (CurrentState == GrabbableState.Anchored)
+        {
+            // ✅ Anchored object chuyển trực tiếp sang Grabbed (không qua ConstrainedGrab)
+            SetState(GrabbableState.Grabbed);
         }
         else if (CurrentState == GrabbableState.Idle)
         {
@@ -141,6 +145,9 @@ public class Grabbable : MonoBehaviour, IInteractable
                 _multiPointHandler.SnapPoint(closestConnector, potentialZone);
                 potentialZone.Connect(closestConnector);
 
+                // ✅ Lưu reference để có thể unsnap sau này
+                CurrentSnapZone = potentialZone;
+
                 // THAY ĐỔI CỐT LÕI: Đặt trạng thái mới
                 SetState(GrabbableState.Anchored);
             }
@@ -157,12 +164,32 @@ public class Grabbable : MonoBehaviour, IInteractable
     /// </summary>
     public void AttemptUnsnap()
     {
-        if (CurrentState != GrabbableState.Snapped) return;
+        if (CurrentState != GrabbableState.Snapped && CurrentState != GrabbableState.Anchored) return;
 
         var connectedConnectors = _connectors.Where(c => c.ConnectedZone != null).ToList();
-        foreach (var connector in connectedConnectors)
+
+        if (_multiPointHandler != null)
         {
-            connector.ConnectedZone.Disconnect(connector);
+            foreach (var connector in connectedConnectors)
+            {
+                _multiPointHandler.UnsnapPoint(connector);
+                connector.ConnectedZone.Disconnect(connector);
+            }
+        }
+        else
+        {
+            // Logic cho con lắc
+            // Hủy Joint vật lý TRƯỚC
+            if (_joint != null)
+            {
+                Destroy(_joint);
+                _joint = null;
+            }
+            // Sau đó mới hủy kết nối logic
+            foreach (var connector in connectedConnectors)
+            {
+                connector.ConnectedZone.Disconnect(connector);
+            }
         }
 
         UnsnapInternalCleanup();
@@ -190,13 +217,12 @@ public class Grabbable : MonoBehaviour, IInteractable
 
     private void UnsnapInternalCleanup()
     {
-        if (_joint != null)
-        {
-            Destroy(_joint);
-            _joint = null;
-        }
+        // if (_joint != null)
+        // {
+        //     Destroy(_joint);
+        //     _joint = null;
+        // }
 
-        // ✅ FIX: Clear CurrentSnapZone reference để cho phép snap lại
         CurrentSnapZone = null;
 
         SetHoldStrategy(new FreeHoldStrategy());

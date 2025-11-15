@@ -205,6 +205,8 @@ public class InteractionController : MonoBehaviour
             if (hoveredGrabbable.CurrentState == GrabbableState.Snapped || hoveredGrabbable.CurrentState == GrabbableState.Anchored)
             {
                 SnapZone previousSnapZone = hoveredGrabbable.CurrentSnapZone;
+                if (hoveredGrabbable.CurrentSnapZone != null)
+                Debug.Log("[SnapZone]", hoveredGrabbable.CurrentSnapZone);
 
                 if (previousSnapZone != null)
                 {

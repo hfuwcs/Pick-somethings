@@ -172,7 +172,7 @@ public class PendulumExperimentManager : ExperimentManagerBase
         _idealSimulator.StopSimulation();
         _bobRootRigidbody.isKinematic = false;
         _isAssembled = false;
-        _isInSetupPhase = false; // ✅ Reset setup phase
+        _isInSetupPhase = false;
         
         if (_visualizer != null) 
         {
