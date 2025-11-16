@@ -3,111 +3,309 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Linq;
 
-/// <summary>
-/// Quản lý trạng thái và tính toán vật lý cho một mạch điện.
-/// </summary>
 public class CircuitManager : MonoBehaviour
 {
     public static CircuitManager Instance { get; private set; }
 
-    // Danh sách các linh kiện hiện đang được kết nối trong mạch.
-    private readonly List<CircuitComponent> _components = new List<CircuitComponent>();
-
     private void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            Instance = this;
-        }
+        if (Instance != null && Instance != this) Destroy(gameObject);
+        else Instance = this;
     }
 
     private void OnEnable()
     {
-        SnapZone.OnComponentSnapped += RegisterComponent;
-        SnapZone.OnComponentUnsnapped += UnregisterComponent;
-        WiringManager.OnWireConnected += HandleWireConnection;
+        WiringManager.OnWireConnected += HandleCircuitChanged;
+        // TODO: Thêm sự kiện OnWireDisconnected và gọi HandleCircuitChanged.
     }
 
     private void OnDisable()
     {
-        SnapZone.OnComponentSnapped -= RegisterComponent;
-        SnapZone.OnComponentUnsnapped -= UnregisterComponent;
-        WiringManager.OnWireConnected -= HandleWireConnection;
-    }
-    private void HandleWireConnection(Connector start, Connector end)
-    {
-        Debug.Log("[CircuitManager] Nhận được sự kiện kết nối dây. Tính toán lại mạch.");
-        RecalculateCircuit();
-    }
-    private void RegisterComponent(CircuitComponent component)
-    {
-        if (!_components.Contains(component))
-        {
-            _components.Add(component);
-            Debug.Log($"[CircuitManager] Đã đăng ký linh kiện: {component.name}. Tổng số linh kiện: {_components.Count}");
-            RecalculateCircuit();
-        }
+        WiringManager.OnWireConnected -= HandleCircuitChanged;
     }
 
-    private void UnregisterComponent(CircuitComponent component)
+    private void HandleCircuitChanged(Connector c1, Connector c2)
     {
-        if (_components.Contains(component))
-        {
-            _components.Remove(component);
-            Debug.Log($"[CircuitManager] Đã hủy đăng ký linh kiện: {component.name}. Tổng số linh kiện: {_components.Count}");
-            RecalculateCircuit();
-        }
+        Debug.Log("[CircuitManager] Cấu trúc dây thay đổi. Bắt đầu tính toán lại toàn bộ mạch.");
+        RecalculateCircuit();
+    }
+
+    public void RecalculateCircuit()
+    {
+        var allComponents = FindObjectsOfType<CircuitComponent>();
+        if (allComponents.Length == 0) return;
+
+        // 1. Xây dựng một mô hình đồ thị hoàn chỉnh từ scene.
+        CircuitGraph graph = BuildCircuitGraph(allComponents);
+
+        // 2. Giải mạch điện để tìm điện thế tại mỗi nút.
+        Dictionary<int, Complex> nodeVoltages = SolveCircuit(graph);
+
+        // 3. Cập nhật trạng thái của từng linh kiện dựa trên kết quả.
+        UpdateAllComponents(graph, nodeVoltages);
     }
 
     /// <summary>
-    /// Hàm tính toán cốt lõi. Được gọi mỗi khi có sự thay đổi trong mạch.
-    /// Phiên bản này giả định một mạch nối tiếp đơn giản.
+    /// Xây dựng một đối tượng CircuitGraph từ các linh kiện và dây dẫn trong scene.
     /// </summary>
-    public void RecalculateCircuit()
+    private CircuitGraph BuildCircuitGraph(IEnumerable<CircuitComponent> components)
     {
-        if (_components.Count == 0)
+        var graph = new CircuitGraph();
+        var nodeMap = new Dictionary<Connector, ElectricalNode>();
+        int nodeIdCounter = 0;
+
+        var allConnectors = FindObjectsOfType<Connector>().Where(c => c.IsInteractableForWiring);
+
+        // Pha 1: Nhóm các connector được nối với nhau vào các ElectricalNode
+        foreach (var startConnector in allConnectors)
         {
-            Debug.Log("[CircuitManager] Mạch không có linh kiện nào.");
+            if (nodeMap.ContainsKey(startConnector)) continue;
+
+            var newNode = new ElectricalNode(nodeIdCounter++);
+            graph.Nodes.Add(newNode);
+
+            var queue = new Queue<Connector>();
+            queue.Enqueue(startConnector);
+            nodeMap[startConnector] = newNode;
+            newNode.Connectors.Add(startConnector);
+
+            while (queue.Count > 0)
+            {
+                var currentConnector = queue.Dequeue();
+                var wires = FindObjectsOfType<Wire>().Where(w => w.StartConnector == currentConnector || w.EndConnector == currentConnector);
+
+                foreach (var wire in wires)
+                {
+                    Connector otherEnd = (wire.StartConnector == currentConnector) ? wire.EndConnector : wire.StartConnector;
+                    if (otherEnd != null && !nodeMap.ContainsKey(otherEnd))
+                    {
+                        nodeMap[otherEnd] = newNode;
+                        newNode.Connectors.Add(otherEnd);
+                        queue.Enqueue(otherEnd);
+                    }
+                }
+            }
+            Debug.Log($"[BuildGraph-Nodes] Đã tạo Node ID: {newNode.Id} với {newNode.Connectors.Count} connectors: {string.Join(", ", newNode.Connectors.Select(c => c.name))}");
+        }
+
+        // Pha 2: Tạo các ElectricalBranch (linh kiện) nối giữa các Node
+        foreach (var component in components)
+        {
+            if (nodeMap.TryGetValue(component.ConnectorA, out var nodeA) &&
+                nodeMap.TryGetValue(component.ConnectorB, out var nodeB))
+            {
+                // Bỏ qua các linh kiện bị ngắn mạch (cả hai đầu nối vào cùng một nút)
+                if (nodeA != nodeB)
+                {
+                    graph.Branches.Add(new ElectricalBranch(component, nodeA, nodeB));
+                    Debug.Log($"[BuildGraph-Branches] Đã tạo Branch: {component.name} nối giữa Node {nodeA.Id} và Node {nodeB.Id}");
+                }
+                else
+                {
+                    Debug.LogWarning($"[BuildGraph-Branches] Linh kiện {component.name} bị ngắn mạch (cả 2 đầu nối vào Node {nodeA.Id}). Bỏ qua.");
+                }
+            }
+        }
+        Debug.Log($"[BuildGraph-Summary] Hoàn thành xây dựng Graph: {graph.Nodes.Count} Nodes, {graph.Branches.Count} Branches.");
+        return graph;
+    }
+
+    /// <summary>
+    /// Giải mạch bằng phương pháp Phân tích Nút (Nodal Analysis).
+    /// </summary>
+    /// <returns>Một Dictionary map ID của Node tới điện thế (phức) của nó.</returns>
+    private Dictionary<int, Complex> SolveCircuit(CircuitGraph graph)
+    {
+        Debug.Log($"[SolveCircuit] Bắt đầu giải mạch với {graph.Nodes.Count} Nodes và {graph.Branches.Count} Branches.");
+
+        var powerSourceBranch = graph.Branches.FirstOrDefault(b => b.Component is PowerSource);
+        if (powerSourceBranch == null || graph.Nodes.Count < 2)
+        {
+            Debug.LogWarning("[SolveCircuit] Không tìm thấy nguồn điện hoặc không đủ nút để tạo mạch.");
+            return new Dictionary<int, Complex>();
+        }
+
+        PowerSource powerSource = powerSourceBranch.Component as PowerSource;
+
+        // --- LOGIC MỚI: Đơn giản hóa việc xác định nút đất và nút nguồn ---
+        ElectricalNode groundNode = powerSourceBranch.NodeB; // Nút nối với cực âm là đất
+        ElectricalNode sourceNode = powerSourceBranch.NodeA; // Nút nối với cực dương là nút nguồn
+        Debug.Log($"[SolveCircuit] Nút đất (V=0): Node {groundNode.Id}. Nút nguồn (V={powerSource.VoltageSource.Magnitude}): Node {sourceNode.Id}.");
+
+        // Các nút còn lại là các nút "trôi nổi" cần được giải
+        List<ElectricalNode> unknownNodes = graph.Nodes.Where(n => n != groundNode && n != sourceNode).ToList();
+        int n = unknownNodes.Count;
+
+        // Nếu không có nút nào khác, mạch rất đơn giản.
+        if (n == 0)
+        {
+            var results = new Dictionary<int, Complex>();
+            results[groundNode.Id] = 0;
+            results[sourceNode.Id] = powerSource.VoltageSource;
+            return results;
+        }
+
+        // --- LOGIC MỚI: Thiết lập lại hệ phương trình Ax = B ---
+        Complex[,] A = new Complex[n, n]; // Ma trận Admittance
+        Complex[] B = new Complex[n];     // Vector dòng điện
+
+        for (int i = 0; i < n; i++)
+        {
+            ElectricalNode currentNode = unknownNodes[i];
+
+            // Tính các phần tử trên đường chéo chính A[i, i] (tổng admittance nối vào nút i)
+            foreach (var branch in graph.Branches.Where(b => b.NodeA == currentNode || b.NodeB == currentNode))
+            {
+                if (branch.Component.Impedance.Magnitude > 1e-9) // Bỏ qua nguồn điện
+                {
+                    A[i, i] += 1.0 / branch.Component.Impedance;
+                }
+            }
+
+            // Tính các phần tử khác A[i, j] (admittance giữa nút i và j)
+            for (int j = 0; j < n; j++)
+            {
+                if (i == j) continue;
+                ElectricalNode otherNode = unknownNodes[j];
+                foreach (var branch in graph.Branches.Where(b => (b.NodeA == currentNode && b.NodeB == otherNode) || (b.NodeA == otherNode && b.NodeB == currentNode)))
+                {
+                    if (branch.Component.Impedance.Magnitude > 1e-9)
+                    {
+                        A[i, j] -= 1.0 / branch.Component.Impedance;
+                    }
+                }
+            }
+
+            // Tính vector B[i] (dòng điện từ các nguồn đã biết đi vào nút i)
+            foreach (var branch in graph.Branches.Where(b => (b.NodeA == currentNode && b.NodeB == sourceNode) || (b.NodeA == sourceNode && b.NodeB == currentNode)))
+            {
+                if (branch.Component.Impedance.Magnitude > 1e-9)
+                {
+                    B[i] += powerSource.VoltageSource / branch.Component.Impedance;
+                }
+            }
+        }
+
+        Complex[] unknownVoltages = SolveLinearSystem(A, B);
+        Debug.Log($"[SolveCircuit] Hệ phương trình đã được giải. Điện thế các nút chưa biết: [{string.Join(", ", unknownVoltages.Select(v => v.Magnitude.ToString("F2")))}]");
+
+        var finalVoltages = new Dictionary<int, Complex>();
+        finalVoltages[groundNode.Id] = 0;
+        finalVoltages[sourceNode.Id] = powerSource.VoltageSource;
+        for (int i = 0; i < n; i++)
+        {
+            finalVoltages[unknownNodes[i].Id] = unknownVoltages[i];
+        }
+        return finalVoltages;
+    }
+
+    /// <summary>
+    /// Cập nhật trạng thái của tất cả các linh kiện dựa trên điện thế các nút đã tính.
+    /// PHIÊN BẢN SỬA LỖI
+    /// </summary>
+    private void UpdateAllComponents(CircuitGraph graph, Dictionary<int, Complex> nodeVoltages)
+    {
+        if (nodeVoltages == null || nodeVoltages.Count == 0)
+        {
+            foreach (var component in FindObjectsOfType<CircuitComponent>())
+            {
+                component.UpdateState(Complex.Zero);
+            }
             return;
         }
 
-        // Tính tổng trở kháng và tổng hiệu điện thế của toàn mạch
-        Complex totalImpedance = Complex.Zero;
-        Complex totalVoltage = Complex.Zero;
-        foreach (var component in _components)
+        // Cập nhật các linh kiện thụ động trước
+        foreach (var branch in graph.Branches.Where(b => !(b.Component is PowerSource)))
         {
-            totalImpedance += component.Impedance;
-            totalVoltage += component.VoltageSource;
+            Complex vA = nodeVoltages.GetValueOrDefault(branch.NodeA.Id, 0);
+            Complex vB = nodeVoltages.GetValueOrDefault(branch.NodeB.Id, 0);
+            Complex voltageDiff = vA - vB;
+            Complex current = Complex.Zero;
+            if (branch.Component.Impedance.Magnitude > 1e-9)
+            {
+                current = voltageDiff / branch.Component.Impedance;
+            }
+
+            Debug.Log($"[Update] Linh kiện: {branch.Component.name}, V_A(N{branch.NodeA.Id})={vA.Magnitude:F2}V, V_B(N{branch.NodeB.Id})={vB.Magnitude:F2}V, I = {current.Magnitude:F3}A");
+            branch.Component.UpdateState(current);
         }
 
-        Debug.Log($"[CircuitManager] Tính toán: Total Voltage = {totalVoltage.Magnitude:F2}V, Total Impedance = {totalImpedance.Magnitude:F2} Ohm");
-
-        //  Tính toán dòng điện trong mạch (Ohm: I = V / Z)
-        Complex current = Complex.Zero;
-        // Kiểm tra điều kiện để mạch hoạt động (phải có nguồn và không bị ngắn mạch)
-        bool hasPowerSource = totalVoltage.Magnitude > 1e-6;
-        bool isShortCircuit = totalImpedance.Magnitude < 1e-6;
-
-        if (hasPowerSource && !isShortCircuit)
+        // Cập nhật nguồn điện sau cùng
+        var powerSourceBranch = graph.Branches.FirstOrDefault(b => b.Component is PowerSource);
+        if (powerSourceBranch != null)
         {
-            current = totalVoltage / totalImpedance;
+            // Dòng điện qua nguồn bằng tổng các dòng đi ra từ nút nguồn (cực dương)
+            Complex sourceCurrent = 0;
+            foreach (var branch in graph.Branches.Where(b => b.NodeA == powerSourceBranch.NodeA || b.NodeB == powerSourceBranch.NodeA))
+            {
+                if (branch.Component is PowerSource) continue;
+
+                Complex vA = nodeVoltages.GetValueOrDefault(branch.NodeA.Id, 0);
+                Complex vB = nodeVoltages.GetValueOrDefault(branch.NodeB.Id, 0);
+                Complex current = (vA - vB) / branch.Component.Impedance;
+
+                // Nếu nút A của nhánh là nút nguồn, dòng đang đi ra
+                if (branch.NodeA == powerSourceBranch.NodeA) sourceCurrent += current;
+                else sourceCurrent -= current; // Ngược lại, dòng đang đi vào
+            }
+            Debug.Log($"[Update] Nguồn: {powerSourceBranch.Component.name}, I = {sourceCurrent.Magnitude:F3}A");
+            powerSourceBranch.Component.UpdateState(sourceCurrent);
+
         }
-        else
+    }
+
+
+    /// <summary>
+    /// Giải hệ phương trình tuyến tính Ax = B bằng phương pháp khử Gauss.
+    /// </summary>
+    private Complex[] SolveLinearSystem(Complex[,] A, Complex[] B)
+    {
+        int n = B.Length;
+        for (int p = 0; p < n; p++)
         {
-            if (!hasPowerSource) Debug.LogWarning("[CircuitManager] Mạch hở hoặc không có nguồn điện.");
-            if (isShortCircuit) Debug.LogWarning("[CircuitManager] Cảnh báo: Ngắn mạch! Tổng trở kháng gần bằng 0.");
+            int max = p;
+            for (int i = p + 1; i < n; i++)
+            {
+                if (A[i, p].Magnitude > A[max, p].Magnitude)
+                {
+                    max = i;
+                }
+            }
+            Complex[] tempA = new Complex[n];
+            for (int i = 0; i < n; i++) tempA[i] = A[p, i];
+            for (int i = 0; i < n; i++) A[p, i] = A[max, i];
+            for (int i = 0; i < n; i++) A[max, i] = tempA[i];
+
+            Complex tempB = B[p];
+            B[p] = B[max];
+            B[max] = tempB;
+
+            if (A[p, p].Magnitude <= 1e-9) continue;
+
+            for (int i = p + 1; i < n; i++)
+            {
+                Complex alpha = A[i, p] / A[p, p];
+                B[i] -= alpha * B[p];
+                for (int j = p; j < n; j++)
+                {
+                    A[i, j] -= alpha * A[p, j];
+                }
+            }
         }
 
-        Debug.Log($"[CircuitManager] Dòng điện tính được: {current.Magnitude:F3}A, Phase: {current.Phase * Mathf.Rad2Deg:F2} deg");
-
-        // Thông báo kết quả cho từng linh kiện để chúng cập nhật trạng thái
-        foreach (var component in _components)
+        Complex[] x = new Complex[n];
+        for (int i = n - 1; i >= 0; i--)
         {
-            component.UpdateState(current);
+            Complex sum = 0.0;
+            for (int j = i + 1; j < n; j++)
+            {
+                sum += A[i, j] * x[j];
+            }
+            if (A[i, i].Magnitude > 1e-9)
+            {
+                x[i] = (B[i] - sum) / A[i, i];
+            }
         }
+        return x;
     }
 }
