@@ -1,9 +1,8 @@
 using System;
 using UnityEngine;
 
-public class Switch : CircuitComponent, IInteractable
+public class Switch : CircuitComponent, IClickable
 {
-    public event Action OnSwitchClicked;
 
     [Header("Trạng thái Công tắc")]
     [SerializeField]
@@ -11,7 +10,7 @@ public class Switch : CircuitComponent, IInteractable
 
     [Header("Phản hồi Trực quan")]
     [SerializeField]
-    private Transform switchObjectVisual; // Đối tượng 3D sẽ xoay để minh họa
+    private Transform switchVisual; // Đối tượng 3D sẽ xoay để minh họa
     [SerializeField]
     private Vector3 openRotation = new Vector3(0, 0, 45);
     [SerializeField]
@@ -20,63 +19,78 @@ public class Switch : CircuitComponent, IInteractable
     private bool _isOpen;
     private Renderer _renderer;
     private Color _originalColor;
+    #region IClickable Implementation
+    public Grabbable AssociatedGrabbable { get; private set; }
 
+    public void OnClick()
+    {
+        _isOpen = !_isOpen;
+        Debug.Log($"Công tắc được click. Trạng thái mới: {(_isOpen ? "Mở" : "Đóng")}");
+        UpdateSwitchStateAndNotify();
+    }
+    #endregion
     protected override void Awake()
     {
         base.Awake();
         _isOpen = startsOpen;
-        _renderer = switchObjectVisual.GetComponent<Renderer>();
+        _renderer = switchVisual.GetComponent<Renderer>();
         if (_renderer != null) _originalColor = _renderer.material.color;
 
-        UpdateSwitchState();
+        UpdateSwitchStateAndNotify(false);
     }
 
-    private void UpdateSwitchState()
+    private void UpdateSwitchStateAndNotify(bool notifyCircuitManager = true)
     {
         if (_isOpen)
         {
+            // Mạch hở, trở kháng vô cùng lớn
             Impedance = new System.Numerics.Complex(double.PositiveInfinity, 0);
-            if (switchObjectVisual != null)
-                switchObjectVisual.localEulerAngles = openRotation;
+            if (switchVisual != null)
+                switchVisual.localEulerAngles = openRotation;
         }
         else
         {
+            // Mạch kín, trở kháng bằng 0 (lý tưởng)
             Impedance = System.Numerics.Complex.Zero;
-            if (switchObjectVisual != null)
-                switchObjectVisual.localEulerAngles = closedRotation;
+            if (switchVisual != null)
+                switchVisual.localEulerAngles = closedRotation;
         }
 
-        if (CircuitManager.Instance != null)
+        // Thông báo cho manager rằng mạch đã thay đổi
+        if (notifyCircuitManager && CircuitManager.Instance != null)
         {
             CircuitManager.Instance.RecalculateCircuit();
         }
     }
 
-    // --- Triển khai IInteractable ---
-
-    public void OnHoverEnter()
-    {
-        if (_renderer != null) _renderer.material.color = Color.yellow;
-    }
-
-    public void OnHoverExit()
-    {
-        if (_renderer != null) _renderer.material.color = _originalColor;
-    }
-
-    public void OnSelectStart()
-    {
-        _isOpen = !_isOpen;
-        Debug.Log($"Công tắc được bật. Trạng thái mới: {(_isOpen ? "Mở" : "Đóng")}");
-        UpdateSwitchState();
-        OnSwitchClicked?.Invoke();
-    }
-
-    public void OnSelectEnd()
-    {
-    }
-
+    /// <summary>
+    /// Trạng thái của công tắc không phụ thuộc vào dòng điện chạy qua nó.
+    /// </summary>
     public override void UpdateState(System.Numerics.Complex current)
     {
     }
+
+    // // --- Triển khai IInteractable ---
+
+    // public void OnHoverEnter()
+    // {
+    //     if (_renderer != null) _renderer.material.color = Color.yellow;
+    // }
+
+    // public void OnHoverExit()
+    // {
+    //     if (_renderer != null) _renderer.material.color = _originalColor;
+    // }
+
+    // public void OnSelectStart()
+    // {
+    //     _isOpen = !_isOpen;
+    //     Debug.Log($"Công tắc được bật. Trạng thái mới: {(_isOpen ? "Mở" : "Đóng")}");
+    //     UpdateSwitchState();
+    //     OnSwitchClicked?.Invoke();
+    // }
+
+    // public void OnSelectEnd()
+    // {
+    // }
 }

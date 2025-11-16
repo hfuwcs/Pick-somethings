@@ -154,6 +154,11 @@ public class InteractionController : MonoBehaviour
     public void OnInteract(InputAction.CallbackContext context)
     {
         if (!context.performed || _isUIMode) return;
+        if (_currentHoveredInteractable is IClickable clickable && clickable.AssociatedGrabbable.CurrentState == GrabbableState.Anchored)
+        {
+            clickable.OnClick();
+            return; // Dừng xử lý tại đây, không làm gì khác
+        }
         if (_currentHoveredInteractable is Connector clickedConnector && clickedConnector.IsInteractableForWiring)
         {
             WiringManager.Instance.HandleConnectorClick(clickedConnector);
