@@ -1,7 +1,7 @@
 public interface IClickable
 {
 
-    Grabbable AssociatedGrabbable { get; }
+    bool IsClickable { get; }
 
     void OnClick();
 }

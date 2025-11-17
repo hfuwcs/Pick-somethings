@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class Switch : CircuitComponent, IClickable, IInteractable
+public class Switch : CircuitComponent, IClickable
 {
 
     [Header("Trạng thái Công tắc")]
@@ -20,20 +20,35 @@ public class Switch : CircuitComponent, IClickable, IInteractable
     private Renderer _renderer;
     private Color _originalColor;
     #region IClickable Implementation
-    public Grabbable AssociatedGrabbable { get; private set; }
+    public bool IsClickable 
+    { 
+        get 
+        {
+            bool result = GrabbableComponent.CurrentState == GrabbableState.Anchored;
+            Debug.Log($"[SWITCH DEBUG] IsClickable: CurrentState = {GrabbableComponent.CurrentState}, Result = {result}");
+            return result;
+        }
+    }
 
     public void OnClick()
     {
+        Debug.Log($"[SWITCH DEBUG] OnClick - IsClickable: {IsClickable}, CurrentState: {GrabbableComponent.CurrentState}");
+        
+        if (!IsClickable)
+        {
+            Debug.LogWarning($"[SWITCH DEBUG] Click bị từ chối. CurrentState: {GrabbableComponent.CurrentState}");
+            return;
+        }
+
         _isOpen = !_isOpen;
-        Debug.Log($"Công tắc được click. Trạng thái mới: {(_isOpen ? "Mở" : "Đóng")}");
-        UpdateSwitchStateAndNotify();
+        Debug.Log($"[SWITCH DEBUG] Switch toggled: {(_isOpen ? "Mở" : "Đóng")}");
+        UpdateSwitchStateAndNotify(true);
     }
     #endregion
     protected override void Awake()
     {
         base.Awake();
         _isOpen = startsOpen;
-        AssociatedGrabbable = GetComponent<Grabbable>();
         _renderer = switchVisual.GetComponent<Renderer>();
         if (_renderer != null) _originalColor = _renderer.material.color;
 
@@ -71,23 +86,25 @@ public class Switch : CircuitComponent, IClickable, IInteractable
     {
     }
 
-    // --- Triển khai IInteractable ---
+    // // --- Triển khai IInteractable ---
 
-    public void OnHoverEnter()
-    {
-        if (_renderer != null) _renderer.material.color = Color.yellow;
-    }
+    // public void OnHoverEnter()
+    // {
+    //     if (_renderer != null) _renderer.material.color = Color.yellow;
+    // }
 
-    public void OnHoverExit()
-    {
-        if (_renderer != null) _renderer.material.color = _originalColor;
-    }
+    // public void OnHoverExit()
+    // {
+    //     if (_renderer != null) _renderer.material.color = _originalColor;
+    // }
 
-    public void OnSelectStart()
-    {
-    }
+    // public void OnSelectStart()
+    // {
+    //     Debug.Log($"[SWITCH DEBUG] OnSelectStart - CurrentState: {GrabbableComponent.CurrentState}");
+    // }
 
-    public void OnSelectEnd()
-    {
-    }
+    // public void OnSelectEnd()
+    // {
+    //     Debug.Log($"[SWITCH DEBUG] OnSelectEnd - CurrentState: {GrabbableComponent.CurrentState}");
+    // }
 }

@@ -123,64 +123,69 @@ public class InteractionController : MonoBehaviour
     }
     private void HandleHoverDetection()
     {
-        // If currently holding an object, skip hover detection.
         if (_currentSelectedInteractable != null)
         {
+            // Nếu đang cầm một vật, không cần phát hiện hover nữa.
+            // Đồng thời xóa tham chiếu đến đối tượng đang hover trước đó.
+            if (_currentHoveredInteractable != null)
+            {
+                _currentHoveredInteractable.OnHoverExit();
+                _currentHoveredInteractable = null;
+            }
             return;
         }
 
         Vector2 screenCenter = new Vector2(Screen.width / 2f, Screen.height / 2f);
         Ray ray = _mainCamera.ScreenPointToRay(screenCenter);
         Debug.DrawRay(ray.origin, ray.direction * _interactionDistance, Color.cyan);
-        RaycastHit hit;
+
         IInteractable newHoveredInteractable = null;
-
-        if (Physics.Raycast(ray, out hit, _interactionDistance, _interactionLayerMask))
+        if (Physics.Raycast(ray, out RaycastHit hit, _interactionDistance, _interactionLayerMask))
         {
-            IClickable clickable = hit.collider.GetComponentInParent<IClickable>();
-            if (clickable != null)
-            {
-                // Nếu tìm thấy, ép kiểu nó thành IInteractable và sử dụng nó.
-                // Điều này hoạt động vì Switch (IClickable) cũng là một IInteractable.
-                newHoveredInteractable = clickable as IInteractable;
-            }
-            else
-            {
-                // Nếu không có IClickable, quay lại tìm IInteractable chung (cho Grabbable, Connector).
-                newHoveredInteractable = hit.collider.GetComponentInParent<IInteractable>();
-            }
+            // **SỬA LỖI QUAN TRỌNG:** Luôn tìm IInteractable gốc (thường là Grabbable).
+            // Điều này đảm bảo các sự kiện hover luôn được gửi đến đúng component chịu trách nhiệm.
+            newHoveredInteractable = hit.collider.GetComponentInParent<IInteractable>();
         }
-
 
         if (newHoveredInteractable != _currentHoveredInteractable)
         {
-            // Hover exit on the previous interactable
             _currentHoveredInteractable?.OnHoverExit();
-
-            // Hover enter on the new interactable
             _currentHoveredInteractable = newHoveredInteractable;
             _currentHoveredInteractable?.OnHoverEnter();
         }
     }
+
     public void OnInteract(InputAction.CallbackContext context)
     {
         if (!context.performed || _isUIMode) return;
-        if (_currentHoveredInteractable is IClickable clickable &&
-            clickable.AssociatedGrabbable != null &&
-            clickable.AssociatedGrabbable.CurrentState == GrabbableState.Anchored)
-        {
-            clickable.OnClick();
-            return; // Hành động đã được xử lý, kết thúc.
-        }
 
-        // ƯU TIÊN 2: Xử lý kéo dây
+        // Nếu không có gì để tương tác, thoát sớm.
+        if (_currentHoveredInteractable == null && _currentSelectedInteractable == null) return;
+
+        // ƯU TIÊN 1: Xử lý Connector wiring.
         if (_currentHoveredInteractable is Connector clickedConnector && clickedConnector.IsInteractableForWiring)
         {
             WiringManager.Instance.HandleConnectorClick(clickedConnector);
-            return; // Hành động đã được xử lý, kết thúc.
+            return;
         }
 
-        // ƯU TIÊN 3: Logic Cầm/Thả/Snap mặc định
+        // ƯU TIÊN 2: Xử lý click cho các đối tượng IClickable hợp lệ.
+        // **SỬA LỖI QUAN TRỌNG:** Tìm component IClickable trên cùng GameObject với IInteractable đang hover.
+        if (_currentHoveredInteractable != null)
+        {
+            var monoBehaviour = _currentHoveredInteractable as MonoBehaviour;
+            IClickable clickable = monoBehaviour?.GetComponent<IClickable>();
+
+            if (clickable != null && clickable.IsClickable)
+            {
+                Debug.Log($"[INTERACT DEBUG] Gọi OnClick() trên {monoBehaviour.gameObject.name}");
+                clickable.OnClick();
+                return; // Hành động click đã được thực hiện, dừng xử lý.
+            }
+        }
+
+        // ƯU TIÊN 3: Logic Cầm/Thả/Snap mặc định.
+        // Logic này sẽ được thực thi nếu các ưu tiên trên không được đáp ứng.
         if (_currentSelectedInteractable is Grabbable grabbable)
         {
             if (_potentialSnapZone != null && (grabbable.CurrentState == GrabbableState.Grabbed || grabbable.CurrentState == GrabbableState.ConstrainedGrab))
