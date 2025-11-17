@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class Switch : CircuitComponent, IClickable
+public class Switch : CircuitComponent, IClickable, IInteractable
 {
 
     [Header("Trạng thái Công tắc")]
@@ -33,6 +33,7 @@ public class Switch : CircuitComponent, IClickable
     {
         base.Awake();
         _isOpen = startsOpen;
+        AssociatedGrabbable = GetComponent<Grabbable>();
         _renderer = switchVisual.GetComponent<Renderer>();
         if (_renderer != null) _originalColor = _renderer.material.color;
 
@@ -70,27 +71,23 @@ public class Switch : CircuitComponent, IClickable
     {
     }
 
-    // // --- Triển khai IInteractable ---
+    // --- Triển khai IInteractable ---
 
-    // public void OnHoverEnter()
-    // {
-    //     if (_renderer != null) _renderer.material.color = Color.yellow;
-    // }
+    public void OnHoverEnter()
+    {
+        if (_renderer != null) _renderer.material.color = Color.yellow;
+    }
 
-    // public void OnHoverExit()
-    // {
-    //     if (_renderer != null) _renderer.material.color = _originalColor;
-    // }
+    public void OnHoverExit()
+    {
+        if (_renderer != null) _renderer.material.color = _originalColor;
+    }
 
-    // public void OnSelectStart()
-    // {
-    //     _isOpen = !_isOpen;
-    //     Debug.Log($"Công tắc được bật. Trạng thái mới: {(_isOpen ? "Mở" : "Đóng")}");
-    //     UpdateSwitchState();
-    //     OnSwitchClicked?.Invoke();
-    // }
+    public void OnSelectStart()
+    {
+    }
 
-    // public void OnSelectEnd()
-    // {
-    // }
+    public void OnSelectEnd()
+    {
+    }
 }

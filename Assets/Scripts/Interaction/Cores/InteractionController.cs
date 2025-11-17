@@ -137,7 +137,18 @@ public class InteractionController : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, _interactionDistance, _interactionLayerMask))
         {
-            newHoveredInteractable = hit.collider.GetComponentInParent<IInteractable>();
+            IClickable clickable = hit.collider.GetComponentInParent<IClickable>();
+            if (clickable != null)
+            {
+                // Nếu tìm thấy, ép kiểu nó thành IInteractable và sử dụng nó.
+                // Điều này hoạt động vì Switch (IClickable) cũng là một IInteractable.
+                newHoveredInteractable = clickable as IInteractable;
+            }
+            else
+            {
+                // Nếu không có IClickable, quay lại tìm IInteractable chung (cho Grabbable, Connector).
+                newHoveredInteractable = hit.collider.GetComponentInParent<IInteractable>();
+            }
         }
 
 
@@ -154,46 +165,42 @@ public class InteractionController : MonoBehaviour
     public void OnInteract(InputAction.CallbackContext context)
     {
         if (!context.performed || _isUIMode) return;
-        if (_currentHoveredInteractable is IClickable clickable && clickable.AssociatedGrabbable.CurrentState == GrabbableState.Anchored)
+        if (_currentHoveredInteractable is IClickable clickable &&
+            clickable.AssociatedGrabbable != null &&
+            clickable.AssociatedGrabbable.CurrentState == GrabbableState.Anchored)
         {
             clickable.OnClick();
-            return; // Dừng xử lý tại đây, không làm gì khác
+            return; // Hành động đã được xử lý, kết thúc.
         }
+
+        // ƯU TIÊN 2: Xử lý kéo dây
         if (_currentHoveredInteractable is Connector clickedConnector && clickedConnector.IsInteractableForWiring)
         {
             WiringManager.Instance.HandleConnectorClick(clickedConnector);
-            return;
+            return; // Hành động đã được xử lý, kết thúc.
         }
-        if (_currentSelectedInteractable != null)
-        {
-            // Nếu đang cầm/giữ một vật
-            if (_potentialSnapZone != null && _currentSelectedInteractable is Grabbable grabbable)
-            {
-                // Cho phép snap nếu object ở trạng thái Grabbed hoặc ConstrainedGrab
-                if (grabbable.CurrentState == GrabbableState.Grabbed || grabbable.CurrentState == GrabbableState.ConstrainedGrab)
-                {
-                    // Ưu tiên Snap nếu có thể
-                    grabbable.AttemptSnap(_potentialSnapZone);
-                    //_potentialSnapZone.SetSnappedObject(grabbable);
-                    _currentSelectedInteractable = null;
-                    _potentialSnapZone = null;
-                    return;
-                }
-            }
 
-            // Nếu không, chỉ đơn giản là thả ra (Release/Let go)
-            _currentSelectedInteractable.OnSelectEnd();
-            _currentSelectedInteractable = null;
+        // ƯU TIÊN 3: Logic Cầm/Thả/Snap mặc định
+        if (_currentSelectedInteractable is Grabbable grabbable)
+        {
+            if (_potentialSnapZone != null && (grabbable.CurrentState == GrabbableState.Grabbed || grabbable.CurrentState == GrabbableState.ConstrainedGrab))
+            {
+                grabbable.AttemptSnap(_potentialSnapZone);
+            }
+            else
+            {
+                _currentSelectedInteractable.OnSelectEnd();
+                _currentSelectedInteractable = null;
+            }
         }
         else if (_currentHoveredInteractable != null)
         {
-            // Nếu đang trỏ vào một vật
             _currentSelectedInteractable = _currentHoveredInteractable;
             _currentSelectedInteractable.OnSelectStart();
 
-            if (_currentSelectedInteractable is Grabbable grabbable)
+            if (_currentSelectedInteractable is Grabbable newGrabbable)
             {
-                grabbable.SetGrabber(_grabAttachPoint);
+                newGrabbable.SetGrabber(_grabAttachPoint);
             }
         }
     }
