@@ -28,6 +28,7 @@ public class Wire : MonoBehaviour, IInteractable
         transform.position = start.transform.position;
         _lineRenderer.SetPosition(0, start.transform.position);
         _lineRenderer.SetPosition(1, start.transform.position);
+        StartConnector.AddWire(this);
     }
 
     /// <summary>
@@ -43,6 +44,7 @@ public class Wire : MonoBehaviour, IInteractable
         EndConnector = end;
         _lineRenderer.SetPosition(1, end.transform.position);
         gameObject.name = $"Wire_{StartConnector.ParentComponent.name}_to_{EndConnector.ParentComponent.name}";
+        EndConnector.AddWire(this);
     }
 
     /// <summary>

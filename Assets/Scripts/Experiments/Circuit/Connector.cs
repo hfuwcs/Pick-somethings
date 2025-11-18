@@ -56,6 +56,16 @@ public class Connector : MonoBehaviour, IInteractable
             _connectedWires.Remove(wire);
         }
     }
+    public bool HasActiveConnection
+    {
+        get
+        {
+            // Connector được coi là "có kết nối" nếu:
+            // 1. Có ít nhất 1 dây đang nối vào nó.
+            // 2. HOẶC nó đang nằm trong một SnapZone (ví dụ: cắm trên Breadboard).
+            return _connectedWires.Count > 0 || ConnectedZone != null;
+        }
+    }
     #region IInteractable 
     public void OnHoverEnter()
     {

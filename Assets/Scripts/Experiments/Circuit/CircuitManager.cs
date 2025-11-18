@@ -41,60 +41,81 @@ public class CircuitManager : MonoBehaviour
     private CircuitGraph BuildCircuitGraph(IEnumerable<CircuitComponent> components)
     {
         var graph = new CircuitGraph();
-        var nodeMap = new Dictionary<Connector, ElectricalNode>();
         int nodeIdCounter = 0;
 
-        var allConnectors = FindObjectsByType<Connector>(FindObjectsSortMode.None).Where(c => c.IsInteractableForWiring);
+        var nodeMap = new Dictionary<Connector, ElectricalNode>();
 
-        // Nhóm các connector được nối với nhau vào các ElectricalNode
-        foreach (var startConnector in allConnectors)
+        var activeConnectors = FindObjectsByType<Connector>(FindObjectsSortMode.None)
+                               .Where(c => c.IsInteractableForWiring && c.HasActiveConnection)
+                               .ToList();
+
+        var visitedConnectors = new HashSet<Connector>();
+
+        foreach (var startConnector in activeConnectors)
         {
-            if (nodeMap.ContainsKey(startConnector)) continue;
+            if (visitedConnectors.Contains(startConnector)) continue;
 
             var newNode = new ElectricalNode(nodeIdCounter++);
             graph.Nodes.Add(newNode);
 
+            // BFS to find all connected connectors
             var queue = new Queue<Connector>();
             queue.Enqueue(startConnector);
-            nodeMap[startConnector] = newNode;
-            newNode.Connectors.Add(startConnector);
+            visitedConnectors.Add(startConnector);
 
             while (queue.Count > 0)
             {
-                var currentConnector = queue.Dequeue();
-                var wires = FindObjectsByType<Wire>(FindObjectsSortMode.None).Where(w => w.StartConnector == currentConnector || w.EndConnector == currentConnector);
+                var current = queue.Dequeue();
 
-                foreach (var wire in wires)
+                newNode.Connectors.Add(current);
+                nodeMap[current] = newNode;
+
+                // Find connected connectors via wires
+                foreach (var wire in current.ConnectedWires)
                 {
-                    Connector otherEnd = (wire.StartConnector == currentConnector) ? wire.EndConnector : wire.StartConnector;
-                    if (otherEnd != null && !nodeMap.ContainsKey(otherEnd))
+                    if (wire == null) continue;
+
+                    Connector neighbor = (wire.StartConnector == current) ? wire.EndConnector : wire.StartConnector;
+
+                    if (neighbor != null && !visitedConnectors.Contains(neighbor))
                     {
-                        nodeMap[otherEnd] = newNode;
-                        newNode.Connectors.Add(otherEnd);
-                        queue.Enqueue(otherEnd);
+                        if (neighbor.HasActiveConnection)
+                        {
+                            visitedConnectors.Add(neighbor);
+                            queue.Enqueue(neighbor);
+                        }
                     }
                 }
             }
+
             Debug.Log($"[BuildGraph-Nodes] Đã tạo Node ID: {newNode.Id} với {newNode.Connectors.Count} connectors: {string.Join(", ", newNode.Connectors.Select(c => c.name))}");
         }
 
-        // Tạo các ElectricalBranch nối giữa các Node
+        // Build branches from components
         foreach (var component in components)
         {
+            // Only create branch if both connectors are in the node map
             if (nodeMap.TryGetValue(component.ConnectorA, out var nodeA) &&
                 nodeMap.TryGetValue(component.ConnectorB, out var nodeB))
             {
-                if (nodeA != nodeB)
+                // Skip short circuit case
+                if (nodeA == nodeB)
                 {
-                    graph.Branches.Add(new ElectricalBranch(component, nodeA, nodeB));
-                    Debug.Log($"[BuildGraph-Branches] Đã tạo Branch: {component.name} nối giữa Node {nodeA.Id} và Node {nodeB.Id}");
+                    Debug.LogWarning($"[BuildGraph-Branches] Linh kiện {component.name} bị ngắn mạch (2 đầu cùng Node {nodeA.Id}), bỏ qua.");
+                    continue;
                 }
-                else
-                {
-                    Debug.LogWarning($"[BuildGraph-Branches] Linh kiện {component.name} bị ngắn mạch, bỏ qua.");
-                }
+
+                var branch = new ElectricalBranch(component, nodeA, nodeB);
+                graph.Branches.Add(branch);
+                Debug.Log($"[BuildGraph-Branches] Đã tạo Branch: {component.name} nối giữa Node {nodeA.Id} và Node {nodeB.Id}");
+            }
+            else
+            {
+
+                component.UpdateState(System.Numerics.Complex.Zero);
             }
         }
+
         Debug.Log($"[BuildGraph-Summary] Hoàn thành xây dựng Graph: {graph.Nodes.Count} Nodes, {graph.Branches.Count} Branches.");
         return graph;
     }
@@ -116,7 +137,7 @@ public class CircuitManager : MonoBehaviour
         ElectricalNode sourceNode = powerSourceBranch.NodeA;
         Debug.Log($"[SolveCircuit] Nút đất (V=0): Node {groundNode.Id}. Nút nguồn (V={powerSource.VoltageSource.Magnitude}): Node {sourceNode.Id}.");
 
-        // Các nút còn lại là các nút "trôi nổi" cần được giải
+        // Collect unknown nodes for solving
         List<ElectricalNode> unknownNodes = graph.Nodes.Where(n => n != groundNode && n != sourceNode).ToList();
         int n = unknownNodes.Count;
 
@@ -189,7 +210,7 @@ public class CircuitManager : MonoBehaviour
             return;
         }
 
-        // Cập nhật các linh kiện thụ động trước
+        // Update passive components
         foreach (var branch in graph.Branches.Where(b => !(b.Component is PowerSource)))
         {
             Complex vA = nodeVoltages.GetValueOrDefault(branch.NodeA.Id, 0);
@@ -205,7 +226,7 @@ public class CircuitManager : MonoBehaviour
             branch.Component.UpdateState(current);
         }
 
-        // Cập nhật nguồn điện sau cùng
+        // Update power source
         var powerSourceBranch = graph.Branches.FirstOrDefault(b => b.Component is PowerSource);
         if (powerSourceBranch != null)
         {
