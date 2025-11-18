@@ -52,6 +52,8 @@ public class Wire : MonoBehaviour, IInteractable
     /// </summary>
     public void DisconnectAndDestroy()
     {
+        if (StartConnector != null) StartConnector.RemoveWire(this);
+        if (EndConnector != null) EndConnector.RemoveWire(this);
         Destroy(gameObject);
     }
 

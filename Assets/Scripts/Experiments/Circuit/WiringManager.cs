@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System;
+using System.Linq;
 
 public enum WiringState { Idle, Wiring }
 
@@ -13,8 +14,7 @@ public class WiringManager : MonoBehaviour
     private GameObject wirePrefab;
 
     public WiringState CurrentState { get; private set; } = WiringState.Idle;
-
-    // Sự kiện được phát khi một kết nối dây hoàn tất
+    public bool IsDrawing => _currentDrawingWire != null;
     public static event Action<Connector, Connector> OnWireConnected;
 
     private Wire _currentDrawingWire;
@@ -47,7 +47,6 @@ public class WiringManager : MonoBehaviour
         }
         else
         {
-            // Ngăn việc nối một connector vào chính nó
             if (clickedConnector != _startConnector)
             {
                 EndWiring(clickedConnector);
@@ -69,7 +68,7 @@ public class WiringManager : MonoBehaviour
         GameObject wireObject = Instantiate(wirePrefab, startPoint.transform.position, Quaternion.identity);
         _currentDrawingWire = wireObject.GetComponent<Wire>();
         _currentDrawingWire.Initialize(startPoint);
-        
+
         Debug.Log($"Bắt đầu kéo dây từ: {startPoint.name}");
     }
 
@@ -77,8 +76,7 @@ public class WiringManager : MonoBehaviour
     {
         _currentDrawingWire.Complete(endPoint);
         Debug.Log($"Hoàn thành kéo dây đến: {endPoint.name}");
-        
-        // Phát sự kiện để CircuitManager biết
+
         OnWireConnected?.Invoke(_startConnector, endPoint);
 
         ResetWiringState();
@@ -103,16 +101,31 @@ public class WiringManager : MonoBehaviour
 
     private void UpdateWireEndpointToCursor()
     {
-        // Raycast ra từ camera để tìm vị trí con trỏ trong không gian 3D
         Ray ray = _mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
-        Vector3 endPoint = ray.GetPoint(10f); // Mặc định điểm cuối ở xa 10m
+        Vector3 endPoint = ray.GetPoint(10f);
 
-        // Ưu tiên snap vào một connector khác nếu có
         if (Physics.Raycast(ray, out RaycastHit hit, 100f, LayerMask.GetMask("Connectors")))
         {
             endPoint = hit.point;
         }
 
         _currentDrawingWire.UpdateEndPosition(endPoint);
+    }
+    public void RemoveWiresFromConnector(Connector connector)
+    {
+        if (connector.ConnectedWires.Count == 0) return;
+
+        Debug.Log($"[Wiring] Đang gỡ {connector.ConnectedWires.Count} dây khỏi {connector.name}");
+
+
+        var wiresToRemove = connector.ConnectedWires.ToList();
+
+        foreach (var wire in wiresToRemove)
+        {
+            wire.DisconnectAndDestroy();
+        }
+
+        // Sau khi xóa hết dây, tính lại mạch điện
+        CircuitManager.Instance.RecalculateCircuit();
     }
 }
