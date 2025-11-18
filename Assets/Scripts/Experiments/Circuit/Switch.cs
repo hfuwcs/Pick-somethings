@@ -59,20 +59,17 @@ public class Switch : CircuitComponent, IClickable
     {
         if (_isOpen)
         {
-            // Mạch hở, trở kháng vô cùng lớn
-            Impedance = new System.Numerics.Complex(double.PositiveInfinity, 0);
+            Impedance = new System.Numerics.Complex(1e9, 0);
             if (switchVisual != null)
                 switchVisual.localEulerAngles = openRotation;
         }
         else
         {
-            // Mạch kín, trở kháng bằng 0 (lý tưởng)
-            Impedance = System.Numerics.Complex.Zero;
+            Impedance = new System.Numerics.Complex(0.001, 0); 
             if (switchVisual != null)
                 switchVisual.localEulerAngles = closedRotation;
         }
 
-        // Thông báo cho manager rằng mạch đã thay đổi
         if (notifyCircuitManager && CircuitManager.Instance != null)
         {
             CircuitManager.Instance.RecalculateCircuit();
@@ -85,26 +82,4 @@ public class Switch : CircuitComponent, IClickable
     public override void UpdateState(System.Numerics.Complex current)
     {
     }
-
-    // // --- Triển khai IInteractable ---
-
-    // public void OnHoverEnter()
-    // {
-    //     if (_renderer != null) _renderer.material.color = Color.yellow;
-    // }
-
-    // public void OnHoverExit()
-    // {
-    //     if (_renderer != null) _renderer.material.color = _originalColor;
-    // }
-
-    // public void OnSelectStart()
-    // {
-    //     Debug.Log($"[SWITCH DEBUG] OnSelectStart - CurrentState: {GrabbableComponent.CurrentState}");
-    // }
-
-    // public void OnSelectEnd()
-    // {
-    //     Debug.Log($"[SWITCH DEBUG] OnSelectEnd - CurrentState: {GrabbableComponent.CurrentState}");
-    // }
 }

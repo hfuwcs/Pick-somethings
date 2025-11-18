@@ -20,8 +20,10 @@ public class Connector : MonoBehaviour, IInteractable
 
     private readonly List<Wire> _connectedWires = new List<Wire>();
     public IReadOnlyList<Wire> ConnectedWires => _connectedWires;
+    public bool HasWires => _connectedWires.Count > 0;
     private void Awake()
     {
+        
         _parentGrabbable = GetComponentInParent<Grabbable>();
         ParentComponent = GetComponentInParent<CircuitComponent>();
 
