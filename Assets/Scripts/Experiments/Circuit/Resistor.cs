@@ -20,7 +20,7 @@ public class Resistor : CircuitComponent
     /// <summary>
     /// Điện trở có thể nóng lên, nhưng trong mô phỏng này ta bỏ qua.
     /// </summary>
-    public override void UpdateState(Complex current)
+    public override void UpdateState(Complex voltageDrop,Complex current)
     {
         // No-op: Có thể mở rộng để mô phỏng nhiệt độ tỏa ra.
         // double power = Complex.Abs(current * current) * Impedance.Real;

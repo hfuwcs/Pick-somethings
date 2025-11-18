@@ -117,11 +117,9 @@ public class Grabbable : MonoBehaviour, IInteractable
             SetState(GrabbableState.Snapped);
             WasJustReleased = true;
 
-            // ✅ Reset velocity để tránh dao động khi thả ra
             _rigidbody.linearVelocity = Vector3.zero;
             _rigidbody.angularVelocity = Vector3.zero;
 
-            // ✅ CHỈ WakeUp nếu không ở trạng thái kinematic (tránh kích hoạt physics khi đang setup)
             if (!_rigidbody.isKinematic)
             {
                 _rigidbody.WakeUp();
@@ -149,19 +147,15 @@ public class Grabbable : MonoBehaviour, IInteractable
         {
             if (_multiPointHandler != null)
             {
-                // Đối tượng mạch điện -> sử dụng logic multi-point
                 _multiPointHandler.SnapPoint(closestConnector, potentialZone);
                 potentialZone.Connect(closestConnector);
 
-                // ✅ Lưu reference để có thể unsnap sau này
                 CurrentSnapZone = potentialZone;
 
-                // THAY ĐỔI CỐT LÕI: Đặt trạng thái mới
                 SetState(GrabbableState.Anchored);
             }
             else
             {
-                // Đối tượng con lắc -> sử dụng logic cũ
                 SnapObjectTo(closestConnector, potentialZone);
             }
         }

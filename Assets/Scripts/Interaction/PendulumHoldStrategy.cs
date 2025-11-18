@@ -37,18 +37,15 @@ public class PendulumHoldStrategy : IHoldStrategy
 
         Vector3 desiredDirection = projectedDirection.normalized;
 
-        // ✅ Áp dụng giới hạn góc nếu được bật
         if (_enforceAngleLimit)
         {
             float angleFromDown = Vector3.Angle(Vector3.down, desiredDirection);
             
             if (angleFromDown > _maxAngleDegrees)
             {
-                // Giới hạn góc bằng cách xoay từ Vector3.down đến hướng mong muốn nhưng chỉ đến maxAngle
                 Vector3 axis = Vector3.Cross(Vector3.down, desiredDirection).normalized;
                 if (axis.sqrMagnitude < 0.001f)
                 {
-                    // Nếu hướng mong muốn là ngược hướng với down, chọn trục bất kỳ
                     axis = _pivotPoint.forward;
                 }
                 desiredDirection = Quaternion.AngleAxis(_maxAngleDegrees, axis) * Vector3.down;

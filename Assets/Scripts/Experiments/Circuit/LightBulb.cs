@@ -47,15 +47,15 @@ public class LightBulb : CircuitComponent
         }
 
         // Tắt đèn khi bắt đầu
-        UpdateState(Complex.Zero);
+        UpdateState(Complex.Zero,Complex.Zero);
     }
 
-    public override void UpdateState(Complex current)
+    public override void UpdateState(Complex voltageDrop, Complex current)
     {
         if (pointLight == null || _bulbMaterialInstance == null) return;
 
         double currentMagnitude = current.Magnitude;
-        float intensity = 0f;
+        float intensity = Mathf.InverseLerp(0, 2.0f, (float)current.Magnitude); 
 
         if (currentMagnitude >= minCurrentToGlow)
         {

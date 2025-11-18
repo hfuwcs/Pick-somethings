@@ -103,7 +103,6 @@ public class PendulumExperimentManager : ExperimentManagerBase
     {
         Debug.Log($"Bắt đầu logic thí nghiệm con lắc ở chế độ: {mode}.");
         
-        // ✅ Thoát khỏi setup phase và chuyển sang running mode (CHỈ cho Ideal Mode)
         if (_isInSetupPhase && mode == SimulationMode.Ideal)
         {
             _isInSetupPhase = false;
@@ -132,7 +131,6 @@ public class PendulumExperimentManager : ExperimentManagerBase
             Debug.Log($"[Realistic Mode] Đã áp dụng Damping Factor: {dampingFactor}");
         }
 
-        // ✅ ApplySimulationMode sẽ kích hoạt IdealPendulumSimulator từ góc hiện tại
         ApplySimulationMode();
     }
 
@@ -144,7 +142,6 @@ public class PendulumExperimentManager : ExperimentManagerBase
             Debug.Log("[Ideal Mode] Dừng IdealPendulumSimulator.");
         }
         
-        // ✅ Trả về trạng thái không kinematic để người dùng có thể tương tác lại
         if (pendulumBob.CurrentState == GrabbableState.Snapped)
         {
             pendulumBob.ConfigureSnappedPhysics(false);
@@ -188,24 +185,19 @@ public class PendulumExperimentManager : ExperimentManagerBase
     {
         CheckAssemblyState();
 
-        // ✅ Cho phép người dùng điều chỉnh góc trong giai đoạn Setup (CHỈ Ideal Mode)
         if (_isInSetupPhase && mode == SimulationMode.Ideal)
         {
-            // ✅ ĐẢM BẢO con lắc đứng yên trong setup phase
             if (pendulumBob.CurrentState == GrabbableState.Snapped)
             {
-                // Re-apply kinematic để đảm bảo không bị override
                 if (!_bobRootRigidbody.isKinematic)
                 {
                     _bobRootRigidbody.isKinematic = true;
                 }
                 
-                // Reset velocity để đảm bảo đứng yên hoàn toàn
                 _bobRootRigidbody.linearVelocity = Vector3.zero;
                 _bobRootRigidbody.angularVelocity = Vector3.zero;
             }
             
-            // Khi đang kéo hoặc đã thả ra, hiển thị góc hiện tại
             if (pendulumBob.CurrentState == GrabbableState.ConstrainedGrab || 
                 pendulumBob.CurrentState == GrabbableState.Snapped)
             {
@@ -240,7 +232,6 @@ public class PendulumExperimentManager : ExperimentManagerBase
 
             float length = Vector3.Distance(pivotPoint.transform.position, _bobModelTransform.position);
             
-            // ✅ Setup phase CHỈ áp dụng cho Ideal Mode trong PreExperiment
             bool isIdealSetupPhase = (mode == SimulationMode.Ideal && CurrentState == ExperimentState.PreExperiment);
             var pendulumStrategy = new PendulumHoldStrategy(pivotPoint.transform, length, maxSetupAngleDegrees, isIdealSetupPhase);
             pendulumBob.SetHoldStrategy(pendulumStrategy);
@@ -248,13 +239,11 @@ public class PendulumExperimentManager : ExperimentManagerBase
             if (isIdealSetupPhase)
             {
                 _isInSetupPhase = true;
-                // ✅ Đặt con lắc ở trạng thái kinematic để đứng yên khi kéo
                 pendulumBob.ConfigureSnappedPhysics(true); // isKinematic = true
                 Debug.Log($"[Ideal Mode - Setup] Bạn có thể kéo con lắc trong phạm vi ±{maxSetupAngleDegrees}° để chọn góc ban đầu. Con lắc sẽ đứng yên cho đến khi bấm Start.");
             }
             else if (mode == SimulationMode.Realistic)
             {
-                // ✅ Realistic mode: vật lý thông thường ngay từ đầu
                 pendulumBob.ConfigureSnappedPhysics(false); // isKinematic = false
                 Debug.Log($"[Realistic Mode] Con lắc sẽ dao động theo vật lý thực tế khi bấm Start.");
             }
@@ -294,21 +283,17 @@ public class PendulumExperimentManager : ExperimentManagerBase
         
         if (isIdealMode)
         {
-            // ✅ Ideal Mode: Kích hoạt script simulator từ góc hiện tại
-            // IdealPendulumSimulator sẽ đọc góc hiện tại và bắt đầu mô phỏng từ đó
+
             _idealSimulator.StartSimulation(pivotPoint.transform, pendulumBob.transform, _bobModelTransform);
             _idealSimulator.enabled = true;
             
-            // ✅ Đặt isKinematic = true để script điều khiển hoàn toàn
             pendulumBob.ConfigureSnappedPhysics(true);
             Debug.Log("[Ideal Mode] IdealPendulumSimulator đã được kích hoạt. Script sẽ điều khiển vị trí con lắc.");
         }
         else
         {
-            // ✅ Realistic Mode: Tắt script simulator, để physics engine điều khiển
             _idealSimulator.enabled = false;
             
-            // ✅ Đặt isKinematic = false để physics engine điều khiển
             pendulumBob.ConfigureSnappedPhysics(false);
             Debug.Log("[Realistic Mode] Physics engine sẽ điều khiển dao động con lắc.");
         }

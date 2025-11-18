@@ -49,7 +49,7 @@ public abstract class CircuitComponent : MonoBehaviour, IMultiPointSnappable
     /// dựa trên dòng điện chạy qua nó.
     /// </summary>
     /// <param name="current">Dòng điện phức chạy qua linh kiện.</param>
-    public abstract void UpdateState(Complex current);
+    public abstract void UpdateState(Complex voltageDrop,Complex current);
     #region IMultiPointSnappable Implementation
 
     public void SnapPoint(Connector connector, SnapZone snapZone)

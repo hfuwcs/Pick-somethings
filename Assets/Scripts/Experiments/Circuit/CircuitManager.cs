@@ -112,7 +112,7 @@ public class CircuitManager : MonoBehaviour
             else
             {
 
-                component.UpdateState(System.Numerics.Complex.Zero);
+                component.UpdateState(Complex.Zero, Complex.Zero);
             }
         }
 
@@ -205,17 +205,35 @@ public class CircuitManager : MonoBehaviour
         {
             foreach (var component in FindObjectsByType<CircuitComponent>(FindObjectsSortMode.None))
             {
-                component.UpdateState(Complex.Zero);
+                component.UpdateState(Complex.Zero, Complex.Zero);
             }
             return;
         }
 
-        // Update passive components
+
+        var activeComponents = new HashSet<CircuitComponent>();
+        foreach (var branch in graph.Branches)
+        {
+            activeComponents.Add(branch.Component);
+        }
+
+        foreach (var component in FindObjectsByType<CircuitComponent>(FindObjectsSortMode.None))
+        {
+            if (!activeComponents.Contains(component))
+            {
+                component.UpdateState(Complex.Zero, Complex.Zero);
+            }
+        }
+
         foreach (var branch in graph.Branches.Where(b => !(b.Component is PowerSource)))
         {
             Complex vA = nodeVoltages.GetValueOrDefault(branch.NodeA.Id, 0);
             Complex vB = nodeVoltages.GetValueOrDefault(branch.NodeB.Id, 0);
+            
+            // Hiệu điện thế (Voltage drop)
             Complex voltageDiff = vA - vB;
+            
+            // Dòng điện (Current) - Định luật Ohm: I = U / Z
             Complex current = Complex.Zero;
             if (branch.Component.Impedance.Magnitude > 1e-9)
             {
@@ -223,27 +241,58 @@ public class CircuitManager : MonoBehaviour
             }
 
             Debug.Log($"[Update] Linh kiện: {branch.Component.name}, V_A(N{branch.NodeA.Id})={vA.Magnitude:F2}V, V_B(N{branch.NodeB.Id})={vB.Magnitude:F2}V, I = {current.Magnitude:F3}A");
-            branch.Component.UpdateState(current);
+            
+            branch.Component.UpdateState(voltageDiff, current);
         }
 
-        // Update power source
         var powerSourceBranch = graph.Branches.FirstOrDefault(b => b.Component is PowerSource);
         if (powerSourceBranch != null)
         {
             Complex sourceCurrent = 0;
-            foreach (var branch in graph.Branches.Where(b => b.NodeA == powerSourceBranch.NodeA || b.NodeB == powerSourceBranch.NodeA))
+            
+
+            foreach (var branch in graph.Branches)
             {
                 if (branch.Component is PowerSource) continue;
 
-                Complex vA = nodeVoltages.GetValueOrDefault(branch.NodeA.Id, 0);
-                Complex vB = nodeVoltages.GetValueOrDefault(branch.NodeB.Id, 0);
-                Complex current = (vA - vB) / branch.Component.Impedance;
+                if (branch.NodeA == powerSourceBranch.NodeA || branch.NodeB == powerSourceBranch.NodeA)
+                {
+                    Complex vA = nodeVoltages.GetValueOrDefault(branch.NodeA.Id, 0);
+                    Complex vB = nodeVoltages.GetValueOrDefault(branch.NodeB.Id, 0);
+                    
+                    Complex branchCurrent = Complex.Zero;
+                    if (branch.Component.Impedance.Magnitude > 1e-9)
+                        branchCurrent = (vA - vB) / branch.Component.Impedance;
 
-                if (branch.NodeA == powerSourceBranch.NodeA) sourceCurrent += current;
-                else sourceCurrent -= current;
+                    if (branch.NodeA == powerSourceBranch.NodeA) 
+                        sourceCurrent += branchCurrent;
+                    else 
+                        sourceCurrent -= branchCurrent;
+                }
             }
+
             Debug.Log($"[Update] Nguồn: {powerSourceBranch.Component.name}, I = {sourceCurrent.Magnitude:F3}A");
-            powerSourceBranch.Component.UpdateState(sourceCurrent);
+            
+             double maxSafeCurrent = 20.0; // Giới hạn an toàn
+
+            if (sourceCurrent.Magnitude > maxSafeCurrent)
+            {
+                Debug.LogWarning("QUÁ TẢI! Ngắt điện toàn mạch để bảo vệ.");
+                
+                powerSourceBranch.Component.UpdateState(Complex.Zero, sourceCurrent);
+
+                foreach (var branch in graph.Branches)
+                {
+                    if (branch.Component != powerSourceBranch.Component)
+                    {
+                        branch.Component.UpdateState(Complex.Zero, Complex.Zero);
+                    }
+                }
+            }
+            else
+            {
+                powerSourceBranch.Component.UpdateState(powerSourceBranch.Component.VoltageSource, sourceCurrent);
+            }
         }
     }
 

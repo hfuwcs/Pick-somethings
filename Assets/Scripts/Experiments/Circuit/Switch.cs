@@ -79,7 +79,7 @@ public class Switch : CircuitComponent, IClickable
     /// <summary>
     /// Trạng thái của công tắc không phụ thuộc vào dòng điện chạy qua nó.
     /// </summary>
-    public override void UpdateState(System.Numerics.Complex current)
+    public override void UpdateState(System.Numerics.Complex voltageDrop,System.Numerics.Complex current)
     {
     }
 }

@@ -14,15 +14,13 @@ public class PowerSource : CircuitComponent, IMultiPointSnappable
         base.Awake();
         // Nguồn điện DC lý tưởng có trở kháng trong bằng 0.
         Impedance = Complex.Zero;
-        // Hiệu điện thế là một số thực (phần ảo bằng 0).
         VoltageSource = new Complex(voltage, 0);
     }
 
     /// <summary>
     /// Nguồn điện không thay đổi trạng thái dựa trên dòng điện.
     /// </summary>
-    public override void UpdateState(Complex current)
+    public override void UpdateState(Complex voltageDrop,Complex current)
     {
-        // No-op: Trạng thái của nguồn điện không phụ thuộc vào dòng điện trong mạch.
     }
 }
