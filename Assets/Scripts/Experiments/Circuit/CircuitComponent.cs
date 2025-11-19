@@ -3,7 +3,7 @@ using System.Numerics;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(Grabbable))] //Lưu ý: Nhớ để ý Grabbable
-public abstract class CircuitComponent : MonoBehaviour, IMultiPointSnappable
+public abstract class CircuitComponent : MonoBehaviour, IMultiPointSnappable, IInfoDisplayable
 {
     [Header("Cấu hình Kết nối")]
     [Tooltip("Connector đại diện cho điểm kết nối đầu tiên.")]
@@ -12,9 +12,10 @@ public abstract class CircuitComponent : MonoBehaviour, IMultiPointSnappable
     [Tooltip("Connector đại diện cho điểm kết nối thứ hai.")]
     [SerializeField] private Connector connectorB;
 
-    // Public accessors để các hệ thống khác có thể đọc
     public Connector ConnectorA => connectorA;
     public Connector ConnectorB => connectorB;
+    protected Complex _lastVoltageDrop;
+    protected Complex _lastCurrent;
 
     /// <summary>
     /// Trở kháng phức (Z) của linh kiện.
@@ -25,13 +26,9 @@ public abstract class CircuitComponent : MonoBehaviour, IMultiPointSnappable
 
     /// <summary>
     /// Nguồn hiệu điện thế phức (V) mà linh kiện này cung cấp.
-    /// Hầu hết các linh kiện sẽ có giá trị này bằng 0, trừ nguồn điện.
     /// </summary>
     public Complex VoltageSource { get; protected set; } = Complex.Zero;
 
-    /// <summary>
-    /// Tham chiếu đến Grabbable component để quản lý trạng thái vật lý.
-    /// </summary>
     protected Grabbable GrabbableComponent { get; private set; }
     private readonly Dictionary<Connector, Joint> _connectorJoints = new Dictionary<Connector, Joint>();
     protected virtual void Awake()
@@ -49,18 +46,26 @@ public abstract class CircuitComponent : MonoBehaviour, IMultiPointSnappable
     /// dựa trên dòng điện chạy qua nó.
     /// </summary>
     /// <param name="current">Dòng điện phức chạy qua linh kiện.</param>
-    public abstract void UpdateState(Complex voltageDrop,Complex current);
+    public virtual void UpdateState(Complex voltageDrop, Complex current)
+    {
+        _lastVoltageDrop = voltageDrop;
+        _lastCurrent = current;
+    }
+    public virtual string GetTooltipInfo() //Override ở các class con để hiển thị thêm 
+    {
+        return $"<b>{gameObject.name}</b>\n" +
+               $"U: {_lastVoltageDrop.Magnitude:F2} V\n" +
+               $"I: {_lastCurrent.Magnitude:F2} A";
+    }
     #region IMultiPointSnappable Implementation
 
     public void SnapPoint(Connector connector, SnapZone snapZone)
     {
         if (_connectorJoints.ContainsKey(connector)) return;
 
-        // Lấy tham chiếu đến Rigidbody của chính linh kiện này
         Rigidbody rb = GetComponent<Rigidbody>();
         if (rb != null)
         {
-            // BẮT BUỘC: Đặt thành kinematic để nó không bị ảnh hưởng bởi vật lý bên ngoài
             rb.isKinematic = true;
         }
 
@@ -71,7 +76,6 @@ public abstract class CircuitComponent : MonoBehaviour, IMultiPointSnappable
             return;
         }
 
-        // ... code tạo ConfigurableJoint không đổi ...
         ConfigurableJoint joint = gameObject.AddComponent<ConfigurableJoint>();
         joint.connectedBody = connectedBody;
         joint.anchor = transform.InverseTransformPoint(connector.transform.position);
@@ -95,7 +99,6 @@ public abstract class CircuitComponent : MonoBehaviour, IMultiPointSnappable
             Debug.Log($"[MultiPoint] Đã hủy Joint cho {connector.name}.");
         }
 
-        // Nếu không còn khớp nối nào, trả lại quyền điều khiển cho vật lý
         if (_connectorJoints.Count == 0)
         {
             Rigidbody rb = GetComponent<Rigidbody>();

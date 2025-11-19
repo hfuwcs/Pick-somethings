@@ -150,6 +150,7 @@ public class InteractionController : MonoBehaviour
             _currentHoveredInteractable?.OnHoverExit();
             _currentHoveredInteractable = newHoveredInteractable;
             _currentHoveredInteractable?.OnHoverEnter();
+            UpdateTooltipState(_currentHoveredInteractable);
         }
     }
 
@@ -249,6 +250,17 @@ public class InteractionController : MonoBehaviour
                 hoveredGrabbable.OnSelectStart();
                 hoveredGrabbable.SetGrabber(_grabAttachPoint);
             }
+        }
+    }
+    private void UpdateTooltipState(IInteractable interactable)
+    {
+        if (interactable is MonoBehaviour mb && mb.TryGetComponent<IInfoDisplayable>(out var infoItem))
+        {
+            TooltipManager.Instance.ShowTooltip(infoItem.GetTooltipInfo());
+        }
+        else
+        {
+            TooltipManager.Instance.HideTooltip();
         }
     }
 }
