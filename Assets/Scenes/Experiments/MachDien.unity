@@ -4311,7 +4311,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Switch
   connectorA: {fileID: 2146147067}
   connectorB: {fileID: 647818432}
-  startsOpen: 1
+  startsOpen: 0
   switchVisual: {fileID: 1883662152}
   openRotation: {x: 0, y: 0, z: 45}
   closedRotation: {x: 0, y: 0, z: -45}
