@@ -18,16 +18,14 @@ public class ExperimentUIManager : MonoBehaviour
 
     private void Start()
     {
-        // Mặc định khi vào Scene: Hiện HUD, ẩn các cái khác
         ShowPracticeMode();
     }
 
-    // --- CHỨC NĂNG CHUYỂN ĐỔI ---
 
     public void ToggleMenu()
     {
-        if (_isPaused) ShowPracticeMode(); // Đang mở menu thì đóng lại
-        else ShowMenu(); // Đang chơi thì mở menu
+        if (_isPaused) ShowPracticeMode();
+        else ShowMenu();
     }
 
     public void ShowMenu()
@@ -37,7 +35,7 @@ public class ExperimentUIManager : MonoBehaviour
         theoryPanel.SetActive(false);
         quizPanel.SetActive(false);
 
-        menuPanel.SetActive(true); // Hiện bảng lựa chọn
+        menuPanel.SetActive(true);
     }
 
     public void ShowTheory()
