@@ -8,7 +8,7 @@ public class TooltipManager : MonoBehaviour
 
     [SerializeField] private RectTransform tooltipPanel; 
     [SerializeField] private TextMeshProUGUI tooltipText;
-    [SerializeField] private Vector2 offset = new Vector2(15, -15);
+    [SerializeField] private Vector2 offset = new Vector2(120, -120);
 
     private void Awake()
     {

@@ -80,6 +80,19 @@ public class InteractionController : MonoBehaviour
         HandleHoverDetection();
         CheckForGrabbedObjectBreak();
     }
+    public void SetUIMode(bool isActive)
+    {
+        if (_isUIMode == isActive) return;
+
+        _isUIMode = isActive;
+        ToggleCursorLock(_isUIMode);
+        
+        if (_isUIMode && _currentHoveredInteractable != null)
+        {
+            _currentHoveredInteractable.OnHoverExit();
+            _currentHoveredInteractable = null;
+        }
+    }
     public void OnToggleCursor(InputAction.CallbackContext context)
     {
         if (context.performed)
