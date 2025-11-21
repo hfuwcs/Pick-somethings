@@ -1,5 +1,5 @@
-// File: Assets/Scripts/UI/ExperimentUIManager.cs
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class ExperimentUIManager : MonoBehaviour
@@ -8,7 +8,7 @@ public class ExperimentUIManager : MonoBehaviour
     [SerializeField] private GameObject hudPanel;       // UI khi đang chơi (Crosshair, nút Menu, Tooltip)
     [SerializeField] private GameObject theoryPanel;    // Panel Lý thuyết
     [SerializeField] private GameObject quizPanel;      // Panel Kiểm tra
-    [SerializeField] private GameObject menuPanel;      // Panel Menu con (để chọn Lý thuyết/Kiểm tra/Về MainMenu)
+    [SerializeField] private GameObject menuPanel;      // Panel Menu con 
     [SerializeField] private MonoBehaviour mouseLookScript;
 
     [Header("Components")]
@@ -16,16 +16,35 @@ public class ExperimentUIManager : MonoBehaviour
 
     private bool _isPaused = false;
 
+    private void Update()
+    {
+
+        if (Keyboard.current.escapeKey.wasPressedThisFrame)
+        {
+            ToggleMenu();
+        }
+    }
+
+
     private void Start()
     {
         ShowPracticeMode();
     }
 
-
     public void ToggleMenu()
     {
-        if (_isPaused) ShowPracticeMode();
-        else ShowMenu();
+        if (theoryPanel.activeSelf || quizPanel.activeSelf)
+        {
+            ShowMenu(); 
+        }
+        else if (menuPanel.activeSelf)
+        {
+            ShowPracticeMode();
+        }
+        else
+        {
+            ShowMenu();
+        }
     }
 
     public void ShowMenu()

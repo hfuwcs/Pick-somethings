@@ -9,8 +9,6 @@ public class LessonContentLoader : MonoBehaviour
 {
     public static LessonContentLoader Instance { get; private set; }
 
-    [Header("Configuration")]
-    [SerializeField] private string apiBaseUrl = "http://your-laravel-domain.com/api/lesson/";
     [SerializeField] private TheoryDisplayManager uiManager;
 
     private void Awake()
@@ -29,12 +27,14 @@ public class LessonContentLoader : MonoBehaviour
     {
         string localPath = Path.Combine(Application.persistentDataPath, $"Lessons/{lessonId}");
         
-        // 1. Gọi API lấy Metadata
-        string url = apiBaseUrl + lessonId;
+        string url = $"{AppConfig.BaseUrl.TrimEnd('/')}/api/lesson/{lessonId}";
         Debug.Log($"[API] Fetching metadata: {url}");
 
         using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
         {
+            webRequest.SetRequestHeader("ngrok-skip-browser-warning", "true");
+            webRequest.SetRequestHeader("User-Agent", "UnityGameClient");
+
             yield return webRequest.SendWebRequest();
 
             if (webRequest.result != UnityWebRequest.Result.Success)
@@ -46,7 +46,7 @@ public class LessonContentLoader : MonoBehaviour
 
             // 2. Parse JSON
             string json = webRequest.downloadHandler.text;
-            LessonResponse data = JsonUtility.FromJson<LessonResponse>(json);
+            LessonDetail data = JsonUtility.FromJson<LessonDetail>(json);
             
             Debug.Log($"[API] Lesson '{data.title}' - Server Ver: {data.version}");
 
@@ -71,7 +71,7 @@ public class LessonContentLoader : MonoBehaviour
         }
     }
 
-    private IEnumerator DownloadAndCacheImages(LessonResponse data, string savePath)
+    private IEnumerator DownloadAndCacheImages(LessonDetail data, string savePath)
     {
         if (!Directory.Exists(savePath)) Directory.CreateDirectory(savePath);
 
