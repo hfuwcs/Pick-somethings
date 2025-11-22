@@ -26,7 +26,7 @@ public class LessonContentLoader : MonoBehaviour
     private IEnumerator ProcessLessonRoutine(int lessonId)
     {
         string localPath = Path.Combine(Application.persistentDataPath, $"Lessons/{lessonId}");
-        
+
         string url = $"{AppConfig.BaseUrl.TrimEnd('/')}/api/lesson/{lessonId}";
         Debug.Log($"[API] Fetching metadata: {url}");
 
@@ -47,7 +47,7 @@ public class LessonContentLoader : MonoBehaviour
             // 2. Parse JSON
             string json = webRequest.downloadHandler.text;
             LessonDetail data = JsonUtility.FromJson<LessonDetail>(json);
-            
+
             Debug.Log($"[API] Lesson '{data.title}' - Server Ver: {data.version}");
 
             string versionKey = $"Lesson_{lessonId}_Version";
@@ -56,8 +56,22 @@ public class LessonContentLoader : MonoBehaviour
             if (data.version > currentVersion || !Directory.Exists(localPath))
             {
                 Debug.Log("[Data] Phát hiện phiên bản mới. Đang tải...");
+                if (Directory.Exists(localPath))
+                {
+                    try
+                    {
+                        Directory.Delete(localPath, true);
+                        Debug.Log("[Cache] Đã xóa cache cũ.");
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Debug.LogWarning($"[Cache] Lỗi khi xóa cache cũ: {ex.Message}");
+                    }
+                }
+
+                Directory.CreateDirectory(localPath);
                 yield return StartCoroutine(DownloadAndCacheImages(data, localPath));
-                
+
                 PlayerPrefs.SetInt(versionKey, data.version);
                 PlayerPrefs.Save();
             }
@@ -83,7 +97,7 @@ public class LessonContentLoader : MonoBehaviour
 
             Debug.Log($"[Download] Downloading page {i}: {imgUrl}");
 
-            using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(imgUrl))
+            using (UnityWebRequest uwr = UnityWebRequest.Get(imgUrl))
             {
                 yield return uwr.SendWebRequest();
 
@@ -93,10 +107,7 @@ public class LessonContentLoader : MonoBehaviour
                     continue;
                 }
 
-                // Lấy Texture và lưu xuống đĩa
-                Texture2D texture = DownloadHandlerTexture.GetContent(uwr);
-                byte[] bytes = texture.EncodeToJPG();
-                File.WriteAllBytes(filePath, bytes);
+                File.WriteAllBytes(filePath, uwr.downloadHandler.data);
             }
         }
         Debug.Log("[Download] Hoàn tất tải xuống.");
@@ -109,22 +120,31 @@ public class LessonContentLoader : MonoBehaviour
         for (int i = 0; i < pageCount; i++)
         {
             string filePath = Path.Combine(localPath, $"page_{i}.jpg");
-            string url = "file://" + filePath;
+            //string url = "file://" + filePath;
 
-            using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(url))
+            if (File.Exists(filePath))
             {
-                yield return uwr.SendWebRequest();
-
-                if (uwr.result == UnityWebRequest.Result.Success)
+                byte[] fileData = File.ReadAllBytes(filePath);
+                
+                Texture2D tex = new Texture2D(2, 2);
+                
+                if (tex.LoadImage(fileData))
                 {
-                    Texture2D tex = DownloadHandlerTexture.GetContent(uwr);
+
+                    tex.filterMode = FilterMode.Bilinear;
+                    tex.wrapMode = TextureWrapMode.Clamp;
+                    
+                    tex.name = $"Page_{i}"; 
+                    
                     loadedTextures.Add(tex);
                 }
-                else
-                {
-                    Debug.LogWarning($"[Disk Load] Không tìm thấy file: {filePath}");
-                }
             }
+            else
+            {
+                Debug.LogWarning($"[Disk Load] Không tìm thấy file: {filePath}");
+            }
+            
+            yield return null; 
         }
 
         uiManager.DisplayDownloadedLesson(loadedTextures);

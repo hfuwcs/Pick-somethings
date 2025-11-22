@@ -5,10 +5,10 @@ using UnityEngine.UI;
 public class ExperimentUIManager : MonoBehaviour
 {
     [Header("Panels")]
-    [SerializeField] private GameObject hudPanel;       // UI khi đang chơi (Crosshair, nút Menu, Tooltip)
-    [SerializeField] private GameObject theoryPanel;    // Panel Lý thuyết
-    [SerializeField] private GameObject quizPanel;      // Panel Kiểm tra
-    [SerializeField] private GameObject menuPanel;      // Panel Menu con 
+    [SerializeField] private GameObject hudPanel;
+    [SerializeField] private GameObject theoryPanel;
+    [SerializeField] private GameObject quizPanel;
+    [SerializeField] private GameObject menuPanel;
     [SerializeField] private MonoBehaviour mouseLookScript;
 
     [Header("Components")]
@@ -65,6 +65,17 @@ public class ExperimentUIManager : MonoBehaviour
         quizPanel.SetActive(false);
 
         theoryPanel.SetActive(true);
+        int currentLessonId = 12;
+        
+        if (LessonContentLoader.Instance != null)
+        {
+            Debug.Log("[UI] Requesting lesson content load...");
+            LessonContentLoader.Instance.LoadLessonContent(currentLessonId);
+        }
+        else
+        {
+            Debug.LogError("[UI] LessonContentLoader not found!");
+        }
     }
 
     public void ShowQuiz()
