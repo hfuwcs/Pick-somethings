@@ -2766,11 +2766,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3000785180287025602, guid: 295df3997db81d644908d2427bbfe833, type: 3}
   m_PrefabInstance: {fileID: 1015056177}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1015056179 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6159099778565946629, guid: 295df3997db81d644908d2427bbfe833, type: 3}
-  m_PrefabInstance: {fileID: 1015056177}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1028430920
 GameObject:
   m_ObjectHideFlags: 0
@@ -3488,14 +3483,14 @@ PrefabInstance:
     - target: {fileID: 5442182605099983772, guid: 5ce2758974fdc144297090a345303833, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1015056179}
+      objectReference: {fileID: 1276190671}
     - target: {fileID: 5442182605099983772, guid: 5ce2758974fdc144297090a345303833, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: 
+      value: ReturnToMainMenu
       objectReference: {fileID: 0}
     - target: {fileID: 5442182605099983772, guid: 5ce2758974fdc144297090a345303833, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: ExperimentUIManager, Assembly-CSharp
+      value: SceneController, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5442182605099983772, guid: 5ce2758974fdc144297090a345303833, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
@@ -5095,6 +5090,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3071895170425503038, guid: 5ce2758974fdc144297090a345303833, type: 3}
   m_PrefabInstance: {fileID: 1074314748}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1276190671 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8643551828200045693, guid: 5ce2758974fdc144297090a345303833, type: 3}
+  m_PrefabInstance: {fileID: 1074314748}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d58feaecce0c871458e71b417e1122ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SceneController
 --- !u!1 &1294089116
 GameObject:
   m_ObjectHideFlags: 0
@@ -6067,7 +6073,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TooltipManager
   tooltipPanel: {fileID: 439671370}
   tooltipText: {fileID: 17799311}
-  offset: {x: 15, y: -15}
+  offset: {x: 20, y: -20}
 --- !u!4 &1617583814
 Transform:
   m_ObjectHideFlags: 0

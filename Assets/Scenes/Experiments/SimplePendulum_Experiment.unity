@@ -153,8 +153,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be46c31097f6f65419c0fd8cc0d08c91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TooltipManager
-  tooltipPanel: {fileID: 1428299509}
-  tooltipText: {fileID: 1422451249}
+  tooltipPanel: {fileID: 0}
+  tooltipText: {fileID: 0}
   offset: {x: 15, y: -15}
 --- !u!4 &213722457
 Transform:
@@ -580,6 +580,50 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4040664725440342902, guid: 7910eb4329cf5f148be6e4750262f09a, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4040664725440342902, guid: 7910eb4329cf5f148be6e4750262f09a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4040664725440342902, guid: 7910eb4329cf5f148be6e4750262f09a, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4040664725440342902, guid: 7910eb4329cf5f148be6e4750262f09a, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4040664725440342902, guid: 7910eb4329cf5f148be6e4750262f09a, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4040664725440342902, guid: 7910eb4329cf5f148be6e4750262f09a, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4040664725440342902, guid: 7910eb4329cf5f148be6e4750262f09a, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4040664725440342902, guid: 7910eb4329cf5f148be6e4750262f09a, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4040664725440342902, guid: 7910eb4329cf5f148be6e4750262f09a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4040664725440342902, guid: 7910eb4329cf5f148be6e4750262f09a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4040664725440342902, guid: 7910eb4329cf5f148be6e4750262f09a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6281580291205313908, guid: 7910eb4329cf5f148be6e4750262f09a, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -663,7 +707,8 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -1286,22 +1331,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1404264246}
   m_CullTransparentMesh: 1
---- !u!114 &1422451249 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 9070240634979284069, guid: 7910eb4329cf5f148be6e4750262f09a, type: 3}
-  m_PrefabInstance: {fileID: 922613616}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
---- !u!224 &1428299509 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 6281580291205313908, guid: 7910eb4329cf5f148be6e4750262f09a, type: 3}
-  m_PrefabInstance: {fileID: 922613616}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1676697169
 PrefabInstance:
   m_ObjectHideFlags: 0
