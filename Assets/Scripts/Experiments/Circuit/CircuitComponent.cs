@@ -51,11 +51,13 @@ public abstract class CircuitComponent : MonoBehaviour, IMultiPointSnappable, II
         _lastVoltageDrop = voltageDrop;
         _lastCurrent = current;
     }
-    public virtual string GetTooltipInfo() //Override ở các class con để hiển thị thêm 
+    public virtual IInfoDisplayable.TooltipInfo GetTooltipInfo()
     {
-        return $"<b>{gameObject.name}</b>\n" +
-               $"U: {_lastVoltageDrop.Magnitude:F2} V\n" +
-               $"I: {_lastCurrent.Magnitude:F2} A";
+        return new IInfoDisplayable.TooltipInfo(
+            gameObject.name,
+            $"U: {_lastVoltageDrop.Magnitude:F2} V\n" +
+            $"I: {_lastCurrent.Magnitude:F2} A"
+        );
     }
     #region IMultiPointSnappable Implementation
 

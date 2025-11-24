@@ -87,7 +87,7 @@ public class InteractionController : MonoBehaviour
     public void SetUIMode(bool isActive)
     {
         _isUIMode = isActive;
-        
+
 
         if (_isUIMode && _currentHoveredInteractable != null)
         {
@@ -273,7 +273,11 @@ public class InteractionController : MonoBehaviour
     {
         if (interactable is MonoBehaviour mb && mb.TryGetComponent<IInfoDisplayable>(out var infoItem))
         {
-            TooltipManager.Instance.ShowTooltip(infoItem.GetTooltipInfo());
+            var info = infoItem.GetTooltipInfo();
+            var title = info.title;
+            var bodyText = info.content;
+
+            TooltipManager.Instance.ShowTooltip(bodyText,title);
         }
         else
         {

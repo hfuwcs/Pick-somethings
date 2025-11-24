@@ -413,4 +413,23 @@ public class PendulumExperimentManager : ExperimentManagerBase
         _lastBobVelocityY = 0f;
     }
     #endregion
+    public void OnResetButtonPressed()
+    {
+        Debug.Log("[UI] Người dùng bấm nút Reset.");
+        
+        ResetExperimentLogic();
+
+        if (lengthSlider != null)
+        {
+            lengthSlider.value = 1.0f; 
+            
+            if (lengthValueText != null) lengthValueText.text = $"L = {1.0f:F2} m";
+        }
+    }
+
+    public void OnStartButtonPressed()
+    {
+        Debug.Log("[UI] Người dùng bấm nút Start.");
+        StartPendulumExperiment();
+    }
 }

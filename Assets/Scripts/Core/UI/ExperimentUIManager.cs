@@ -10,6 +10,8 @@ public class ExperimentUIManager : MonoBehaviour
     [SerializeField] private GameObject theoryPanel;
     [SerializeField] private GameObject quizPanel;
     [SerializeField] private GameObject menuPanel;
+    [Header("HUD Control")]
+    [SerializeField] private CanvasGroup controlPanelGroup; 
     [Header("Camera Control")]
     [SerializeField] private CinemachineInputAxisController cameraInputController; 
     
@@ -22,6 +24,7 @@ public class ExperimentUIManager : MonoBehaviour
     private void Start()
     {
         ShowPracticeMode();
+        UpdateControlPanelState(false);
     }
 
     private void Update()
@@ -54,6 +57,7 @@ public class ExperimentUIManager : MonoBehaviour
 
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+            UpdateControlPanelState(true);
         }
         else
         {
@@ -64,6 +68,7 @@ public class ExperimentUIManager : MonoBehaviour
             {
                 cameraInputController.enabled = true;
             }
+            UpdateControlPanelState(false);
         }
 
         if (playerInteraction != null)
@@ -85,6 +90,23 @@ public class ExperimentUIManager : MonoBehaviour
         else
         {
             ShowMenu();
+        }
+    }
+    private void UpdateControlPanelState(bool isVisible)
+    {
+        if (controlPanelGroup == null) return;
+
+        if (isVisible)
+        {
+            controlPanelGroup.alpha = 1f; 
+            controlPanelGroup.interactable = true;
+            controlPanelGroup.blocksRaycasts = true;
+        }
+        else
+        {
+            controlPanelGroup.alpha = 0f;
+            controlPanelGroup.interactable = false;
+            controlPanelGroup.blocksRaycasts = false;
         }
     }
 
@@ -143,5 +165,6 @@ public class ExperimentUIManager : MonoBehaviour
         if (playerInteraction != null) playerInteraction.SetUIMode(pause);
 
         if (cameraInputController != null) cameraInputController.enabled = !pause;
+        UpdateControlPanelState(false); 
     }
 }
