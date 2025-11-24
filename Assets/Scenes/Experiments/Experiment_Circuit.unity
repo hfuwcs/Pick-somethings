@@ -456,12 +456,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 3410736235170488739, guid: 929fe88d55ced6d4d85ec8a3528640c6, type: 3}
+      propertyPath: _uiManager
+      value: 
+      objectReference: {fileID: 1617583816}
+    - target: {fileID: 3410736235170488739, guid: 929fe88d55ced6d4d85ec8a3528640c6, type: 3}
       propertyPath: _maxGrabDistance
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3410736235170488739, guid: 929fe88d55ced6d4d85ec8a3528640c6, type: 3}
       propertyPath: _interactionDistance
-      value: 60
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 3410736235170488739, guid: 929fe88d55ced6d4d85ec8a3528640c6, type: 3}
       propertyPath: _interactionLayerMask.m_Bits
@@ -555,6 +559,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5df81ae5136b9f47b7f6c549dcd3e8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InteractionController
+--- !u!114 &156749933 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8521047783807566807, guid: 929fe88d55ced6d4d85ec8a3528640c6, type: 3}
+  m_PrefabInstance: {fileID: 156749931}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &171288861
 GameObject:
   m_ObjectHideFlags: 0
@@ -7720,6 +7735,10 @@ PrefabInstance:
       propertyPath: theoryPanel
       value: 
       objectReference: {fileID: 2094556650}
+    - target: {fileID: 4424753537275115507, guid: 8a861c687a853c64e9f3a833edacf85f, type: 3}
+      propertyPath: mouseLookScript
+      value: 
+      objectReference: {fileID: 156749933}
     - target: {fileID: 4424753537275115507, guid: 8a861c687a853c64e9f3a833edacf85f, type: 3}
       propertyPath: playerInteraction
       value: 

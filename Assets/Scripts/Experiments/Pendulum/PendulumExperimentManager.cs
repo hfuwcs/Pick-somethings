@@ -133,7 +133,6 @@ public class PendulumExperimentManager : ExperimentManagerBase
     protected override void InitializeExperiment()
     {
         _bobRootRigidbody = pendulumBob.GetComponent<Rigidbody>();
-        // Tìm Renderer để xác định tâm Model visual
         _bobModelTransform = pendulumBob.GetComponentInChildren<Renderer>().transform;
 
         _idealSimulator = pendulumBob.GetComponent<IdealPendulumSimulator>();
@@ -142,7 +141,6 @@ public class PendulumExperimentManager : ExperimentManagerBase
 
         _visualizer = pivotPoint.GetComponent<PendulumVisualizer>();
 
-        // [NEW] Setup Slider Configuration
         if (lengthSlider != null)
         {
             lengthSlider.minValue = minLength;
@@ -280,16 +278,13 @@ public class PendulumExperimentManager : ExperimentManagerBase
             _isAssembled = true;
             Debug.Log("Con lắc đã được lắp ráp. Sẵn sàng để bắt đầu thí nghiệm.");
             
-            // [UPDATE] Visualizer logic: Lấy Connector Point trên quả nặng để vẽ dây chính xác
             Transform bobConnectorT = pendulumBob.GetComponentInChildren<Connector>().transform;
             if (_visualizer != null) _visualizer.StartVisualizing(pivotPoint.transform, bobConnectorT);
 
             float length = Vector3.Distance(pivotPoint.transform.position, _bobModelTransform.position);
             
-            // [NEW] Đồng bộ Slider với chiều dài thực tế khi vừa lắp xong
             if (lengthSlider != null)
             {
-                // SetValueWithoutNotify để không kích hoạt logic OnLengthSliderChanged (tránh rung lắc khi vừa snap)
                 lengthSlider.SetValueWithoutNotify(Mathf.Clamp(length, minLength, maxLength));
                 if (lengthValueText != null) lengthValueText.text = $"L = {length:F2} m";
             }

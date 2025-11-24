@@ -14,7 +14,10 @@ public class InteractionController : MonoBehaviour
 
     [Header("Grabbing Logic")]
     [Tooltip("Khoảng cách tối đa mà đối tượng có thể được giữ trước khi tự động thả.")]
-    [SerializeField] private float _maxGrabDistance = 3f;
+    [SerializeField] private float _maxGrabDistance = 1.5f;
+
+    [Header("References")]
+    [SerializeField] private ExperimentUIManager _uiManager;
 
     private Camera _mainCamera;
     private IInteractable _currentHoveredInteractable;
@@ -64,6 +67,7 @@ public class InteractionController : MonoBehaviour
         {
             _grabAttachPoint = transform;
         }
+        if (_uiManager == null) _uiManager = FindFirstObjectByType<ExperimentUIManager>();
     }
 
     private void Update()
@@ -82,11 +86,9 @@ public class InteractionController : MonoBehaviour
     }
     public void SetUIMode(bool isActive)
     {
-        if (_isUIMode == isActive) return;
-
         _isUIMode = isActive;
-        ToggleCursorLock(_isUIMode);
         
+
         if (_isUIMode && _currentHoveredInteractable != null)
         {
             _currentHoveredInteractable.OnHoverExit();
@@ -97,8 +99,10 @@ public class InteractionController : MonoBehaviour
     {
         if (context.performed)
         {
-            _isUIMode = !_isUIMode;
-            ToggleCursorLock(_isUIMode);
+            if (_uiManager != null)
+            {
+                _uiManager.ToggleCursorOnly();
+            }
         }
     }
     private void ToggleCursorLock(bool isUIMode)

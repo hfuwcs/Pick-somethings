@@ -1,3 +1,4 @@
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -9,26 +10,68 @@ public class ExperimentUIManager : MonoBehaviour
     [SerializeField] private GameObject theoryPanel;
     [SerializeField] private GameObject quizPanel;
     [SerializeField] private GameObject menuPanel;
-    [SerializeField] private MonoBehaviour mouseLookScript;
+    [Header("Camera Control")]
+    [SerializeField] private CinemachineInputAxisController cameraInputController; 
+    
+    //[SerializeField] private MonoBehaviour mouseLookScript; 
 
     [Header("Components")]
     [SerializeField] private InteractionController playerInteraction;
 
-    private bool _isPaused = false;
-
-    private void Update()
-    {
-
-        if (Keyboard.current.escapeKey.wasPressedThisFrame)
-        {
-            ToggleMenu();
-        }
-    }
-
+    private bool _isPaused = false;      // Trạng thái ESC (Dừng game)
+    private bool _isCursorMode = false;  // Trạng thái Tab (Chuột hiện, game vẫn chạy)
 
     private void Start()
     {
         ShowPracticeMode();
+    }
+
+    private void Update()
+    {
+        if (Keyboard.current.escapeKey.wasPressedThisFrame)
+        {
+            if (_isCursorMode)
+            {
+                ToggleCursorOnly(); 
+            }
+            else
+            {
+                ToggleMenu();
+            }
+        }
+    }
+
+     public void ToggleCursorOnly()
+    {
+        if (_isPaused) return;
+
+        _isCursorMode = !_isCursorMode;
+
+        if (_isCursorMode)
+        {
+            if (cameraInputController != null) 
+            {
+                cameraInputController.enabled = false; 
+            }
+
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+
+            if (cameraInputController != null) 
+            {
+                cameraInputController.enabled = true;
+            }
+        }
+
+        if (playerInteraction != null)
+        {
+            playerInteraction.SetUIMode(_isCursorMode);
+        }
     }
 
     public void ToggleMenu()
@@ -53,7 +96,6 @@ public class ExperimentUIManager : MonoBehaviour
         hudPanel.SetActive(false);
         theoryPanel.SetActive(false);
         quizPanel.SetActive(false);
-
         menuPanel.SetActive(true);
     }
 
@@ -65,16 +107,10 @@ public class ExperimentUIManager : MonoBehaviour
         quizPanel.SetActive(false);
 
         theoryPanel.SetActive(true);
-        int currentLessonId = 12;
         
         if (LessonContentLoader.Instance != null)
         {
-            Debug.Log("[UI] Requesting lesson content load...");
-            LessonContentLoader.Instance.LoadLessonContent(currentLessonId);
-        }
-        else
-        {
-            Debug.LogError("[UI] LessonContentLoader not found!");
+            LessonContentLoader.Instance.LoadLessonContent(12);
         }
     }
 
@@ -84,7 +120,6 @@ public class ExperimentUIManager : MonoBehaviour
         hudPanel.SetActive(false);
         menuPanel.SetActive(false);
         theoryPanel.SetActive(false);
-
         quizPanel.SetActive(true);
     }
 
@@ -94,25 +129,21 @@ public class ExperimentUIManager : MonoBehaviour
         theoryPanel.SetActive(false);
         quizPanel.SetActive(false);
         menuPanel.SetActive(false);
-
         hudPanel.SetActive(true);
     }
 
     private void SetPauseState(bool pause)
     {
         _isPaused = pause;
-        
+        _isCursorMode = false;
 
         Time.timeScale = pause ? 0f : 1f;
 
-        if (playerInteraction != null)
-        {
-            playerInteraction.SetUIMode(pause);
-        }
+        Cursor.lockState = pause ? CursorLockMode.None : CursorLockMode.Locked;
+        Cursor.visible = pause;
 
-        if (mouseLookScript != null)
-        {
-            mouseLookScript.enabled = !pause;
-        }
+        if (playerInteraction != null) playerInteraction.SetUIMode(pause);
+
+        if (cameraInputController != null) cameraInputController.enabled = !pause;
     }
 }
