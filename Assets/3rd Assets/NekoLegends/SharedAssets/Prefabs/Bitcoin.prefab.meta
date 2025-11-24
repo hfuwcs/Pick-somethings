@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 117ea3fdf05c61c4fb90a18a5221fe2e
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Prefabs/Bitcoin.prefab
+  uploadId: 814818

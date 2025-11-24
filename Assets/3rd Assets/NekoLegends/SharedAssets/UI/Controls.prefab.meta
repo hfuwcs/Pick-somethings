@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: f7e17d5d47bf6f645ba05890abcf9439
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/UI/Controls.prefab
+  uploadId: 814818

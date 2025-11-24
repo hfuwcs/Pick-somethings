@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: d8e3d40b1bd109941a55f495581b820b
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/ReadMe.txt
+  uploadId: 814818

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 235d0292c29fc8c4da6b0efb0e88c22c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Materials/GroundWood.mat
+  uploadId: 814818

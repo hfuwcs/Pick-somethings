@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 787484a1f70c7414fb515c1c791bd7e2
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Prefabs/UIDesc.prefab
+  uploadId: 814818

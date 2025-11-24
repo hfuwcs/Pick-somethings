@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 2df030742469dd44b820ce61b908cccf
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Prefabs/NekoSphere.prefab
+  uploadId: 814818

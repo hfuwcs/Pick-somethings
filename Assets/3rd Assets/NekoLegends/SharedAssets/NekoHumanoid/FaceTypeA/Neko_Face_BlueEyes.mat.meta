@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c0d1e60a580ff8840a1244ff678b1f8e
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/NekoHumanoid/FaceTypeA/Neko_Face_BlueEyes.mat
+  uploadId: 814818

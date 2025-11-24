@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 69083b251369518438ceefa1d2cc680c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/NekoHumanoid/NekoEars/NekoEar_Blue.mat
+  uploadId: 814818

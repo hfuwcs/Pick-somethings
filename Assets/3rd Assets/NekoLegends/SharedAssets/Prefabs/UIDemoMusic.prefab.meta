@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 95c8e04365b153948bd3fa7c9a1d4778
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Prefabs/UIDemoMusic.prefab
+  uploadId: 814818

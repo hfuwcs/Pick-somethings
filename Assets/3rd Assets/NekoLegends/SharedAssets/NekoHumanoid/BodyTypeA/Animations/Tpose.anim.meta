@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a19909121c242a8449746dd867a281f8
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/NekoHumanoid/BodyTypeA/Animations/Tpose.anim
+  uploadId: 814818

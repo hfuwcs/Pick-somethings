@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d0cdba9975331a247a0181ace6705f2a
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Vfx/ParticleMats/AlphaBlend.mat
+  uploadId: 814818

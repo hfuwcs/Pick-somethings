@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: f9801dbb9b5fbfa43b8c3fbd21957c43
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Prefabs/Music UI Template.prefab
+  uploadId: 814818

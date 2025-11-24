@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 2438b8ec667dfca4f98f6d282151b35b
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Models/Neko/cat - standing idle.anim
+  uploadId: 814818

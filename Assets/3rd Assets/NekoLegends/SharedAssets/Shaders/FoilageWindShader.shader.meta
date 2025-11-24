@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 52a836a0e7a561249b9eaff4d0250586
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Shaders/FoilageWindShader.shader
+  uploadId: 814818

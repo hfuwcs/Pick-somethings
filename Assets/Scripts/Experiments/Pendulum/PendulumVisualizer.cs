@@ -1,58 +1,57 @@
 ﻿using UnityEngine;
 
-/// <summary>
-/// Chịu trách nhiệm hiển thị trực quan sợi dây của con lắc bằng Line Renderer.
-/// </summary>
-[RequireComponent(typeof(LineRenderer))]
 public class PendulumVisualizer : MonoBehaviour
 {
-    private LineRenderer _lineRenderer;
-    private Transform _bobModelTransform; // Transform của quả nặng để vẽ đến
+    [Header("Settings")]
+    [SerializeField] private Transform wireModel;
+    [SerializeField] private float wireThickness = 0.02f;
+    
+    private Transform _pivotPoint;
+    private Transform _bobConnectorPoint;
 
-    void Awake()
+    private void Awake()
     {
-        _lineRenderer = GetComponent<LineRenderer>();
-        // Cấu hình Line Renderer cơ bản
-        _lineRenderer.positionCount = 2;
-        _lineRenderer.startWidth = 0.05f;
-        _lineRenderer.endWidth = 0.05f;
-        // Đảm bảo Line Renderer sử dụng tọa độ thế giới
-        _lineRenderer.useWorldSpace = true;
-
-        // Tắt visualizer ban đầu
-        this.enabled = false;
-        _lineRenderer.enabled = false;
+        if (wireModel != null)
+        {
+            var col = wireModel.GetComponent<Collider>();
+            if (col != null) Destroy(col); 
+            
+            var renderer = wireModel.GetComponent<Renderer>();
+            if (renderer != null) renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            
+            wireModel.gameObject.SetActive(false);
+        }
     }
 
-    /// <summary>
-    /// Bắt đầu hiển thị sợi dây.
-    /// </summary>
-    /// <param name="bobModel">Transform của model quả nặng.</param>
-    public void StartVisualizing(Transform bobModel)
+    public void StartVisualizing(Transform pivot, Transform bobConnector)
     {
-        _bobModelTransform = bobModel;
+        _pivotPoint = pivot;
+        _bobConnectorPoint = bobConnector;
+        
+        if (wireModel != null) wireModel.gameObject.SetActive(true);
         this.enabled = true;
-        _lineRenderer.enabled = true;
     }
 
-    /// <summary>
-    /// Dừng hiển thị sợi dây.
-    /// </summary>
     public void StopVisualizing()
     {
-        _bobModelTransform = null;
+        if (wireModel != null) wireModel.gameObject.SetActive(false);
         this.enabled = false;
-        _lineRenderer.enabled = false;
+        _pivotPoint = null;
+        _bobConnectorPoint = null;
     }
 
-    // Sử dụng LateUpdate để đảm bảo sợi dây được vẽ sau khi tất cả các
-    // tính toán vật lý trong FixedUpdate và Update đã hoàn tất.
     void LateUpdate()
     {
-        if (_bobModelTransform == null) return;
+        if (_pivotPoint == null || _bobConnectorPoint == null || wireModel == null) return;
 
-        // Cập nhật vị trí 2 đầu của sợi dây
-        _lineRenderer.SetPosition(0, transform.position); // Điểm A: Pivot
-        _lineRenderer.SetPosition(1, _bobModelTransform.position); // Điểm B: Bob
+        Vector3 start = _pivotPoint.position;
+        Vector3 end = _bobConnectorPoint.position;
+        float distance = Vector3.Distance(start, end);
+
+        wireModel.position = (start + end) / 2f;
+
+        wireModel.up = start - end;
+
+        wireModel.localScale = new Vector3(wireThickness, distance / 2f, wireThickness);
     }
 }

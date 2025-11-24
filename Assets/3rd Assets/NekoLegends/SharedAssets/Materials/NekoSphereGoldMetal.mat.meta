@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 86c6d38b22a651a4b9448f566c39e6a2
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Materials/NekoSphereGoldMetal.mat
+  uploadId: 814818

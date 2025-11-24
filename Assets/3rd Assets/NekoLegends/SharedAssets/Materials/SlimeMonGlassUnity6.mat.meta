@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f4158376f7c1e8340b6d748af07dcec4
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Materials/SlimeMonGlassUnity6.mat
+  uploadId: 814818

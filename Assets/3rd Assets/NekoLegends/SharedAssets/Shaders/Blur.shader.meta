@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: c3ef7dd39a82cfb4f9bcd8e9756bae10
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Shaders/Blur.shader
+  uploadId: 814818

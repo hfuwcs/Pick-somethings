@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 5cd1168a8814f4d40a62086629e8e640
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Shaders/StylizedGrassShader/Demo Grass
+    Settings.asset
+  uploadId: 814818

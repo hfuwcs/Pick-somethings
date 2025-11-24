@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 411c9d69e454911439c7cdf8a0bef7ce
+ShaderIncludeImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Shaders/StylizedGrassShader/Grass.hlsl
+  uploadId: 814818

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f3db87a790a79694bbb3be5f9e945cbc
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Scenes/PostProcessingCharacter.asset
+  uploadId: 814818

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 523968bf76442ac4ab457273aa683253
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Models/WallPaintings/Textures/paintingNature.mat
+  uploadId: 814818

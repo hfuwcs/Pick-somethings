@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 395a26247c6959a47917dfb2de33d373
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Prefabs/NekoCat GrassInteractor.prefab
+  uploadId: 814818

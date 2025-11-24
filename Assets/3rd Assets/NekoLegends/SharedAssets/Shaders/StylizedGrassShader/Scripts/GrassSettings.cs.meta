@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 5330b9aa49efd424495407d6e28ed910
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Shaders/StylizedGrassShader/Scripts/GrassSettings.cs
+  uploadId: 814818

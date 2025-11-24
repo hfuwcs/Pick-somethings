@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: be33e225f8dfc7a4e89b5deaccab2791
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Materials/CelTriplanar_RoundedCube_GrassAndDirt.mat
+  uploadId: 814818

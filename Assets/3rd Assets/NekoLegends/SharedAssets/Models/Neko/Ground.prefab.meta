@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 113f362c98df673468c68d41d0369825
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Models/Neko/Ground.prefab
+  uploadId: 814818

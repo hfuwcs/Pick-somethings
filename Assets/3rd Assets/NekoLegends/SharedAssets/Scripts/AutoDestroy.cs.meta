@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 5bf69b41f2b8a0143b699f8fde4a8251
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Scripts/AutoDestroy.cs
+  uploadId: 814818

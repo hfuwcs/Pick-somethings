@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 72ddbd19c4d4a4a4b9434c01cbe405b9
+timeCreated: 1487516209
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Physics/FrictionNoBounce.physicMaterial
+  uploadId: 814818

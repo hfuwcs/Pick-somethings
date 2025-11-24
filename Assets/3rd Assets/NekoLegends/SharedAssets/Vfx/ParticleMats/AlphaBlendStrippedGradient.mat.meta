@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f8ba3ba4c73f0064798fe1727b16e962
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Vfx/ParticleMats/AlphaBlendStrippedGradient.mat
+  uploadId: 814818

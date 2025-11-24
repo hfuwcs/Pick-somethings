@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: c6547668b6aa76f4d8522285310475c0
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Prefabs/GroundCylinder.prefab
+  uploadId: 814818

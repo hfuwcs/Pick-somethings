@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: ef902d0096690124aa6aaff263e0b800
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Prefabs/UISliderWithLabel_LightAngle.prefab
+  uploadId: 814818

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 457c2da48c21ff34aa2f11eb86becb49
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Materials/MetalGoldCel.mat
+  uploadId: 814818

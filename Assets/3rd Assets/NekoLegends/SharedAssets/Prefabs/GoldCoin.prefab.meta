@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 0f5aeb0ff838905499dc7da3c56d6d58
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Prefabs/GoldCoin.prefab
+  uploadId: 814818

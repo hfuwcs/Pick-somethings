@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 54f7b72ffc6b33f4e9379c739e0904df
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Fonts/license.txt
+  uploadId: 814818

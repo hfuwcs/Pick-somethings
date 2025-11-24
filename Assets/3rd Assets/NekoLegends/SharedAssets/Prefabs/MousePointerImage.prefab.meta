@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 26e574030b04eb7488921a975eb7fc16
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Prefabs/MousePointerImage.prefab
+  uploadId: 814818

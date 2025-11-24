@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f5a9c428b956ffd4ca291e8ef0738552
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Models/Neko/cat - walk.anim
+  uploadId: 814818

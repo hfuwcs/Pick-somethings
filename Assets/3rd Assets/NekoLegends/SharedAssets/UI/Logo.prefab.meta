@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 414fbef3a63bfff48a20736a52393784
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/UI/Logo.prefab
+  uploadId: 814818

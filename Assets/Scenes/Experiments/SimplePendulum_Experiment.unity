@@ -153,8 +153,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be46c31097f6f65419c0fd8cc0d08c91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TooltipManager
-  tooltipPanel: {fileID: 0}
-  tooltipText: {fileID: 0}
+  tooltipPanel: {fileID: 578035513}
+  tooltipText: {fileID: 689560940}
   offset: {x: 15, y: -15}
 --- !u!4 &213722457
 Transform:
@@ -328,10 +328,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PendulumExperimentManager
   dampingFactor: 0.05
-  mode: 1
+  mode: 0
   pendulumBob: {fileID: 1261244005}
   pivotPoint: {fileID: 1331864703}
   resetPoint: {fileID: 1997139573}
+  lengthSlider: {fileID: 0}
+  lengthValueText: {fileID: 0}
+  minLength: 0.3
+  maxLength: 1.5
   cyclesToAverage: 2
   calculatedPeriod: 0
   minimumValidPeriod: 0.25
@@ -351,6 +355,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!224 &578035513 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7553862499069798073, guid: 7910eb4329cf5f148be6e4750262f09a, type: 3}
+  m_PrefabInstance: {fileID: 922613616}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &596464298
 GameObject:
   m_ObjectHideFlags: 0
@@ -419,6 +428,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Connector
   isInteractableForWiring: 0
   connectionID: PendulumConnector
+--- !u!114 &689560940 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4767031449776875432, guid: 7910eb4329cf5f148be6e4750262f09a, type: 3}
+  m_PrefabInstance: {fileID: 922613616}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1001 &701462320
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -564,6 +584,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2228508980768620163, guid: 7910eb4329cf5f148be6e4750262f09a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2228508980768620163, guid: 7910eb4329cf5f148be6e4750262f09a, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2228508980768620163, guid: 7910eb4329cf5f148be6e4750262f09a, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2228508980768620163, guid: 7910eb4329cf5f148be6e4750262f09a, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2383902878150110542, guid: 7910eb4329cf5f148be6e4750262f09a, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -635,6 +671,14 @@ PrefabInstance:
     - target: {fileID: 7170728574446071740, guid: 7910eb4329cf5f148be6e4750262f09a, type: 3}
       propertyPath: m_Name
       value: TooltipPanelPrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 7553862499069798073, guid: 7910eb4329cf5f148be6e4750262f09a, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7553862499069798073, guid: 7910eb4329cf5f148be6e4750262f09a, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1031,6 +1075,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97293e70f3b07fb4996da2646deb1af2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PendulumVisualizer
+  wireModel: {fileID: 3075887772071595523, guid: d627f50cb5f8bfd45bafa8cba68150b0, type: 3}
+  wireThickness: 0.02
 --- !u!120 &1331864705
 LineRenderer:
   serializedVersion: 2
@@ -1469,7 +1515,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0.684, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
+  m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1261244003}
@@ -1520,7 +1566,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 483678d96bb5b3040bb76ef08ee9e87e, type: 2}
+  - {fileID: 2100000, guid: 8779e88486653464dae5520700cc141e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

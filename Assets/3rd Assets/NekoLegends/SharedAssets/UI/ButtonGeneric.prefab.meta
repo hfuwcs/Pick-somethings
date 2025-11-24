@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 015bb24e5f6b4fc4fa4b44397de63f7c
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/UI/ButtonGeneric.prefab
+  uploadId: 814818

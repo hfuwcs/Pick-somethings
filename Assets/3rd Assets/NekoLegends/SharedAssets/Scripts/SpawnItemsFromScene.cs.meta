@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: b0c622c6134d9dd4799eb61e9f16f8aa
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Scripts/SpawnItemsFromScene.cs
+  uploadId: 814818

@@ -1,0 +1,11 @@
+{
+    "asset": "8779e88486653464dae5520700cc141e",
+    "fileName": "019aae96-1b7f-79aa-a76b-220fe78f6d82_Preview.png",
+    "prompt": "make me a material for a pendulum bob",
+    "negativePrompt": "",
+    "model": "44ec3749-963a-44b1-aa54-dc19f6ed8ab2",
+    "modelName": "Unity Texture2D",
+    "customSeed": 280734549,
+    "w3CTraceId": "16e3597eea5e041fcac426660c447b79",
+    "refinementMode": "Generation"
+}

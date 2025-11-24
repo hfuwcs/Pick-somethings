@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: c7da02f02f85dbd41aa8101ff3739890
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Prefabs/boulder.prefab
+  uploadId: 814818

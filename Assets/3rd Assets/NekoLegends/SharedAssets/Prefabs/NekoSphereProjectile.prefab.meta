@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 71d4d8c992fe9bf44b0331bffc564fe4
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Prefabs/NekoSphereProjectile.prefab
+  uploadId: 814818

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: d7d5d314feb10b44ea8f05f365049e2b
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/ToolsMenu/CopyPastePose.cs
+  uploadId: 814818

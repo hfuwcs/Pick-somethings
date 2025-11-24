@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 26126ed0b20f1a34eb2653f6e48f52af
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Models/CoinPouch/MaterialsAndTextures/xmasBag.mat
+  uploadId: 814818

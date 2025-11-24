@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 94363a6351fb41828d2f598cae02b73e
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/NekoLegends.SharedAssets.asmdef
+  uploadId: 814818

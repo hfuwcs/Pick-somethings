@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 14a70c4db1888b54484e270503e83531
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Prefabs/slimeMonsterBlendShapesAnim.prefab
+  uploadId: 814818

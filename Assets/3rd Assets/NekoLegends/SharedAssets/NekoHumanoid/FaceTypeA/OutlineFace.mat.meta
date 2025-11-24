@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 6c7362bcd3d4ce748b964058d590396b
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/NekoHumanoid/FaceTypeA/OutlineFace.mat
+  uploadId: 814818

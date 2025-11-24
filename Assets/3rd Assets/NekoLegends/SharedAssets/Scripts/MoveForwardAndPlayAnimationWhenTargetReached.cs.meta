@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: 855c6b6c74ce09f4b99ceceb767a7b1f
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267428
+  packageName: Shared Demo Assets URP
+  packageVersion: 1.9.1
+  assetPath: Assets/NekoLegends/SharedAssets/Scripts/MoveForwardAndPlayAnimationWhenTargetReached.cs
+  uploadId: 814818
