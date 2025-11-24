@@ -13,13 +13,11 @@ public class ExperimentUIManager : MonoBehaviour
     [Header("Camera Control")]
     [SerializeField] private CinemachineInputAxisController cameraInputController; 
     
-    //[SerializeField] private MonoBehaviour mouseLookScript; 
-
     [Header("Components")]
     [SerializeField] private InteractionController playerInteraction;
 
-    private bool _isPaused = false;      // Trạng thái ESC (Dừng game)
-    private bool _isCursorMode = false;  // Trạng thái Tab (Chuột hiện, game vẫn chạy)
+    private bool _isPaused = false;
+    private bool _isCursorMode = false;
 
     private void Start()
     {
