@@ -196,6 +196,25 @@ public class Grabbable : MonoBehaviour, IInteractable
 
         UnsnapInternalCleanup();
     }
+    public void UpdateJointAnchor(Vector3 connectedBodyWorldPosition)
+    {
+        if (_joint == null) return;
+
+        if (_joint is HingeJoint hinge)
+        {
+            hinge.autoConfigureConnectedAnchor = false;
+            Vector3 newAnchorLocalPosition = transform.InverseTransformPoint(connectedBodyWorldPosition);
+            hinge.anchor = newAnchorLocalPosition;            
+            hinge.connectedAnchor = Vector3.zero; 
+            
+            if (_rigidbody != null)
+            {
+                _rigidbody.linearVelocity = Vector3.zero;
+                _rigidbody.angularVelocity = Vector3.zero;
+                _rigidbody.WakeUp();
+            }
+        }
+    }
 
     #endregion
 

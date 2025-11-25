@@ -31,7 +31,7 @@ public class PendulumExperimentManager : ExperimentManagerBase
     [Tooltip("Slider điều chỉnh chiều dài dây.")]
     [SerializeField] private Slider lengthSlider;
     [Tooltip("Text hiển thị giá trị chiều dài.")]
-    [SerializeField] private TextMeshProUGUI lengthValueText; 
+    [SerializeField] private TextMeshProUGUI lengthValueText;
     [SerializeField] private float minLength = 0.3f;
     [SerializeField] private float maxLength = 1.5f;
 
@@ -49,7 +49,7 @@ public class PendulumExperimentManager : ExperimentManagerBase
     [Tooltip("Góc tối đa (độ) mà người dùng có thể kéo con lắc trong giai đoạn setup. Phù hợp với dao động điều hòa nhỏ (< 15°).")]
     [Range(5f, 30f)]
     [SerializeField] private float maxSetupAngleDegrees = 15f;
-    
+
     #endregion
 
     #region Private State
@@ -99,29 +99,29 @@ public class PendulumExperimentManager : ExperimentManagerBase
     {
         if (!_isAssembled) return;
 
-        // Cập nhật UI Text
         if (lengthValueText != null) lengthValueText.text = $"L = {newLength:F2} m";
-
 
         Vector3 direction = (_bobModelTransform.position - pivotPoint.transform.position).normalized;
 
         if (direction.sqrMagnitude < 0.001f) direction = Vector3.down;
-
         Vector3 newBobPos = pivotPoint.transform.position + (direction * newLength);
-
-        _bobRootRigidbody.MovePosition(newBobPos); 
-        
         pendulumBob.transform.position = newBobPos;
+        _bobRootRigidbody.position = newBobPos;
+
+        if (pendulumBob.CurrentState == GrabbableState.Snapped || pendulumBob.CurrentState == GrabbableState.Anchored)
+        {
+            pendulumBob.UpdateJointAnchor(pivotPoint.transform.position);
+        }
 
         if (mode == SimulationMode.Ideal && _idealSimulator != null)
         {
-            _idealSimulator.SetLength(newLength); 
+            _idealSimulator.SetLength(newLength);
         }
 
         bool isIdealSetupPhase = (mode == SimulationMode.Ideal && CurrentState == ExperimentState.PreExperiment);
         var newStrategy = new PendulumHoldStrategy(pivotPoint.transform, newLength, maxSetupAngleDegrees, isIdealSetupPhase);
         pendulumBob.SetHoldStrategy(newStrategy);
-        
+
         if (mode == SimulationMode.Ideal && CurrentState == ExperimentState.Running)
         {
             CalculatePeriodIdeal();
@@ -152,21 +152,21 @@ public class PendulumExperimentManager : ExperimentManagerBase
     protected override void StartExperimentLogic()
     {
         Debug.Log($"Bắt đầu logic thí nghiệm con lắc ở chế độ: {mode}.");
-        
+
         if (_isInSetupPhase && mode == SimulationMode.Ideal)
         {
             _isInSetupPhase = false;
-            
+
             Vector3 currentVector = _bobModelTransform.position - pivotPoint.transform.position;
             float setupAngle = Vector3.SignedAngle(Vector3.down, currentVector, Vector3.forward);
-            
+
             Debug.Log($"[Ideal Mode] Kết thúc Setup Phase. Bắt đầu mô phỏng từ góc: {setupAngle:F2}°");
-            
+
             float length = Vector3.Distance(pivotPoint.transform.position, _bobModelTransform.position);
             var runningStrategy = new PendulumHoldStrategy(pivotPoint.transform, length, maxSetupAngleDegrees, false);
             pendulumBob.SetHoldStrategy(runningStrategy);
         }
-        
+
         ResetMeasurement();
 
         if (mode == SimulationMode.Ideal)
@@ -190,7 +190,7 @@ public class PendulumExperimentManager : ExperimentManagerBase
             _idealSimulator.StopSimulation();
             Debug.Log("[Ideal Mode] Dừng IdealPendulumSimulator.");
         }
-        
+
         if (pendulumBob.CurrentState == GrabbableState.Snapped)
         {
             pendulumBob.ConfigureSnappedPhysics(false);
@@ -218,13 +218,13 @@ public class PendulumExperimentManager : ExperimentManagerBase
         _bobRootRigidbody.isKinematic = false;
         _isAssembled = false;
         _isInSetupPhase = false;
-        
-        if (_visualizer != null) 
+
+        if (_visualizer != null)
         {
             _visualizer.StopVisualizing();
             Debug.Log("[Reset] LineRenderer/Cylinder đã được tắt.");
         }
-        
+
         ResetMeasurement();
     }
     #endregion
@@ -241,17 +241,17 @@ public class PendulumExperimentManager : ExperimentManagerBase
                 {
                     _bobRootRigidbody.isKinematic = true;
                 }
-                
+
                 _bobRootRigidbody.linearVelocity = Vector3.zero;
                 _bobRootRigidbody.angularVelocity = Vector3.zero;
             }
-            
-            if (pendulumBob.CurrentState == GrabbableState.ConstrainedGrab || 
+
+            if (pendulumBob.CurrentState == GrabbableState.ConstrainedGrab ||
                 pendulumBob.CurrentState == GrabbableState.Snapped)
             {
                 Vector3 currentVector = _bobModelTransform.position - pivotPoint.transform.position;
                 float currentAngle = Vector3.SignedAngle(Vector3.down, currentVector, Vector3.forward);
-                
+
                 if (Time.fixedTime % 0.5f < Time.fixedDeltaTime)
                 {
                     Debug.Log($"[Ideal Setup] Góc hiện tại: {currentAngle:F1}° (Max: ±{maxSetupAngleDegrees}°). Con lắc đang đứng yên.");
@@ -272,17 +272,17 @@ public class PendulumExperimentManager : ExperimentManagerBase
     private void CheckAssemblyState()
     {
         bool wasJustAssembled = !_isAssembled && pendulumBob.CurrentState == GrabbableState.Snapped;
-        
+
         if (wasJustAssembled)
         {
             _isAssembled = true;
             Debug.Log("Con lắc đã được lắp ráp. Sẵn sàng để bắt đầu thí nghiệm.");
-            
+
             Transform bobConnectorT = pendulumBob.GetComponentInChildren<Connector>().transform;
             if (_visualizer != null) _visualizer.StartVisualizing(pivotPoint.transform, bobConnectorT);
 
             float length = Vector3.Distance(pivotPoint.transform.position, _bobModelTransform.position);
-            
+
             if (lengthSlider != null)
             {
                 lengthSlider.SetValueWithoutNotify(Mathf.Clamp(length, minLength, maxLength));
@@ -292,11 +292,11 @@ public class PendulumExperimentManager : ExperimentManagerBase
             bool isIdealSetupPhase = (mode == SimulationMode.Ideal && CurrentState == ExperimentState.PreExperiment);
             var pendulumStrategy = new PendulumHoldStrategy(pivotPoint.transform, length, maxSetupAngleDegrees, isIdealSetupPhase);
             pendulumBob.SetHoldStrategy(pendulumStrategy);
-            
+
             if (isIdealSetupPhase)
             {
                 _isInSetupPhase = true;
-                pendulumBob.ConfigureSnappedPhysics(true); 
+                pendulumBob.ConfigureSnappedPhysics(true);
                 Debug.Log($"[Ideal Mode - Setup] Bạn có thể kéo con lắc trong phạm vi ±{maxSetupAngleDegrees}° để chọn góc ban đầu.");
             }
             else if (mode == SimulationMode.Realistic)
@@ -304,23 +304,23 @@ public class PendulumExperimentManager : ExperimentManagerBase
                 pendulumBob.ConfigureSnappedPhysics(false);
                 Debug.Log($"[Realistic Mode] Con lắc sẽ dao động theo vật lý thực tế khi bấm Start.");
             }
-            
+
             Vector3 initialVector = _bobModelTransform.position - pivotPoint.transform.position;
             var _angle = Vector3.SignedAngle(Vector3.down, initialVector, Vector3.forward) * Mathf.Deg2Rad;
             Debug.Log("[DEBUG] Length: " + length);
             Debug.Log("[DEBUG] Initial Angle (deg): " + (_angle * Mathf.Rad2Deg));
         }
 
-        bool wasJustDisassembled = _isAssembled && 
-                                   (pendulumBob.CurrentState == GrabbableState.Idle || 
+        bool wasJustDisassembled = _isAssembled &&
+                                   (pendulumBob.CurrentState == GrabbableState.Idle ||
                                     pendulumBob.CurrentState == GrabbableState.Grabbed);
         if (wasJustDisassembled)
         {
             _isAssembled = false;
             _isInSetupPhase = false;
             Debug.Log("Con lắc đã bị tháo gỡ.");
-            
-            if (_visualizer != null) 
+
+            if (_visualizer != null)
             {
                 _visualizer.StopVisualizing();
             }
@@ -336,7 +336,7 @@ public class PendulumExperimentManager : ExperimentManagerBase
     private void ApplySimulationMode()
     {
         bool isIdealMode = (mode == SimulationMode.Ideal);
-        
+
         if (isIdealMode)
         {
             _idealSimulator.StartSimulation(pivotPoint.transform, pendulumBob.transform, _bobModelTransform);
@@ -416,13 +416,13 @@ public class PendulumExperimentManager : ExperimentManagerBase
     public void OnResetButtonPressed()
     {
         Debug.Log("[UI] Người dùng bấm nút Reset.");
-        
+
         ResetExperimentLogic();
 
         if (lengthSlider != null)
         {
-            lengthSlider.value = 1.0f; 
-            
+            lengthSlider.value = 1.0f;
+
             if (lengthValueText != null) lengthValueText.text = $"L = {1.0f:F2} m";
         }
     }

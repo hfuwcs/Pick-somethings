@@ -235,7 +235,7 @@ Transform:
   m_GameObject: {fileID: 165016660}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.0676, z: 0}
+  m_LocalPosition: {x: 0, y: 0.0507, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1751,7 +1751,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3410736235170488739, guid: 929fe88d55ced6d4d85ec8a3528640c6, type: 3}
       propertyPath: _interactionDistance
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3410736235170488739, guid: 929fe88d55ced6d4d85ec8a3528640c6, type: 3}
       propertyPath: _interactionLayerMask.m_Bits
@@ -2371,9 +2371,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1146538487}
     m_Modifications:
+    - target: {fileID: 3892270733949609415, guid: b063eb46cc1ce924b99a802d9d22f8f3, type: 3}
+      propertyPath: jointType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4269978728141690042, guid: b063eb46cc1ce924b99a802d9d22f8f3, type: 3}
       propertyPath: m_Name
       value: Burette stand
+      objectReference: {fileID: 0}
+    - target: {fileID: 7439218110387131844, guid: b063eb46cc1ce924b99a802d9d22f8f3, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2.6187
+      objectReference: {fileID: 0}
+    - target: {fileID: 7439218110387131844, guid: b063eb46cc1ce924b99a802d9d22f8f3, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2.6187
+      objectReference: {fileID: 0}
+    - target: {fileID: 7439218110387131844, guid: b063eb46cc1ce924b99a802d9d22f8f3, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2.6187
       objectReference: {fileID: 0}
     - target: {fileID: 7439218110387131844, guid: b063eb46cc1ce924b99a802d9d22f8f3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2381,11 +2397,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7439218110387131844, guid: b063eb46cc1ce924b99a802d9d22f8f3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.225
+      value: 1.651
       objectReference: {fileID: 0}
     - target: {fileID: 7439218110387131844, guid: b063eb46cc1ce924b99a802d9d22f8f3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.7516298
+      value: -2.546
       objectReference: {fileID: 0}
     - target: {fileID: 7439218110387131844, guid: b063eb46cc1ce924b99a802d9d22f8f3, type: 3}
       propertyPath: m_LocalRotation.w
