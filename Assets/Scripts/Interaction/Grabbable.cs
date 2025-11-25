@@ -309,8 +309,7 @@ public class Grabbable : MonoBehaviour, IInteractable
                 HingeJoint hingeJoint = gameObject.AddComponent<HingeJoint>();
                 hingeJoint.connectedBody = connectedBody;
                 hingeJoint.anchor = transform.InverseTransformPoint(snapZone.transform.position);
-                // Axis là trục xoay, ví dụ trục Z (0, 0, 1) cho phép xoay qua lại
-                hingeJoint.axis = new Vector3(0, 0, 1);
+                hingeJoint.axis = snapZone.OscillationAxis; 
                 _joint = hingeJoint;
                 break;
 

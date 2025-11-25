@@ -119,7 +119,8 @@ public class PendulumExperimentManager : ExperimentManagerBase
         }
 
         bool isIdealSetupPhase = (mode == SimulationMode.Ideal && CurrentState == ExperimentState.PreExperiment);
-        var newStrategy = new PendulumHoldStrategy(pivotPoint.transform, newLength, maxSetupAngleDegrees, isIdealSetupPhase);
+        Vector3 worldAxis = pivotPoint.transform.TransformDirection(pivotPoint.OscillationAxis);
+        var newStrategy = new PendulumHoldStrategy(pivotPoint.transform, newLength, maxSetupAngleDegrees, isIdealSetupPhase, worldAxis);
         pendulumBob.SetHoldStrategy(newStrategy);
 
         if (mode == SimulationMode.Ideal && CurrentState == ExperimentState.Running)
@@ -290,7 +291,10 @@ public class PendulumExperimentManager : ExperimentManagerBase
             }
 
             bool isIdealSetupPhase = (mode == SimulationMode.Ideal && CurrentState == ExperimentState.PreExperiment);
-            var pendulumStrategy = new PendulumHoldStrategy(pivotPoint.transform, length, maxSetupAngleDegrees, isIdealSetupPhase);
+            Vector3 worldAxis = pivotPoint.transform.TransformDirection(pivotPoint.OscillationAxis);
+
+            var pendulumStrategy = new PendulumHoldStrategy(pivotPoint.transform, length, maxSetupAngleDegrees, isIdealSetupPhase, worldAxis);
+
             pendulumBob.SetHoldStrategy(pendulumStrategy);
 
             if (isIdealSetupPhase)
@@ -339,7 +343,9 @@ public class PendulumExperimentManager : ExperimentManagerBase
 
         if (isIdealMode)
         {
-            _idealSimulator.StartSimulation(pivotPoint.transform, pendulumBob.transform, _bobModelTransform);
+            Vector3 worldAxis = pivotPoint.transform.TransformDirection(pivotPoint.OscillationAxis);
+
+            _idealSimulator.StartSimulation(pivotPoint.transform, pendulumBob.transform, _bobModelTransform, worldAxis);
             _idealSimulator.enabled = true;
             pendulumBob.ConfigureSnappedPhysics(true);
             Debug.Log("[Ideal Mode] IdealPendulumSimulator đã được kích hoạt.");

@@ -6,29 +6,23 @@ public class PendulumHoldStrategy : IHoldStrategy
     private readonly float _length;
     private readonly float _maxAngleDegrees;
     private readonly bool _enforceAngleLimit;
-
-    /// <summary>
-    /// Khởi tạo chiến lược với các tham số ràng buộc của con lắc.
-    /// </summary>
-    /// <param name="pivot">Transform của điểm treo.</param>
-    /// <param name="length">Chiều dài của con lắc.</param>
-    /// <param name="maxAngleDegrees">Góc tối đa cho phép (độ). Mặc định là 90 độ (không giới hạn thực tế).</param>
-    /// <param name="enforceAngleLimit">Có áp dụng giới hạn góc hay không.</param>
-    public PendulumHoldStrategy(Transform pivot, float length, float maxAngleDegrees = 90f, bool enforceAngleLimit = false)
+    private readonly Vector3 _rotationAxis;
+    public PendulumHoldStrategy(Transform pivot, float length, float maxAngleDegrees = 90f, bool enforceAngleLimit = false, Vector3 rotationAxis = default)
     {
         _pivotPoint = pivot;
         _length = length;
         _maxAngleDegrees = maxAngleDegrees;
         _enforceAngleLimit = enforceAngleLimit;
+        _rotationAxis = rotationAxis == default ? pivot.forward : rotationAxis;
     }
 
     public void Hold(Rigidbody heldBody, Transform grabberTransform, Transform centerOfMassTransform)
     {
         Vector3 grabberPosition = grabberTransform.position;
         Vector3 pivotPosition = _pivotPoint.position;
-
         Vector3 directionToGrabber = grabberPosition - pivotPosition;
-        Vector3 projectedDirection = Vector3.ProjectOnPlane(directionToGrabber, _pivotPoint.forward);
+
+        Vector3 projectedDirection = Vector3.ProjectOnPlane(directionToGrabber, _rotationAxis);
 
         if (projectedDirection.sqrMagnitude < 0.001f)
         {
@@ -40,23 +34,20 @@ public class PendulumHoldStrategy : IHoldStrategy
         if (_enforceAngleLimit)
         {
             float angleFromDown = Vector3.Angle(Vector3.down, desiredDirection);
-            
             if (angleFromDown > _maxAngleDegrees)
             {
                 Vector3 axis = Vector3.Cross(Vector3.down, desiredDirection).normalized;
                 if (axis.sqrMagnitude < 0.001f)
                 {
-                    axis = _pivotPoint.forward;
+                    axis = _rotationAxis;
                 }
                 desiredDirection = Quaternion.AngleAxis(_maxAngleDegrees, axis) * Vector3.down;
             }
         }
 
         Vector3 targetModelPosition = pivotPosition + desiredDirection * _length;
-
         Vector3 offset = heldBody.transform.position - centerOfMassTransform.position;
         Vector3 targetRootPosition = targetModelPosition + offset;
-
         heldBody.MovePosition(targetRootPosition);
     }
 }

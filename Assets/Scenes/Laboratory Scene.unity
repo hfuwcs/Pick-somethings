@@ -1751,7 +1751,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3410736235170488739, guid: 929fe88d55ced6d4d85ec8a3528640c6, type: 3}
       propertyPath: _interactionDistance
-      value: 1
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 3410736235170488739, guid: 929fe88d55ced6d4d85ec8a3528640c6, type: 3}
       propertyPath: _interactionLayerMask.m_Bits
@@ -2374,6 +2374,14 @@ PrefabInstance:
     - target: {fileID: 3892270733949609415, guid: b063eb46cc1ce924b99a802d9d22f8f3, type: 3}
       propertyPath: jointType
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3892270733949609415, guid: b063eb46cc1ce924b99a802d9d22f8f3, type: 3}
+      propertyPath: oscillationAxis.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3892270733949609415, guid: b063eb46cc1ce924b99a802d9d22f8f3, type: 3}
+      propertyPath: oscillationAxis.z
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4269978728141690042, guid: b063eb46cc1ce924b99a802d9d22f8f3, type: 3}
       propertyPath: m_Name

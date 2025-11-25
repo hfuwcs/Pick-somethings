@@ -70,6 +70,10 @@ public class SnapZone : MonoBehaviour
 
     #region SerializeField
 
+    [Header("Pendulum Configuration")]
+    [Tooltip("Trục xoay của khớp nối (Local Space). (0,0,1) = Lắc Trái/Phải. (1,0,0) = Lắc Trước/Sau.")]
+    [SerializeField] private Vector3 oscillationAxis = new Vector3(0, 0, 1);
+
     [Header("Cấu hình Hành vi")]
     [Tooltip("Vai trò của SnapZone này trong hệ thống logic.")]
     [SerializeField] private SnapRole role = SnapRole.DirectConnection;
@@ -91,6 +95,7 @@ public class SnapZone : MonoBehaviour
     #region public Variables
     public JointType DesiredJointType => jointType;
     public SnapType SnapBehavior => snapBehavior;
+    public Vector3 OscillationAxis => oscillationAxis;
     #endregion
     #region  private Variables
     private Material _originalMaterial;
