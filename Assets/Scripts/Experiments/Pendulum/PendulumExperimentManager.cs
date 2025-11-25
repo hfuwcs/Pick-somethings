@@ -378,35 +378,45 @@ public class PendulumExperimentManager : ExperimentManagerBase
         float currentVelocityY = _bobRootRigidbody.linearVelocity.y;
         float currentVelocityX = _bobRootRigidbody.linearVelocity.x;
 
-        if (_lastBobVelocityY < 0 && currentVelocityY >= 0 && currentVelocityX > 0)
+        if (_lastBobVelocityY < 0 && currentVelocityY >= 0)
         {
-            if (!_isTiming)
+            Vector3 worldAxis = pivotPoint.transform.TransformDirection(pivotPoint.OscillationAxis);
+
+            Vector3 tangentDirection = Vector3.Cross(worldAxis, Vector3.up);
+
+            bool isForwardSwing = Vector3.Dot(_bobRootRigidbody.linearVelocity, tangentDirection) > 0;
+
+            if (isForwardSwing)
             {
-                _swingStartTime = Time.fixedTime;
-                _isTiming = true;
-                Debug.Log("Bắt đầu đo chu kỳ.");
-            }
-            else
-            {
-                float period = Time.fixedTime - _swingStartTime;
-                if (period < minimumValidPeriod)
+                if (!_isTiming)
                 {
-                    Debug.LogWarning($"Phép đo chu kỳ ({period:F3}s) bị loại bỏ vì quá ngắn.");
                     _swingStartTime = Time.fixedTime;
-                    return;
+                    _isTiming = true;
+                    Debug.Log("Bắt đầu đo chu kỳ (Realistic).");
                 }
-
-                _measuredPeriods.Add(period);
-                Debug.Log($"Đo được chu kỳ: {period:F3}s");
-
-                if (_measuredPeriods.Count >= cyclesToAverage)
+                else
                 {
-                    calculatedPeriod = _measuredPeriods.Average();
-                    Debug.LogWarning($"[Realistic Mode] CHU KỲ TRUNG BÌNH sau {_measuredPeriods.Count} lần đo: {calculatedPeriod:F3}s");
-                    _measuredPeriods.Clear();
-                }
+                    float period = Time.fixedTime - _swingStartTime;
 
-                _swingStartTime = Time.fixedTime;
+                    if (period < minimumValidPeriod)
+                    {
+                        Debug.LogWarning($"Phép đo chu kỳ ({period:F3}s) bị loại bỏ vì quá ngắn (Nhiễu).");
+                        _swingStartTime = Time.fixedTime; 
+                        return;
+                    }
+
+                    _measuredPeriods.Add(period);
+                    Debug.Log($"Đo được chu kỳ: {period:F3}s");
+
+                    if (_measuredPeriods.Count >= cyclesToAverage)
+                    {
+                        calculatedPeriod = _measuredPeriods.Average();
+                        Debug.LogWarning($"[Realistic Mode] CHU KỲ TRUNG BÌNH sau {_measuredPeriods.Count} lần đo: {calculatedPeriod:F3}s");
+                        _measuredPeriods.Clear();
+                    }
+
+                    _swingStartTime = Time.fixedTime;
+                }
             }
         }
     }
