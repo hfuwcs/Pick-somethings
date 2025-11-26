@@ -1,0 +1,265 @@
+<?xml version="1.0"?>
+<Data xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Questions>
+    <Question>
+      <Info>Con lắc đơn gồm vật nặng khối lượng m treo vào sợi dây tại nơi có gia tốc trọng trường g, dao động điều hoà với chu kỳ T phụ thuộc vào</Info>
+      <Category>Conlacdon</Category>
+      <Answers>
+        <Answer>
+          <Info>A. l và g</Info>
+          <IsCorrect>true</IsCorrect>
+        </Answer>
+        <Answer>
+          <Info>B. m và l </Info>
+          <IsCorrect>false</IsCorrect>
+        </Answer>
+        <Answer>
+          <Info>C. m và g</Info>
+          <IsCorrect>false</IsCorrect>
+        </Answer>
+        <Answer>
+          <Info>D. m, l và g</Info>
+          <IsCorrect>false</IsCorrect>
+        </Answer>
+      </Answers>
+      <UseTimer>true</UseTimer>
+      <Timer>10</Timer>
+      <Type>Multi</Type>
+      <AddScore>10</AddScore>
+    </Question>
+    <Question>
+      <Info>Con lắc đơn chiều dài l dao động điều hoà với chu kỳ</Info>
+      <Category>Conlacdon</Category>
+      <Answers>
+        <Answer>
+          <Info>A. 2pi * sqrt(m/k)</Info>
+          <IsCorrect>false</IsCorrect>
+        </Answer>
+        <Answer>
+          <Info>B. 2pi * sqrt(k/m)</Info>
+          <IsCorrect>false</IsCorrect>
+        </Answer>
+        <Answer>
+          <Info>C. 2pi * sqrt(l/g)</Info>
+          <IsCorrect>true</IsCorrect>
+        </Answer>
+        <Answer>
+          <Info>D. 2pi * sqrt(g/l)</Info>
+          <IsCorrect>false</IsCorrect>
+        </Answer>
+      </Answers>
+      <UseTimer>true</UseTimer>
+      <Timer>10</Timer>
+      <Type>Multi</Type>
+      <AddScore>10</AddScore>
+    </Question>
+    <Question>
+      <Info>Con lắc đơn dao động điều hoà, khi tăng chiều dài của con lắc lên 4 lần thì tần số dao động của con lắc:</Info>
+      <Category>Conlacdon</Category>
+      <Answers>
+        <Answer>
+          <Info>A. tăng lên 2 lần.</Info>
+          <IsCorrect>false</IsCorrect>
+        </Answer>
+        <Answer>
+          <Info>B. giảm đi 2 lần.</Info>
+          <IsCorrect>true</IsCorrect>
+        </Answer>
+        <Answer>
+          <Info>C. tăng lên 4 lần.</Info>
+          <IsCorrect>false</IsCorrect>
+        </Answer>
+        <Answer>
+          <Info>D. giảm đi 4 lần.</Info>
+          <IsCorrect>false</IsCorrect>
+        </Answer>
+      </Answers>
+      <UseTimer>true</UseTimer>
+      <Timer>10</Timer>
+      <Type>Multi</Type>
+      <AddScore>10</AddScore>
+    </Question>
+    <Question>
+      <Info>Trong dao động điều hoà của con lắc đơn, phát biểu nào sau đây là đúng?</Info>
+      <Category>Conlacdon</Category>
+      <Answers>
+        <Answer>
+          <Info>A. Lực kéo về phụ thuộc vào chiều dài của con lắc.</Info>
+          <IsCorrect>false</IsCorrect>
+        </Answer>
+        <Answer>
+          <Info>B. Lực kéo về phụ thuộc vào khối lượng của vật nặng.</Info>
+          <IsCorrect>true</IsCorrect>
+        </Answer>
+        <Answer>
+          <Info>C. Gia tốc của vật phụ thuộc vào khối lượng của vật.</Info>
+          <IsCorrect>false</IsCorrect>
+        </Answer>
+        <Answer>
+          <Info>D. Tần số góc của vật phụ thuộc vào khối lượng của vật.</Info>
+          <IsCorrect>false</IsCorrect>
+        </Answer>
+      </Answers>
+      <UseTimer>true</UseTimer>
+      <Timer>10</Timer>
+      <Type>Multi</Type>
+      <AddScore>10</AddScore>
+    </Question>
+    <Question>
+      <Info>Con lắc đơn (chiều dài không đổi), dao động với biên độ nhỏ có chu kỳ phụ thuộc vào</Info>
+      <Category>Conlacdon</Category>
+      <Answers>
+        <Answer>
+          <Info>A. khối lượng của con lắc.</Info>
+          <IsCorrect>false</IsCorrect>
+        </Answer>
+        <Answer>
+          <Info>B. trọng lượng của con lắc.</Info>
+          <IsCorrect>false</IsCorrect>
+        </Answer>
+        <Answer>
+          <Info>C. tỉ số giữa khối lượng và trọng lượng của con lắc.</Info>
+          <IsCorrect>true</IsCorrect>
+        </Answer>
+        <Answer>
+          <Info>D. khối lượng riêng của con lắc.</Info>
+          <IsCorrect>false</IsCorrect>
+        </Answer>
+      </Answers>
+      <UseTimer>true</UseTimer>
+      <Timer>10</Timer>
+      <Type>Multi</Type>
+      <AddScore>10</AddScore>
+    </Question>
+    <Question>
+      <Info>Ở nơi mà con lắc đơn đếm giây (chu kỳ 2s) có độ dài 1 m, thì con lắc đơn có độ dài 3 m sẽ dao động với chu kỳ là</Info>
+      <Category>Conlacdon</Category>
+      <Answers>
+        <Answer>
+          <Info>A. T = 3,46 s</Info>
+          <IsCorrect>true</IsCorrect>
+        </Answer>
+        <Answer>
+          <Info>B. T = 6 s</Info>
+          <IsCorrect>false</IsCorrect>
+        </Answer>
+        <Answer>
+          <Info>C. T = 4,24 s</Info>
+          <IsCorrect>false</IsCorrect>
+        </Answer>
+        <Answer>
+          <Info>D. T = 1,5 s</Info>
+          <IsCorrect>false</IsCorrect>
+        </Answer>
+      </Answers>
+      <UseTimer>true</UseTimer>
+      <Timer>10</Timer>
+      <Type>Multi</Type>
+      <AddScore>10</AddScore>
+    </Question>
+    <Question>
+      <Info>Dòng điện là</Info>
+      <Category>Dongdien</Category>
+      <Answers>
+        <Answer>
+          <Info>A. dòng chuyển dời có hướng của các điện tích.</Info>
+          <IsCorrect>true</IsCorrect>
+        </Answer>
+        <Answer>
+          <Info>B. dòng chuyển động của các điện tích.</Info>
+          <IsCorrect>false</IsCorrect>
+        </Answer>
+        <Answer>
+          <Info>C. dòng chuyển dời có hướng của electron.</Info>
+          <IsCorrect>false</IsCorrect>
+        </Answer>
+        <Answer>
+          <Info>D. dòng chuyển dời có hướng của ion dương.</Info>
+          <IsCorrect>false</IsCorrect>
+        </Answer>
+      </Answers>
+      <UseTimer>true</UseTimer>
+      <Timer>10</Timer>
+      <Type>Multi</Type>
+      <AddScore>10</AddScore>
+    </Question>
+    <Question>
+      <Info>Tác dụng nổi bậc của dòng điện là</Info>
+      <Category>Dongdien</Category>
+      <Answers>
+        <Answer>
+          <Info>A. Tác dụng cơ.</Info>
+          <IsCorrect>false</IsCorrect>
+        </Answer>
+        <Answer>
+          <Info>B. Tác dụng nhiệt.</Info>
+          <IsCorrect>false</IsCorrect>
+        </Answer>
+        <Answer>
+          <Info>C. Tác dụng hóa học.</Info>
+          <IsCorrect>false</IsCorrect>
+        </Answer>
+        <Answer>
+          <Info>D. Tác dụng từ.</Info>
+          <IsCorrect>true</IsCorrect>
+        </Answer>
+      </Answers>
+      <UseTimer>true</UseTimer>
+      <Timer>10</Timer>
+      <Type>Multi</Type>
+      <AddScore>10</AddScore>
+    </Question>
+    <Question>
+      <Info>Chọn câu phát biểu đúng.</Info>
+      <Category>Dongdien</Category>
+      <Answers>
+        <Answer>
+          <Info>A. Dòng điện là dòng chuyển dời của các điện tích.</Info>
+          <IsCorrect>false</IsCorrect>
+        </Answer>
+        <Answer>
+          <Info>B. Dòng điện không đổi là dòng điện có chiều không thay đổi.</Info>
+          <IsCorrect>false</IsCorrect>
+        </Answer>
+        <Answer>
+          <Info>C. Dòng điện không đổi là dòng điện có cường độ (độ lớn) không thay đổi.</Info>
+          <IsCorrect>false</IsCorrect>
+        </Answer>
+        <Answer>
+          <Info>D. Dòng điện có các tác dụng như: từ, nhiệt, hóa, cơ, sinh lý…</Info>
+          <IsCorrect>true</IsCorrect>
+        </Answer>
+      </Answers>
+      <UseTimer>true</UseTimer>
+      <Timer>10</Timer>
+      <Type>Multi</Type>
+      <AddScore>10</AddScore>
+    </Question>
+    <Question>
+      <Info>Đại lượng nào cho biết mức độ mạnh yếu của dòng điện?</Info>
+      <Category>Dongdien</Category>
+      <Answers>
+        <Answer>
+          <Info>A. Hiệu điện thế</Info>
+          <IsCorrect>false</IsCorrect>
+        </Answer>
+        <Answer>
+          <Info>B. Công suất</Info>
+          <IsCorrect>false</IsCorrect>
+        </Answer>
+        <Answer>
+          <Info>C. Cường độ dòng điện</Info>
+          <IsCorrect>true</IsCorrect>
+        </Answer>
+        <Answer>
+          <Info>D. Nhiệt lượng</Info>
+          <IsCorrect>false</IsCorrect>
+        </Answer>
+      </Answers>
+      <UseTimer>true</UseTimer>
+      <Timer>10</Timer>
+      <Type>Multi</Type>
+      <AddScore>10</AddScore>
+    </Question>
+  </Questions>
+</Data>

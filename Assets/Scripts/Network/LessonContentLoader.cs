@@ -80,7 +80,6 @@ public class LessonContentLoader : MonoBehaviour
                 Debug.Log("[Data] Phiên bản hiện tại đã mới nhất. Load từ Disk.");
             }
 
-            // 4. Load ảnh từ Disk lên UI
             yield return StartCoroutine(LoadImagesFromDiskToUI(localPath, data.pages.Length));
         }
     }

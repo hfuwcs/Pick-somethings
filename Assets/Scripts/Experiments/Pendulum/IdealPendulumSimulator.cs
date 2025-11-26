@@ -29,7 +29,7 @@ public class IdealPendulumSimulator : MonoBehaviour
         _visualOffset = _bobRoot.position - bobModelTransform.position;
 
         Vector3 initialVector = bobModelTransform.position - _pivot.position;
-        
+
         _angle = Vector3.SignedAngle(Vector3.down, initialVector, _rotationAxis) * Mathf.Deg2Rad;
 
         _angularVelocity = 0f;
@@ -56,10 +56,15 @@ public class IdealPendulumSimulator : MonoBehaviour
         if (_pivot == null || _bobRoot == null) return;
 
         // Công thức gia tốc góc: a = -(g/L) * sin(theta)
-        float angularAcceleration = -(_gravity / _length) * Mathf.Sin(_angle);
+        int subSteps = 10;
+        float dt = Time.fixedDeltaTime / subSteps;
 
-        _angularVelocity += angularAcceleration * Time.fixedDeltaTime;
-        _angle += _angularVelocity * Time.fixedDeltaTime;
+        for (int i = 0; i < subSteps; i++)
+        {
+            float angularAcceleration = -(_gravity / _length) * Mathf.Sin(_angle);
+            _angularVelocity += angularAcceleration * dt;
+            _angle += _angularVelocity * dt;
+        }
 
         UpdateBobPosition();
     }
@@ -73,10 +78,10 @@ public class IdealPendulumSimulator : MonoBehaviour
         _bobRoot.position = bobModelTargetPosition + _visualOffset;
 
         var rb = _bobRoot.GetComponent<Rigidbody>();
-        if(rb != null && !rb.isKinematic)
+        if (rb != null && !rb.isKinematic)
         {
-             rb.linearVelocity = Vector3.zero;
-             rb.angularVelocity = Vector3.zero;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
         }
     }
 }
