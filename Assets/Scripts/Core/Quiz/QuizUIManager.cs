@@ -129,22 +129,22 @@ public class QuizUIManager : MonoBehaviour
         {
             case ResolutionScreenType.Correct:
                 uiElements.ResolutionBG.color = parameters.CorrectBGColor;
-                uiElements.ResolutionStateInfoText.text = "Correct!";
+                uiElements.ResolutionStateInfoText.text = "Chính xác!";
                 uiElements.ResolutionScoreText.text = "+" + score;
                 break;
             case ResolutionScreenType.Incorrect:
                 uiElements.ResolutionBG.color = parameters.IncorrectBGColor;
-                uiElements.ResolutionStateInfoText.text = "Incorrect!";
+                uiElements.ResolutionStateInfoText.text = "Không chính xác!";
                 uiElements.ResolutionScoreText.text = "0";
                 break;
             case ResolutionScreenType.Finish:
                 uiElements.ResolutionBG.color = parameters.FinalBGColor;
-                uiElements.ResolutionStateInfoText.text = "Final Score!";
+                uiElements.ResolutionStateInfoText.text = "Tổng điểm!";
                 
                 StartCoroutine(CalculateScore());
                 uiElements.FinishUIElements.gameObject.SetActive(true);
                 uiElements.HighScoreText.gameObject.SetActive(true);
-                uiElements.HighScoreText.text = ((highScore > events.StartupHighscore) ? "<color=yellow>new</color>" : string.Empty) + "HighScore: " + highScore;
+                uiElements.HighScoreText.text = ((highScore > events.StartupHighscore) ? "<color=yellow>new</color>" : string.Empty) + "Điểm cao: " + highScore;
                 
                 break;
         }

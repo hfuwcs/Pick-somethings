@@ -1,4 +1,3 @@
-// File: Assets/Scripts/Core/SceneController.cs
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,5 +15,11 @@ public class SceneController : MonoBehaviour
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+    public void PickCategory(string categoryName)
+    {
+        Time.timeScale = 1f;
+        GameSettings.SelectedCategory = categoryName;
+        SceneManager.LoadScene("QuizScene"); 
     }
 }

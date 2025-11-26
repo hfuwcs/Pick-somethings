@@ -49,6 +49,7 @@ public class QuizGameManager : MonoBehaviour
     }
     void Start()
     {
+        Time.timeScale = 1f;
         events.StartupHighscore = PlayerPrefs.GetInt(GameUtility.SavePrefKey);
 
         timerDefaultColor = timerText.color;

@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6165f633c657b064a8a1c7018d6efd15, type: 3}
+  m_Name: Item_Resistor
+  m_EditorClassIdentifier: Assembly-CSharp::SpawnableItem
+  itemName: "\u0110i\u1EC7n tr\u1EDF"
+  icon: {fileID: 0}
+  prefab: {fileID: 3244979319211663127, guid: e5ad39ea7477be849acfc5a402e09d78, type: 3}
+  description: 
