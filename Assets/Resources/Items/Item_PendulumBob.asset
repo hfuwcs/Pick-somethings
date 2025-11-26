@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6165f633c657b064a8a1c7018d6efd15, type: 3}
-  m_Name: Item_Resistor
+  m_Name: Item_PendulumBob
   m_EditorClassIdentifier: Assembly-CSharp::SpawnableItem
-  itemName: Resistor
+  itemName: Pendulum Bob
   icon: {fileID: 0}
-  prefab: {fileID: 0}
-  description: 
+  prefab: {fileID: 4269978728141690042, guid: b063eb46cc1ce924b99a802d9d22f8f3, type: 3}
+  description: "Con l\u1EAFc \u0111\u01A1n"
