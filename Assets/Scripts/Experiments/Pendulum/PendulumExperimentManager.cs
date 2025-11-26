@@ -68,7 +68,7 @@ public class PendulumExperimentManager : ExperimentManagerBase
 
     // --- Setup State ---
     private bool _isInSetupPhase = false;
-    
+
     // --- UI Throttle ---
     private float _uiUpdateTimer;
     #endregion
@@ -130,7 +130,7 @@ public class PendulumExperimentManager : ExperimentManagerBase
         {
             CalculatePeriodIdeal();
         }
-        
+
         if (DashboardManager.Instance != null)
             DashboardManager.Instance.UpdateStat("Length", "Chiều dài (l)", $"{newLength:F2} m");
     }
@@ -154,7 +154,7 @@ public class PendulumExperimentManager : ExperimentManagerBase
             lengthSlider.maxValue = maxLength;
             lengthSlider.onValueChanged.AddListener(OnLengthSliderChanged);
         }
-        
+
         InitializeDashboard();
     }
 
@@ -235,11 +235,11 @@ public class PendulumExperimentManager : ExperimentManagerBase
         }
 
         ResetMeasurement();
-        
+
         // [DASHBOARD] Reset lại số liệu
         InitializeDashboard();
         if (lengthSlider != null)
-             DashboardManager.Instance.UpdateStat("Length", "Chiều dài (l)", $"{lengthSlider.value:F2} m");
+            DashboardManager.Instance.UpdateStat("Length", "Chiều dài (l)", $"{lengthSlider.value:F2} m");
     }
     #endregion
 
@@ -256,12 +256,12 @@ public class PendulumExperimentManager : ExperimentManagerBase
         {
             // Callback khi người dùng gạt cần
             SetSimulationMode(val ? SimulationMode.Ideal : SimulationMode.Realistic);
-            
+
             // Cập nhật text chế độ ngay lập tức
             DashboardManager.Instance.UpdateStat("Mode", "Chế độ", val ? "Lý tưởng" : "Thực tế");
-            
+
             // Reset thí nghiệm để áp dụng mode mới
-            ResetExperimentButton(); 
+            ResetExperimentButton();
         });
 
         // Tạo các dòng mặc định
@@ -278,7 +278,7 @@ public class PendulumExperimentManager : ExperimentManagerBase
 
         // 1. Góc lệch (Alpha)
         Vector3 currentVector = _bobModelTransform.position - pivotPoint.transform.position;
-        
+
         Vector3 axis = pivotPoint != null ? pivotPoint.OscillationAxis : Vector3.forward;
         axis = pivotPoint.transform.TransformDirection(axis);
 
@@ -290,7 +290,7 @@ public class PendulumExperimentManager : ExperimentManagerBase
         {
             DashboardManager.Instance.UpdateStat("Period", "Chu kỳ (T)", $"{calculatedPeriod:F3} s");
         }
-        else if (_isTiming) 
+        else if (_isTiming)
         {
             DashboardManager.Instance.UpdateStat("Period", "Chu kỳ (T)", "<color=yellow>Đang đo...</color>");
         }
@@ -394,7 +394,7 @@ public class PendulumExperimentManager : ExperimentManagerBase
                 pendulumBob.ConfigureSnappedPhysics(false);
                 Debug.Log($"[Realistic Mode] Con lắc sẽ dao động theo vật lý thực tế khi bấm Start.");
             }
-            
+
             // [DASHBOARD] Cập nhật chiều dài ngay khi lắp xong
             if (DashboardManager.Instance != null)
                 DashboardManager.Instance.UpdateStat("Length", "Chiều dài (l)", $"{length:F2} m");
@@ -494,6 +494,14 @@ public class PendulumExperimentManager : ExperimentManagerBase
                     {
                         calculatedPeriod = _measuredPeriods.Average();
                         Debug.LogWarning($"[Realistic Mode] CHU KỲ TRUNG BÌNH sau {_measuredPeriods.Count} lần đo: {calculatedPeriod:F3}s");
+                        if (ExperimentNotification.Instance != null)
+                        {
+                            ExperimentNotification.Instance.Show(
+                                "Hoàn thành đo",
+                                $"Kết quả trung bình: {calculatedPeriod:F3}s",
+                                ExperimentNotification.Type.Success
+                            );
+                        }
                         _measuredPeriods.Clear();
                     }
 
@@ -531,7 +539,7 @@ public class PendulumExperimentManager : ExperimentManagerBase
         Debug.Log("[UI] Người dùng bấm nút Start.");
         StartPendulumExperiment();
     }
-    
+
     // Gọi wrapper để đồng nhất logic
     public void ResetExperimentButton()
     {
