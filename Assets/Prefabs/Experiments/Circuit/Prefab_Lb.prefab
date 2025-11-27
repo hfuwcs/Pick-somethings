@@ -1164,7 +1164,6 @@ GameObject:
   - component: {fileID: 8178467142034908597}
   - component: {fileID: 4797552104566919665}
   - component: {fileID: 5825860502794875569}
-  - component: {fileID: 4318151704341461919}
   - component: {fileID: 5238696554177937308}
   m_Layer: 6
   m_Name: Prefab_Lb
@@ -1254,21 +1253,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.2, y: 0.02, z: 0.15}
   m_Center: {x: 0, y: 0.02, z: 0}
---- !u!114 &4318151704341461919
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9113385540263193806}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e691b163335ae5c418ed8b86f36b8cc7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DebugPinState
-  grabbable: {fileID: 4797552104566919665}
-  component: {fileID: 0}
-  connectorA: {fileID: 5562010739219676035}
 --- !u!114 &5238696554177937308
 MonoBehaviour:
   m_ObjectHideFlags: 0

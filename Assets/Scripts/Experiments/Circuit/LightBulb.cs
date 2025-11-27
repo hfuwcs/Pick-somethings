@@ -70,7 +70,7 @@ public class LightBulb : CircuitComponent
 
         pointLight.intensity = intensity * 100.0f;
 
-        float hdrIntensity = intensity * 15.0f;
+        float hdrIntensity = intensity * 45.0f;
         Color finalColor = emissionColor * Mathf.LinearToGammaSpace(hdrIntensity);
         _bulbMaterialInstance.SetColor(EmissionColorID, finalColor);
         if (intensity > 0.01f)
