@@ -247,7 +247,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Ammeter
   connectorA: {fileID: 4852511110239302693}
-  connectorB: {fileID: 0}
+  connectorB: {fileID: 71845782879986240}
   displayValText: {fileID: 5432604219081749514}
 --- !u!1 &3650288329071956271
 GameObject:

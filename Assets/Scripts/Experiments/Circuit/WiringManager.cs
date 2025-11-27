@@ -12,7 +12,9 @@ public class WiringManager : MonoBehaviour
     [SerializeField]
     [Tooltip("Prefab của đối tượng Wire để tạo ra khi kéo dây.")]
     private GameObject wirePrefab;
-
+    [Header("Wire Materials")]
+    [SerializeField] private Material redWireMat;
+    [SerializeField] private Material blueWireMat;
     public WiringState CurrentState { get; private set; } = WiringState.Idle;
     public bool IsDrawing => _currentDrawingWire != null;
     public static event Action<Connector, Connector> OnWireConnected;
@@ -67,6 +69,18 @@ public class WiringManager : MonoBehaviour
 
         GameObject wireObject = Instantiate(wirePrefab, startPoint.transform.position, Quaternion.identity);
         _currentDrawingWire = wireObject.GetComponent<Wire>();
+
+        Material selectedMat = blueWireMat;
+
+        if (startPoint.ParentComponent != null)
+        {
+            if (startPoint == startPoint.ParentComponent.ConnectorA)
+            {
+                selectedMat = redWireMat;
+            }
+        }
+
+        _currentDrawingWire.SetColor(selectedMat);
         _currentDrawingWire.Initialize(startPoint);
 
         Debug.Log($"Bắt đầu kéo dây từ: {startPoint.name}");

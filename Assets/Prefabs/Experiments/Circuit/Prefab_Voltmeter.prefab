@@ -181,7 +181,7 @@ GameObject:
   - component: {fileID: 7144435498598316997}
   - component: {fileID: 2666020634458424022}
   m_Layer: 8
-  m_Name: V1.B
+  m_Name: V.B
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -221,7 +221,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.2, y: 1, z: 0.2}
+  m_Size: {x: 0.2, y: 2, z: 0.2}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &2666020634458424022
 MonoBehaviour:
@@ -249,7 +249,7 @@ GameObject:
   - component: {fileID: 4519523741496738261}
   - component: {fileID: 5569667325012786345}
   m_Layer: 8
-  m_Name: V1.A
+  m_Name: V.A
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -289,7 +289,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.2, y: 1, z: 0.2}
+  m_Size: {x: 0.2, y: 2, z: 0.2}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &5569667325012786345
 MonoBehaviour:
@@ -562,7 +562,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Voltmeter
   connectorA: {fileID: 5569667325012786345}
-  connectorB: {fileID: 0}
+  connectorB: {fileID: 2666020634458424022}
   displayValText: {fileID: 5138605285542313100}
 --- !u!1 &8003859059177372693
 GameObject:

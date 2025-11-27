@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Resistor
   connectorA: {fileID: 8656969411984059999}
-  connectorB: {fileID: 0}
+  connectorB: {fileID: 7038570144158833328}
   resistance: 10
 --- !u!65 &390344750897859063
 BoxCollider:
