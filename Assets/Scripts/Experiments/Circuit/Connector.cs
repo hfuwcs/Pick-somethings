@@ -17,19 +17,27 @@ public class Connector : MonoBehaviour, IInteractable
     public string ConnectionID => connectionID;
     public Grabbable ParentGrabbable => _parentGrabbable;
     public SnapZone ConnectedZone { get; private set; }
-
+    private Collider _collider;
     private readonly List<Wire> _connectedWires = new List<Wire>();
     public IReadOnlyList<Wire> ConnectedWires => _connectedWires;
     public bool HasWires => _connectedWires.Count > 0;
     private void Awake()
     {
-        
+
         _parentGrabbable = GetComponentInParent<Grabbable>();
         ParentComponent = GetComponentInParent<CircuitComponent>();
-
+        _collider = GetComponent<Collider>();
         if (_parentGrabbable == null)
         {
             Debug.LogError($"Connector '{name}' không tìm thấy Grabbable cha.", this);
+        }
+    }
+    public void SetInteractableState(bool isActive)
+    {
+        if (!isInteractableForWiring) return;
+        if (_collider != null)
+        {
+            _collider.enabled = isActive;
         }
     }
     public void SetConnectedZone(SnapZone zone)

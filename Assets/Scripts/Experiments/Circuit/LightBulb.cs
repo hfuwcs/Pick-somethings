@@ -47,7 +47,7 @@ public class LightBulb : CircuitComponent
         }
 
         // Tắt đèn khi bắt đầu
-        UpdateState(Complex.Zero,Complex.Zero);
+        UpdateState(Complex.Zero, Complex.Zero);
     }
 
     public override void UpdateState(Complex voltageDrop, Complex current)
@@ -55,7 +55,7 @@ public class LightBulb : CircuitComponent
         if (pointLight == null || _bulbMaterialInstance == null) return;
 
         double currentMagnitude = current.Magnitude;
-        float intensity = Mathf.InverseLerp(0, 2.0f, (float)current.Magnitude); 
+        float intensity = Mathf.InverseLerp(0, 2.0f, (float)current.Magnitude);
 
         if (currentMagnitude >= minCurrentToGlow)
         {
@@ -68,8 +68,14 @@ public class LightBulb : CircuitComponent
             );
         }
 
-        // Cập nhật ánh sáng và vật liệu
-        pointLight.intensity = intensity * 2.0f;
-        _bulbMaterialInstance.SetColor(EmissionColorID, emissionColor * intensity);
+        pointLight.intensity = intensity * 100.0f;
+
+        float hdrIntensity = intensity * 15.0f;
+        Color finalColor = emissionColor * Mathf.LinearToGammaSpace(hdrIntensity);
+        _bulbMaterialInstance.SetColor(EmissionColorID, finalColor);
+        if (intensity > 0.01f)
+            _bulbMaterialInstance.EnableKeyword("_EMISSION");
+        else
+            _bulbMaterialInstance.DisableKeyword("_EMISSION");
     }
 }

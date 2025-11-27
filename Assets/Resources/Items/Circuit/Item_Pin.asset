@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6165f633c657b064a8a1c7018d6efd15, type: 3}
-  m_Name: Item_Lightbulb
+  m_Name: Item_Pin
   m_EditorClassIdentifier: Assembly-CSharp::SpawnableItem
-  itemName: "B\xF3ng \u0111\xE8n"
+  itemName: Pin
   icon: {fileID: 0}
-  prefab: {fileID: 9113385540263193806, guid: 9471829a8dbd00949bc336e059ab7b6e, type: 3}
+  prefab: {fileID: 5495654390902922855, guid: 93ea941bda4e2d541b17a610f31d08dc, type: 3}
   description: 

@@ -527,7 +527,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Grabbable
   _centerOfMassTransform: {fileID: 2507032242477408468}
-  allowConstrainedGrab: 1
+  allowConstrainedGrab: 0
 --- !u!65 &7696479706652595180
 BoxCollider:
   m_ObjectHideFlags: 0

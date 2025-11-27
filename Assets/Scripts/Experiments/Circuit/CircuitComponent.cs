@@ -41,11 +41,31 @@ public abstract class CircuitComponent : MonoBehaviour, IMultiPointSnappable, II
         }
     }
 
-    /// <summary>
-    /// Được gọi bởi CircuitManager để cập nhật trạng thái của linh kiện
-    /// dựa trên dòng điện chạy qua nó.
-    /// </summary>
-    /// <param name="current">Dòng điện phức chạy qua linh kiện.</param>
+    protected virtual void OnEnable()
+    {
+        if (GrabbableComponent != null)
+        {
+            GrabbableComponent.OnStateChanged += HandleGrabbableStateChanged;
+        }
+
+        HandleGrabbableStateChanged(GrabbableComponent != null ? GrabbableComponent.CurrentState : GrabbableState.Idle);
+    }
+
+    protected virtual void OnDisable()
+    {
+        if (GrabbableComponent != null)
+        {
+            GrabbableComponent.OnStateChanged -= HandleGrabbableStateChanged;
+        }
+    }
+
+    private void HandleGrabbableStateChanged(GrabbableState newState)
+    {
+        bool allowWiring = (newState == GrabbableState.Snapped || newState == GrabbableState.Anchored);
+
+        if (connectorA != null) connectorA.SetInteractableState(allowWiring);
+        if (connectorB != null) connectorB.SetInteractableState(allowWiring);
+    }
     public virtual void UpdateState(Complex voltageDrop, Complex current)
     {
         _lastVoltageDrop = voltageDrop;

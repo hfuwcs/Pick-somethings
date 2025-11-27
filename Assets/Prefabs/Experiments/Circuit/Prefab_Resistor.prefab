@@ -78,7 +78,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Grabbable
   _centerOfMassTransform: {fileID: 0}
-  allowConstrainedGrab: 1
+  allowConstrainedGrab: 0
 --- !u!114 &8244745146119569922
 MonoBehaviour:
   m_ObjectHideFlags: 0

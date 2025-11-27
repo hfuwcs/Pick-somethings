@@ -1540,6 +1540,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WiringManager
   wirePrefab: {fileID: 7563985708518249734, guid: d627f50cb5f8bfd45bafa8cba68150b0, type: 3}
+  redWireMat: {fileID: 2100000, guid: f0f66000c81339741bc2a55a7e78e767, type: 2}
+  blueWireMat: {fileID: 2100000, guid: 466b07ba8ac6a1d4eb0f2c795fbdd909, type: 2}
 --- !u!4 &884946190
 Transform:
   m_ObjectHideFlags: 0

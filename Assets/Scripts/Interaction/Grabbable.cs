@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using UnityEngine;
 
 public enum GrabbableState
@@ -34,7 +35,7 @@ public class Grabbable : MonoBehaviour, IInteractable
 
     // --- Strategy Pattern ---
     public IHoldStrategy HoldStrategy { get; private set; }
-
+    public event Action<GrabbableState> OnStateChanged;
     #region Unity Methods
     private void Awake()
     {
@@ -84,23 +85,11 @@ public class Grabbable : MonoBehaviour, IInteractable
         {
             SetState(GrabbableState.ConstrainedGrab);
         }
-        // Logic cho phép cầm vật thể khi nó đang ở trạng thái nghỉ
         else if (CurrentState == GrabbableState.Idle)
         {
             SetState(GrabbableState.Grabbed);
         }
-        // if (CurrentState == GrabbableState.Snapped)
-        // {
-        //     SetState(GrabbableState.ConstrainedGrab);
-        // }
-        // else if (CurrentState == GrabbableState.Anchored)
-        // {
-        //     SetState(GrabbableState.Grabbed);
-        // }
-        // else if (CurrentState == GrabbableState.Idle)
-        // {
-        //     SetState(GrabbableState.Grabbed);
-        // }
+        OnStateChanged?.Invoke(CurrentState);
     }
 
     public void OnSelectEnd()
@@ -204,9 +193,9 @@ public class Grabbable : MonoBehaviour, IInteractable
         {
             hinge.autoConfigureConnectedAnchor = false;
             Vector3 newAnchorLocalPosition = transform.InverseTransformPoint(connectedBodyWorldPosition);
-            hinge.anchor = newAnchorLocalPosition;            
-            hinge.connectedAnchor = Vector3.zero; 
-            
+            hinge.anchor = newAnchorLocalPosition;
+            hinge.connectedAnchor = Vector3.zero;
+
             if (_rigidbody != null)
             {
                 _rigidbody.linearVelocity = Vector3.zero;
@@ -309,7 +298,7 @@ public class Grabbable : MonoBehaviour, IInteractable
                 HingeJoint hingeJoint = gameObject.AddComponent<HingeJoint>();
                 hingeJoint.connectedBody = connectedBody;
                 hingeJoint.anchor = transform.InverseTransformPoint(snapZone.transform.position);
-                hingeJoint.axis = snapZone.OscillationAxis; 
+                hingeJoint.axis = snapZone.OscillationAxis;
                 _joint = hingeJoint;
                 break;
 
