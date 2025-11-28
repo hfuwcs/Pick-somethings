@@ -27,7 +27,7 @@ public class LightBulb : CircuitComponent
     [SerializeField]
     [Tooltip("Cường độ dòng điện để đèn đạt độ sáng tối đa (A).")]
     private double maxCurrentForMaxBrightness = 2.0;
-
+    private bool _hasNotified = false;
     private Material _bulbMaterialInstance;
     private static readonly int EmissionColorID = Shader.PropertyToID("_EmissionColor");
 
@@ -77,5 +77,22 @@ public class LightBulb : CircuitComponent
             _bulbMaterialInstance.EnableKeyword("_EMISSION");
         else
             _bulbMaterialInstance.DisableKeyword("_EMISSION");
+
+        if (current.Magnitude > minCurrentToGlow && !_hasNotified)
+        {
+            _hasNotified = true;
+            if (ExperimentNotification.Instance != null)
+            {
+                ExperimentNotification.Instance.Show(
+                    "Thành công!",
+                    "Mạch điện đã hoạt động. Đèn đang sáng.",
+                    ExperimentNotification.Type.Success
+                );
+            }
+        }
+        else if (current.Magnitude <= minCurrentToGlow)
+        {
+            _hasNotified = false;
+        }
     }
 }
