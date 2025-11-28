@@ -169,6 +169,59 @@ Transform:
   - {fileID: 3834793991873992490}
   m_Father: {fileID: 2507032242477408468}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3949225268421487734
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5424880157595781912}
+  - component: {fileID: 5758955187327004384}
+  m_Layer: 0
+  m_Name: Anchor_Base
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5424880157595781912
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3949225268421487734}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.026, y: -0.261, z: -0.106}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2507032242477408468}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &5758955187327004384
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3949225268421487734}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.15, y: 0.04, z: 0.4}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4767393328127662656
 GameObject:
   m_ObjectHideFlags: 0
@@ -463,6 +516,7 @@ GameObject:
   - component: {fileID: 5025458545832610824}
   - component: {fileID: 7696479706652595180}
   - component: {fileID: 5589871332380708458}
+  - component: {fileID: 5809627780308276761}
   m_Layer: 6
   m_Name: Prefab_Voltmeter
   m_TagString: Untagged
@@ -480,11 +534,12 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 4.021, y: 2.084, z: -0.055}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4708630895141121733}
   - {fileID: 8836518697144424683}
+  - {fileID: 5424880157595781912}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &6943840927981268945
@@ -564,6 +619,20 @@ MonoBehaviour:
   connectorA: {fileID: 5569667325012786345}
   connectorB: {fileID: 2666020634458424022}
   displayValText: {fileID: 5138605285542313100}
+--- !u!114 &5809627780308276761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6895660260735298019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 648be8a53f6eae94b8adb65c5fee8282, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SchematicIcon
+  type: 5
+  symbol: {fileID: 21300000, guid: e96b6de7ed4218c48a387081bde5ace8, type: 3}
 --- !u!1 &8003859059177372693
 GameObject:
   m_ObjectHideFlags: 0

@@ -236,8 +236,8 @@ public class SnapZone : MonoBehaviour
         _connectedConnectors.Add(connector);
         connector.SetConnectedZone(this);
 
-        //  Sử dụng giá trị role từ SerializeField để kiểm tra đúng
         Debug.Log($"[SnapZone.Connect] Role hiện tại: {role}, Connector: {connector.name}, ParentComponent: {connector.ParentComponent?.name ?? "NULL"}");
+        if (AudioManager.Instance) AudioManager.Instance.PlaySnap();
 
         if (role == SnapRole.DirectConnection && connector.ParentComponent != null)
         {
@@ -261,6 +261,7 @@ public class SnapZone : MonoBehaviour
 
         _connectedConnectors.Remove(connector);
         connector.ClearConnectedZone();
+        if (AudioManager.Instance) AudioManager.Instance.PlayUnsnap();
 
         if (role == SnapRole.DirectConnection && componentToUnsnap != null)
         {

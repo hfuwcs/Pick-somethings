@@ -179,6 +179,7 @@ public class InteractionController : MonoBehaviour
 
         if (_currentHoveredInteractable is Connector clickedConnector && clickedConnector.IsInteractableForWiring)
         {
+            TooltipManager.Instance.HideTooltip();
             WiringManager.Instance.HandleConnectorClick(clickedConnector);
             return;
         }
@@ -201,6 +202,7 @@ public class InteractionController : MonoBehaviour
         {
             if (_potentialSnapZone != null && (grabbable.CurrentState == GrabbableState.Grabbed || grabbable.CurrentState == GrabbableState.ConstrainedGrab))
             {
+                TooltipManager.Instance.HideTooltip();
                 grabbable.AttemptSnap(_potentialSnapZone);
             }
             else
@@ -211,6 +213,7 @@ public class InteractionController : MonoBehaviour
         }
         else if (_currentHoveredInteractable != null)
         {
+            TooltipManager.Instance.HideTooltip();
             _currentSelectedInteractable = _currentHoveredInteractable;
             _currentSelectedInteractable.OnSelectStart();
 
@@ -253,6 +256,7 @@ public class InteractionController : MonoBehaviour
         {
             if (hoveredGrabbable.CurrentState == GrabbableState.Snapped || hoveredGrabbable.CurrentState == GrabbableState.Anchored)
             {
+                TooltipManager.Instance.HideTooltip();
                 SnapZone previousSnapZone = hoveredGrabbable.CurrentSnapZone;
                 if (hoveredGrabbable.CurrentSnapZone != null)
                     Debug.Log("[SnapZone]", hoveredGrabbable.CurrentSnapZone);

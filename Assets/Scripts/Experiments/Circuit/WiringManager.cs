@@ -92,7 +92,7 @@ public class WiringManager : MonoBehaviour
         Debug.Log($"Hoàn thành kéo dây đến: {endPoint.name}");
 
         OnWireConnected?.Invoke(_startConnector, endPoint);
-
+        if (AudioManager.Instance) AudioManager.Instance.PlayWire();
         ResetWiringState();
     }
 

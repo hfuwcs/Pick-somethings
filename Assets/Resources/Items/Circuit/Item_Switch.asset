@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SpawnableItem
   itemName: "C\xF4ng t\u1EAFc"
   icon: {fileID: 0}
-  prefab: {fileID: 6348698834842549945, guid: 22adf305452f92447b2034ce3212200e, type: 3}
+  prefab: {fileID: 3494576846708296224, guid: 8948f80bd9c4af547ae54c0480f3f2f0, type: 3}
   description: 

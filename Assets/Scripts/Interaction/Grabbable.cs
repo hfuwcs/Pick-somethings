@@ -161,6 +161,15 @@ public class Grabbable : MonoBehaviour, IInteractable
 
         if (_multiPointHandler != null)
         {
+            // Xóa tất cả dây từ tất cả connector trước khi unsnap
+            foreach (var connector in _connectors)
+            {
+                if (connector.HasWires && WiringManager.Instance != null)
+                {
+                    WiringManager.Instance.RemoveWiresFromConnector(connector);
+                }
+            }
+
             foreach (var connector in connectedConnectors)
             {
                 _multiPointHandler.UnsnapPoint(connector);

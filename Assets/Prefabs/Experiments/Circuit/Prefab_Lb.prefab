@@ -1165,6 +1165,7 @@ GameObject:
   - component: {fileID: 4797552104566919665}
   - component: {fileID: 5825860502794875569}
   - component: {fileID: 5238696554177937308}
+  - component: {fileID: 7004347818555505584}
   m_Layer: 6
   m_Name: Prefab_Lb
   m_TagString: Untagged
@@ -1273,3 +1274,17 @@ MonoBehaviour:
   emissionColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   minCurrentToGlow: 0.1
   maxCurrentForMaxBrightness: 2
+--- !u!114 &7004347818555505584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9113385540263193806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 648be8a53f6eae94b8adb65c5fee8282, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SchematicIcon
+  type: 2
+  symbol: {fileID: 21300000, guid: 35616cca2ba0dbe4ca46bd13713392be, type: 3}

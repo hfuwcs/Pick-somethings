@@ -19,12 +19,12 @@ public class Resistor : CircuitComponent
     {
     }
     public override IInfoDisplayable.TooltipInfo GetTooltipInfo()
-{
-    return new IInfoDisplayable.TooltipInfo(
-        "Điện trở",
-        $"R: {resistance:F1} Ω\n" +
-        $"U: {_lastVoltageDrop.Magnitude:F2} V\n" +
-        $"I: {_lastCurrent.Magnitude:F2} A"
-    );
-}
+    {
+        string content =
+            $"<color=#FFD700>R: {resistance:F1} Ω</color>\n" +
+            $"<color=#FFA500>U: {_lastVoltageDrop.Magnitude:F2} V</color>\n" +
+            $"<color=#00FFFF>I: {_lastCurrent.Magnitude:F2} A</color>";
+
+        return new IInfoDisplayable.TooltipInfo("ĐIỆN TRỞ", content);
+    }
 }

@@ -109,7 +109,7 @@ public abstract class CircuitComponent : MonoBehaviour, IMultiPointSnappable, II
         joint.angularZMotion = ConfigurableJointMotion.Locked;
 
         _connectorJoints.Add(connector, joint);
-        Debug.Log($"[MultiPoint] Đã tạo Joint và đặt Rigidbody thành Kinematic cho {connector.name}.");
+        HandleGrabbableStateChanged(GrabbableState.Anchored); 
     }
 
     public void UnsnapPoint(Connector connector)
@@ -128,6 +128,7 @@ public abstract class CircuitComponent : MonoBehaviour, IMultiPointSnappable, II
             {
                 rb.isKinematic = false;
             }
+            HandleGrabbableStateChanged(GrabbableState.Idle);
         }
     }
 

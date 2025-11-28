@@ -41,6 +41,7 @@ public class Switch : CircuitComponent, IClickable
         }
 
         _isOpen = !_isOpen;
+        if (AudioManager.Instance) AudioManager.Instance.PlaySwitch();
         Debug.Log($"[SWITCH DEBUG] Switch toggled: {(_isOpen ? "Mở" : "Đóng")}");
         UpdateSwitchStateAndNotify(true);
     }

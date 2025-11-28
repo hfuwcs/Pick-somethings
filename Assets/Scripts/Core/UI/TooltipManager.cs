@@ -38,23 +38,26 @@ public class TooltipManager : MonoBehaviour
     private void FollowMouse()
     {
         Vector2 mousePos = UnityEngine.Input.mousePosition;
-        
-        float pivotX = mousePos.x / Screen.width;
-        float pivotY = mousePos.y / Screen.height;
 
-        tooltipRect.pivot = new Vector2(pivotX > 0.8f ? 1 : 0, pivotY < 0.2f ? 0 : 1);
-        
-        tooltipRect.position = mousePos + offset;
+        float pivotX = (mousePos.x > Screen.width * 0.8f) ? 1 : 0;
+        float pivotY = (mousePos.y < Screen.height * 0.2f) ? 0 : 1;
+
+        tooltipRect.pivot = new Vector2(pivotX, pivotY);
+
+        float offsetX = (pivotX == 0) ? 20 : -20;
+        float offsetY = (pivotY == 0) ? 20 : -20;
+
+        tooltipRect.position = mousePos + new Vector2(offsetX, offsetY);
     }
 
     public void ShowTooltip(string content, string title = "")
     {
         if (contentText != null) contentText.text = content;
-        
+
         if (titleText != null)
         {
             if (string.IsNullOrEmpty(title)) titleText.gameObject.SetActive(false);
-            else 
+            else
             {
                 titleText.gameObject.SetActive(true);
                 titleText.text = title;

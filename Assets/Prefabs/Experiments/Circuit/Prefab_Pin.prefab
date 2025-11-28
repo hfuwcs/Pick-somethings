@@ -149,6 +149,7 @@ GameObject:
   - component: {fileID: 7214919980208866622}
   - component: {fileID: 4803051765355040141}
   - component: {fileID: 9126960629521037532}
+  - component: {fileID: 12196517460062123}
   m_Layer: 6
   m_Name: Prefab_Pin
   m_TagString: Untagged
@@ -251,6 +252,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.04, y: 0.04, z: 0.1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &12196517460062123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5495654390902922855}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 648be8a53f6eae94b8adb65c5fee8282, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SchematicIcon
+  type: 0
+  symbol: {fileID: 21300000, guid: 45587cab77823d54998be7377b97211f, type: 3}
 --- !u!1 &6333397087972415820
 GameObject:
   m_ObjectHideFlags: 0
