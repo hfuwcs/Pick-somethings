@@ -492,6 +492,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1247839537}
     - target: {fileID: 4424753537275115507, guid: 8a861c687a853c64e9f3a833edacf85f, type: 3}
+      propertyPath: currentLessonId
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 4424753537275115507, guid: 8a861c687a853c64e9f3a833edacf85f, type: 3}
       propertyPath: controlPanelGroup
       value: 
       objectReference: {fileID: 1227902716}
@@ -1042,7 +1046,15 @@ PrefabInstance:
     - target: {fileID: 812436536612081610, guid: 5ce2758974fdc144297090a345303833, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1227902720}
+      objectReference: {fileID: 648894670}
+    - target: {fileID: 812436536612081610, guid: 5ce2758974fdc144297090a345303833, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowPracticeMode
+      objectReference: {fileID: 0}
+    - target: {fileID: 812436536612081610, guid: 5ce2758974fdc144297090a345303833, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ExperimentUIManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 908466031219965125, guid: 5ce2758974fdc144297090a345303833, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -1499,6 +1511,18 @@ PrefabInstance:
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 2418841633795318404, guid: 5ce2758974fdc144297090a345303833, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 648894670}
+    - target: {fileID: 2418841633795318404, guid: 5ce2758974fdc144297090a345303833, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowTheory
+      objectReference: {fileID: 0}
+    - target: {fileID: 2418841633795318404, guid: 5ce2758974fdc144297090a345303833, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ExperimentUIManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 2561413931414766488, guid: 5ce2758974fdc144297090a345303833, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -1950,6 +1974,34 @@ PrefabInstance:
     - target: {fileID: 4966630723949016085, guid: 5ce2758974fdc144297090a345303833, type: 3}
       propertyPath: m_HorizontalScrollbar
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4993381460402265993, guid: 5ce2758974fdc144297090a345303833, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4993381460402265993, guid: 5ce2758974fdc144297090a345303833, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4993381460402265993, guid: 5ce2758974fdc144297090a345303833, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 648894670}
+    - target: {fileID: 4993381460402265993, guid: 5ce2758974fdc144297090a345303833, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4993381460402265993, guid: 5ce2758974fdc144297090a345303833, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 4993381460402265993, guid: 5ce2758974fdc144297090a345303833, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ExperimentUIManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4993381460402265993, guid: 5ce2758974fdc144297090a345303833, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 5306299731687514618, guid: 5ce2758974fdc144297090a345303833, type: 3}
       propertyPath: m_OverrideSorting
@@ -2591,17 +2643,12 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8643551828200045693, guid: 5ce2758974fdc144297090a345303833, type: 3}
   m_PrefabInstance: {fileID: 1227902715}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1227902720}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d58feaecce0c871458e71b417e1122ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneController
---- !u!1 &1227902720 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6658165800756611646, guid: 5ce2758974fdc144297090a345303833, type: 3}
-  m_PrefabInstance: {fileID: 1227902715}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1247839537 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4836475030198817518, guid: 5ce2758974fdc144297090a345303833, type: 3}
@@ -2630,13 +2677,29 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 648894670}
     - target: {fileID: 3410736235170488739, guid: 929fe88d55ced6d4d85ec8a3528640c6, type: 3}
+      propertyPath: lookAction
+      value: 
+      objectReference: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    - target: {fileID: 3410736235170488739, guid: 929fe88d55ced6d4d85ec8a3528640c6, type: 3}
       propertyPath: _maxGrabDistance
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3410736235170488739, guid: 929fe88d55ced6d4d85ec8a3528640c6, type: 3}
+      propertyPath: rotateModeAction
+      value: 
+      objectReference: {fileID: -3164043862470464300, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    - target: {fileID: 3410736235170488739, guid: 929fe88d55ced6d4d85ec8a3528640c6, type: 3}
+      propertyPath: rotationSensitivity
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3410736235170488739, guid: 929fe88d55ced6d4d85ec8a3528640c6, type: 3}
       propertyPath: _interactionDistance
       value: 2.5
       objectReference: {fileID: 0}
+    - target: {fileID: 3410736235170488739, guid: 929fe88d55ced6d4d85ec8a3528640c6, type: 3}
+      propertyPath: cameraInputController
+      value: 
+      objectReference: {fileID: 1452276339}
     - target: {fileID: 3410736235170488739, guid: 929fe88d55ced6d4d85ec8a3528640c6, type: 3}
       propertyPath: _interactionLayerMask.m_Bits
       value: 320

@@ -11,13 +11,16 @@ public class ExperimentUIManager : MonoBehaviour
     [SerializeField] private GameObject quizPanel;
     [SerializeField] private GameObject menuPanel;
     [Header("HUD Control")]
-    [SerializeField] private CanvasGroup controlPanelGroup; 
+    [SerializeField] private CanvasGroup controlPanelGroup;
     [Header("Camera Control")]
-    [SerializeField] private CinemachineInputAxisController cameraInputController; 
-    
+    [SerializeField] private CinemachineInputAxisController cameraInputController;
+
     [Header("Components")]
     [SerializeField] private InteractionController playerInteraction;
 
+    [Header("Lesson Context")]
+    [Tooltip("ID của bài học tương ứng với Scene này")]
+    [SerializeField] private int currentLessonId = 1;
     private bool _isPaused = false;
     private bool _isCursorMode = false;
 
@@ -33,7 +36,7 @@ public class ExperimentUIManager : MonoBehaviour
         {
             if (_isCursorMode)
             {
-                ToggleCursorOnly(); 
+                ToggleCursorOnly();
             }
             else
             {
@@ -42,7 +45,7 @@ public class ExperimentUIManager : MonoBehaviour
         }
     }
 
-     public void ToggleCursorOnly()
+    public void ToggleCursorOnly()
     {
         if (_isPaused) return;
 
@@ -50,9 +53,9 @@ public class ExperimentUIManager : MonoBehaviour
 
         if (_isCursorMode)
         {
-            if (cameraInputController != null) 
+            if (cameraInputController != null)
             {
-                cameraInputController.enabled = false; 
+                cameraInputController.enabled = false;
             }
 
             Cursor.lockState = CursorLockMode.None;
@@ -64,7 +67,7 @@ public class ExperimentUIManager : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
 
-            if (cameraInputController != null) 
+            if (cameraInputController != null)
             {
                 cameraInputController.enabled = true;
             }
@@ -81,7 +84,7 @@ public class ExperimentUIManager : MonoBehaviour
     {
         if (theoryPanel.activeSelf || quizPanel.activeSelf)
         {
-            ShowMenu(); 
+            ShowMenu();
         }
         else if (menuPanel.activeSelf)
         {
@@ -98,7 +101,7 @@ public class ExperimentUIManager : MonoBehaviour
 
         if (isVisible)
         {
-            controlPanelGroup.alpha = 1f; 
+            controlPanelGroup.alpha = 1f;
             controlPanelGroup.interactable = true;
             controlPanelGroup.blocksRaycasts = true;
         }
@@ -121,16 +124,21 @@ public class ExperimentUIManager : MonoBehaviour
 
     public void ShowTheory()
     {
+        Debug.Log("ShowTheory được gọi");
         SetPauseState(true);
         hudPanel.SetActive(false);
         menuPanel.SetActive(false);
         quizPanel.SetActive(false);
 
         theoryPanel.SetActive(true);
-        
+
         if (LessonContentLoader.Instance != null)
         {
-            LessonContentLoader.Instance.LoadLessonContent(12);
+            LessonContentLoader.Instance.LoadLessonContent(currentLessonId);
+        }
+        else
+        {
+            Debug.LogError("Thiếu LessonContentLoader trong Scene!");
         }
     }
 
@@ -165,6 +173,6 @@ public class ExperimentUIManager : MonoBehaviour
         if (playerInteraction != null) playerInteraction.SetUIMode(pause);
 
         if (cameraInputController != null) cameraInputController.enabled = !pause;
-        UpdateControlPanelState(false); 
+        UpdateControlPanelState(false);
     }
 }
