@@ -15,7 +15,9 @@ public class PendulumHoldStrategy : IHoldStrategy
         _enforceAngleLimit = enforceAngleLimit;
         _rotationAxis = rotationAxis == default ? pivot.forward : rotationAxis;
     }
-
+    public void InitializeGrab(Transform grabberTransform, Rigidbody heldBody)
+    {
+    }
     public void Hold(Rigidbody heldBody, Transform grabberTransform, Transform centerOfMassTransform)
     {
         Vector3 grabberPosition = grabberTransform.position;

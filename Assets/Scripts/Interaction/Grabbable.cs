@@ -40,6 +40,7 @@ public class Grabbable : MonoBehaviour, IInteractable
     private void Awake()
     {
         _renderer = GetComponentInChildren<Renderer>();
+        _rigidbody = GetComponent<Rigidbody>();
         if (_renderer != null) _originalColor = _renderer.material.color;
         else Debug.LogWarning($"Grabbable '{gameObject.name}' không tìm thấy Renderer. Highlight sẽ không hoạt động.", this);
 
@@ -53,7 +54,8 @@ public class Grabbable : MonoBehaviour, IInteractable
             _centerOfMassTransform = _renderer != null ? _renderer.transform : transform;
         }
 
-        SetHoldStrategy(new FreeHoldStrategy());
+        _rigidbody.maxAngularVelocity = 100f;
+        SetHoldStrategy(new PhysicsHoldStrategy());
     }
 
     private void FixedUpdate()
@@ -88,6 +90,10 @@ public class Grabbable : MonoBehaviour, IInteractable
         else if (CurrentState == GrabbableState.Idle)
         {
             SetState(GrabbableState.Grabbed);
+        }
+        if (_grabberTransform != null)
+        {
+            HoldStrategy.InitializeGrab(_grabberTransform, _rigidbody);
         }
         OnStateChanged?.Invoke(CurrentState);
     }
@@ -244,7 +250,7 @@ public class Grabbable : MonoBehaviour, IInteractable
 
         CurrentSnapZone = null;
 
-        SetHoldStrategy(new FreeHoldStrategy());
+        SetHoldStrategy(new PhysicsHoldStrategy());
         SetState(GrabbableState.Idle);
 
         _rigidbody.linearVelocity = Vector3.zero;
@@ -343,12 +349,19 @@ public class Grabbable : MonoBehaviour, IInteractable
             case GrabbableState.Idle:
                 _rigidbody.isKinematic = false;
                 _rigidbody.useGravity = true;
+                _rigidbody.linearDamping = 0f;
+                _rigidbody.angularDamping = 0.05f;
                 gameObject.layer = _originalLayer;
                 break;
 
             case GrabbableState.Grabbed:
-                _rigidbody.isKinematic = true;
-                _rigidbody.useGravity = false;
+                _rigidbody.isKinematic = false;
+                _rigidbody.useGravity = false; 
+                _rigidbody.interpolation = RigidbodyInterpolation.Interpolate; 
+            
+            _rigidbody.linearDamping = 0f; 
+            _rigidbody.angularDamping = 1f;
+
                 gameObject.layer = LayerMask.NameToLayer("GrabbedObject");
                 break;
 
@@ -360,6 +373,9 @@ public class Grabbable : MonoBehaviour, IInteractable
             case GrabbableState.Snapped:
                 _rigidbody.isKinematic = false;
                 _rigidbody.useGravity = true;
+                _rigidbody.linearDamping = 0f;
+                _rigidbody.angularDamping = 0.05f;
+                _rigidbody.interpolation = RigidbodyInterpolation.None;
                 gameObject.layer = _originalLayer;
                 break;
 

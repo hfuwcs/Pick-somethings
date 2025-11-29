@@ -86,21 +86,25 @@ public abstract class CircuitComponent : MonoBehaviour, IMultiPointSnappable, II
         if (_connectorJoints.ContainsKey(connector)) return;
 
         Rigidbody rb = GetComponent<Rigidbody>();
+
         if (rb != null)
         {
-            rb.isKinematic = true;
+            rb.isKinematic = false;
+            rb.linearDamping = 5f;
+            rb.angularDamping = 5f;
         }
 
         Rigidbody connectedBody = snapZone.GetComponent<Rigidbody>();
         if (connectedBody == null)
         {
-            Debug.LogError($"SnapZone '{snapZone.name}' không có Rigidbody để tạo Joint.", snapZone);
+            Debug.LogError($"SnapZone '{snapZone.name}' thiếu Rigidbody.", snapZone);
             return;
         }
 
         ConfigurableJoint joint = gameObject.AddComponent<ConfigurableJoint>();
         joint.connectedBody = connectedBody;
         joint.anchor = transform.InverseTransformPoint(connector.transform.position);
+
         joint.xMotion = ConfigurableJointMotion.Locked;
         joint.yMotion = ConfigurableJointMotion.Locked;
         joint.zMotion = ConfigurableJointMotion.Locked;
@@ -108,8 +112,13 @@ public abstract class CircuitComponent : MonoBehaviour, IMultiPointSnappable, II
         joint.angularYMotion = ConfigurableJointMotion.Locked;
         joint.angularZMotion = ConfigurableJointMotion.Locked;
 
+        joint.projectionMode = JointProjectionMode.PositionAndRotation;
+        joint.projectionDistance = 0.01f;
+        joint.projectionAngle = 1f;
+
         _connectorJoints.Add(connector, joint);
-        HandleGrabbableStateChanged(GrabbableState.Anchored); 
+
+        HandleGrabbableStateChanged(GrabbableState.Anchored);
     }
 
     public void UnsnapPoint(Connector connector)

@@ -2,6 +2,9 @@
 
 public class FreeHoldStrategy : IHoldStrategy
 {
+    public void InitializeGrab(Transform grabberTransform, Rigidbody heldBody) 
+    {
+    }
     public void Hold(Rigidbody heldBody, Transform grabberTransform, Transform centerOfMassTransform)
     {
         Vector3 targetPosition;
