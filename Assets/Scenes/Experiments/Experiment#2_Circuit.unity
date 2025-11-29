@@ -302,6 +302,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f214332d6dc83d49957f51677a29076, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
+  backgroundMusic: {fileID: 0}
+  musicVolume: 0.3
   clickSound: {fileID: 8300000, guid: 4be0049241f7a6446a9871b9d8de31f2, type: 3}
   hoverSound: {fileID: 0}
   snapSound: {fileID: 8300000, guid: 2d52d47ab90565649b3d3a27c86b72e0, type: 3}
