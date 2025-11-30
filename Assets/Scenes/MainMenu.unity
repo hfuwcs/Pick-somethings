@@ -1186,7 +1186,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 393194567867878790, guid: 0a68be1bd13d8694e8d8fe85574ac075, type: 3}
       propertyPath: lessonDataList.Array.data[0].practiceScene
-      value: Experiment#1_Pendulum
+      value: Experiment#1_SHM
       objectReference: {fileID: 0}
     - target: {fileID: 393194567867878790, guid: 0a68be1bd13d8694e8d8fe85574ac075, type: 3}
       propertyPath: lessonDataList.Array.data[1].practiceScene

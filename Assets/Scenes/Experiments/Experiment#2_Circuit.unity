@@ -1833,7 +1833,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4266435707010635962, guid: 5ce2758974fdc144297090a345303833, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
-      value: Dongdien
+      value: Circuit
       objectReference: {fileID: 0}
     - target: {fileID: 4356158323543604059, guid: 5ce2758974fdc144297090a345303833, type: 3}
       propertyPath: m_AnchorMax.y

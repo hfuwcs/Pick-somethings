@@ -3,7 +3,7 @@
   <Questions>
     <Question>
       <Info>Con lắc đơn gồm vật nặng khối lượng m treo vào sợi dây tại nơi có gia tốc trọng trường g, dao động điều hoà với chu kỳ T phụ thuộc vào</Info>
-      <Category>Conlacdon</Category>
+      <Category>Pendulum</Category>
       <Answers>
         <Answer>
           <Info>A. l và g</Info>
@@ -29,7 +29,7 @@
     </Question>
     <Question>
       <Info>Con lắc đơn chiều dài l dao động điều hoà với chu kỳ</Info>
-      <Category>Conlacdon</Category>
+      <Category>Pendulum</Category>
       <Answers>
         <Answer>
           <Info>A. 2pi * sqrt(m/k)</Info>
@@ -55,7 +55,7 @@
     </Question>
     <Question>
       <Info>Con lắc đơn dao động điều hoà, khi tăng chiều dài của con lắc lên 4 lần thì tần số dao động của con lắc:</Info>
-      <Category>Conlacdon</Category>
+      <Category>Pendulum</Category>
       <Answers>
         <Answer>
           <Info>A. tăng lên 2 lần.</Info>
@@ -81,7 +81,7 @@
     </Question>
     <Question>
       <Info>Trong dao động điều hoà của con lắc đơn, phát biểu nào sau đây là đúng?</Info>
-      <Category>Conlacdon</Category>
+      <Category>Pendulum</Category>
       <Answers>
         <Answer>
           <Info>A. Lực kéo về phụ thuộc vào chiều dài của con lắc.</Info>
@@ -107,7 +107,7 @@
     </Question>
     <Question>
       <Info>Con lắc đơn (chiều dài không đổi), dao động với biên độ nhỏ có chu kỳ phụ thuộc vào</Info>
-      <Category>Conlacdon</Category>
+      <Category>Pendulum</Category>
       <Answers>
         <Answer>
           <Info>A. khối lượng của con lắc.</Info>
@@ -133,7 +133,7 @@
     </Question>
     <Question>
       <Info>Ở nơi mà con lắc đơn đếm giây (chu kỳ 2s) có độ dài 1 m, thì con lắc đơn có độ dài 3 m sẽ dao động với chu kỳ là</Info>
-      <Category>Conlacdon</Category>
+      <Category>Pendulum</Category>
       <Answers>
         <Answer>
           <Info>A. T = 3,46 s</Info>
@@ -159,7 +159,7 @@
     </Question>
     <Question>
       <Info>Dòng điện là</Info>
-      <Category>Dongdien</Category>
+      <Category>Circuit</Category>
       <Answers>
         <Answer>
           <Info>A. dòng chuyển dời có hướng của các điện tích.</Info>
@@ -185,7 +185,7 @@
     </Question>
     <Question>
       <Info>Tác dụng nổi bậc của dòng điện là</Info>
-      <Category>Dongdien</Category>
+      <Category>Circuit</Category>
       <Answers>
         <Answer>
           <Info>A. Tác dụng cơ.</Info>
@@ -211,7 +211,7 @@
     </Question>
     <Question>
       <Info>Chọn câu phát biểu đúng.</Info>
-      <Category>Dongdien</Category>
+      <Category>Circuit</Category>
       <Answers>
         <Answer>
           <Info>A. Dòng điện là dòng chuyển dời của các điện tích.</Info>
@@ -237,7 +237,7 @@
     </Question>
     <Question>
       <Info>Đại lượng nào cho biết mức độ mạnh yếu của dòng điện?</Info>
-      <Category>Dongdien</Category>
+      <Category>Circuit</Category>
       <Answers>
         <Answer>
           <Info>A. Hiệu điện thế</Info>
