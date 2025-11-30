@@ -41,6 +41,7 @@ public class ToolboxUI : MonoBehaviour
 
     private void OnItemClicked(SpawnableItem item)
     {
+        if (AudioManager.Instance) AudioManager.Instance.PlaySound(AudioManager.Instance.clickSound);
         SpawnManager.Instance.SpawnItem(item);
     }
 }

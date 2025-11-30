@@ -69,6 +69,7 @@ public class Wire : MonoBehaviour, IInteractable
         
         gameObject.name = $"Wire_{StartConnector.ParentComponent.name}_to_{EndConnector.ParentComponent.name}";
         EndConnector.AddWire(this);
+        if (AudioManager.Instance) AudioManager.Instance.PlayWire();
     }
 
     // --- PHYSICS ENGINE (VERLET INTEGRATION) ---

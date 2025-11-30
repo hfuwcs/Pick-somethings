@@ -28,6 +28,8 @@ MonoBehaviour:
     m_path: Assets/Scenes/Experiments/Experiment#2_Circuit.unity
   - m_enabled: 1
     m_path: Assets/Scenes/Quiz/QuizScene.unity
+  - m_enabled: 1
+    m_path: Assets/Scenes/Theory/TheoryScene.unity
   m_ScriptingDefines: []
   m_PlayerSettingsYaml:
     m_Settings: []

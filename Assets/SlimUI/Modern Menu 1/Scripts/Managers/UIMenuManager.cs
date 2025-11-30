@@ -1,11 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 
 namespace SlimUI.ModernMenu
 {
+	[System.Serializable]
+	public struct SceneMapping
+	{
+		public string categoryID;
+		public string practiceScene;
+		public int theoryLessonID;
+	}
+
 	public class UIMenuManager : MonoBehaviour
 	{
 		private Animator CameraObject;
@@ -85,6 +94,10 @@ namespace SlimUI.ModernMenu
 		public enum MenuMode { None, Theory, Practice, Exam }
 		private MenuMode currentMode = MenuMode.None;
 
+		[Header("SCENE MAPPING CONFIG")]
+		[Tooltip("Cấu hình ánh xạ tên bài học sang Scene thực hành và ID bài lý thuyết")]
+		public List<SceneMapping> lessonDataList;
+
 		[Header("SCENE NAMES CONFIG")]
 		[Tooltip("Tên Scene dùng cho Lý thuyết (nếu dùng chung 1 scene và load nội dung động)")]
 		public string theorySceneName = "TheoryScene";
@@ -138,43 +151,63 @@ namespace SlimUI.ModernMenu
 			if (extrasMenu) extrasMenu.SetActive(false);
 			playMenu.SetActive(true);
 		}
-		public void OnClickTheoryButton(){
-            currentMode = MenuMode.Theory;
-            PlayCampaign();
-        }
+		public void OnClickTheoryButton()
+		{
+			currentMode = MenuMode.Theory;
+			PlayCampaign();
+		}
 
-        public void OnClickPracticeButton(){
-            currentMode = MenuMode.Practice;
-            PlayCampaign();
-        }
+		public void OnClickPracticeButton()
+		{
+			currentMode = MenuMode.Practice;
+			PlayCampaign();
+		}
 
-        public void OnClickExamButton(){
-            currentMode = MenuMode.Exam;
-            PlayCampaign();
-        }
-        public void OnSelectCategory(string categoryName){
-            
-            GameSettings.SelectedCategory = categoryName;
+		public void OnClickExamButton()
+		{
+			currentMode = MenuMode.Exam;
+			PlayCampaign();
+		}
+		public void OnSelectCategory(string categoryName)
+		{
+			GameSettings.SelectedCategory = categoryName;
+			Debug.Log($"User selected Category: {categoryName} in Mode: {currentMode}");
 
-            switch (currentMode)
-            {
-                case MenuMode.Theory:
-                    LoadScene(theorySceneName); 
-                    break;
+			SceneMapping data = lessonDataList.Find(x => x.categoryID == categoryName);
+			
+			if (string.IsNullOrEmpty(data.categoryID))
+			{
+				Debug.LogError($"Chưa cấu hình data cho Category: '{categoryName}' trong UIMenuManager!");
+				return;
+			}
 
-                case MenuMode.Practice:
-                    LoadScene(practiceSceneName);
-                    break;
+			string sceneToLoad = "";
 
-                case MenuMode.Exam:
-                    LoadScene(quizSceneName);
-                    break;
+			switch (currentMode)
+			{
+				case MenuMode.Theory:
+					GameSettings.SelectedLessonId = data.theoryLessonID;
+					sceneToLoad = theorySceneName;
+					break;
 
-                default:
-                    Debug.LogWarning("Chưa chọn chế độ (Mode) nào cả!");
-                    break;
-            }
-        }
+				case MenuMode.Practice:
+					sceneToLoad = data.practiceScene;
+					break;
+
+				case MenuMode.Exam:
+					sceneToLoad = quizSceneName;
+					break;
+
+				default:
+					Debug.LogWarning("Chưa chọn chế độ (Mode) nào cả!");
+					return;
+			}
+
+			if (!string.IsNullOrEmpty(sceneToLoad))
+			{
+				LoadScene(sceneToLoad);
+			}
+		}
 		public void PlayCampaignMobile()
 		{
 			exitMenu.SetActive(false);

@@ -50,6 +50,7 @@ public class ExperimentUIManager : MonoBehaviour
         if (_isPaused) return;
 
         _isCursorMode = !_isCursorMode;
+        if (AudioManager.Instance) AudioManager.Instance.PlaySound(AudioManager.Instance.clickSound);
 
         if (_isCursorMode)
         {
@@ -82,6 +83,7 @@ public class ExperimentUIManager : MonoBehaviour
 
     public void ToggleMenu()
     {
+        if (AudioManager.Instance) AudioManager.Instance.PlaySound(AudioManager.Instance.clickSound);
         if (theoryPanel.activeSelf || quizPanel.activeSelf)
         {
             ShowMenu();

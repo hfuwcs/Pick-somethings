@@ -76,4 +76,10 @@ public class SceneController : MonoBehaviour
     {
         previousSceneName = "";
     }
+    public void LoadTheoryScene(int lessonId)
+    {
+        Time.timeScale = 1f;
+        GameSettings.SelectedLessonId = lessonId; 
+        SceneManager.LoadScene("TheoryScene");
+    }
 }

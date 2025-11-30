@@ -73,6 +73,7 @@ public class Grabbable : MonoBehaviour, IInteractable
         if (CurrentState == GrabbableState.Idle || CurrentState == GrabbableState.Snapped || CurrentState == GrabbableState.Anchored)
         {
             Highlight();
+            if (AudioManager.Instance) AudioManager.Instance.PlaySound(AudioManager.Instance.hoverSound);
         }
     }
 

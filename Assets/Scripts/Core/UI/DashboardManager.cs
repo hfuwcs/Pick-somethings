@@ -70,7 +70,13 @@ public class DashboardManager : MonoBehaviour
         modeSwitch.OffEvents.RemoveAllListeners();
 
         // Gán event mới (Michsky dùng OnEvents cho TRUE và OffEvents cho FALSE)
-        modeSwitch.OnEvents.AddListener(() => onValueChanged(true));
-        modeSwitch.OffEvents.AddListener(() => onValueChanged(false));
+        modeSwitch.OnEvents.AddListener(() => {
+            if (AudioManager.Instance) AudioManager.Instance.PlaySound(AudioManager.Instance.clickSound);
+            onValueChanged(true);
+        });
+        modeSwitch.OffEvents.AddListener(() => {
+            if (AudioManager.Instance) AudioManager.Instance.PlaySound(AudioManager.Instance.clickSound);
+            onValueChanged(false);
+        });
     }
 }

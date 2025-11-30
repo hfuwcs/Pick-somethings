@@ -1,20 +1,12 @@
- using UnityEngine;
- using System.IO;
- using System.Xml.Serialization;
+using UnityEngine;
+using System.IO;
+using System.Xml.Serialization;
+
 public class GameUtility
 {
     public const float ResolutionDelayTime = 1;
     public const string SavePrefKey = "Game_HighScore_Value";
-
-    public const string xmlFileName = "Questions_Data.xml";
-    public static string XmlFilePath
-    {
-        get
-        {
-            return Application.dataPath + "/" + xmlFileName;
-        }
-    }
-
+    public const string xmlFileName = "Questions_Data"; 
 }
 
 [System.Serializable()]
@@ -22,39 +14,42 @@ public class Data
 {
     public Question[] Questions = new Question[0];
 
-    public Data()
-    {
+    public Data() { }
 
-    }
-
+#if UNITY_EDITOR
     public static void Write(Data data)
     {
+        string path = Application.dataPath + "/Resources/" + GameUtility.xmlFileName + ".xml";
         XmlSerializer serializer = new XmlSerializer(typeof(Data));
-
-        using (FileStream stream = new FileStream(GameUtility.XmlFilePath, FileMode.Create))
+        using (FileStream stream = new FileStream(path, FileMode.Create))
         {
             serializer.Serialize(stream, data);
         }
+        UnityEditor.AssetDatabase.Refresh();
     }
+#endif
     public static Data Fetch()
     {
         return Fetch(out bool result);
     }
+
     public static Data Fetch(out bool result)
     {
-        if(!File.Exists(GameUtility.XmlFilePath)) 
+        TextAsset _xml = Resources.Load<TextAsset>(GameUtility.xmlFileName);
+
+        if (_xml == null)
         {
-            result = false; return new Data();
+            Debug.LogError($"Không tìm thấy file '{GameUtility.xmlFileName}' trong thư mục Resources!");
+            result = false; 
+            return new Data();
         }
+
         XmlSerializer deserializer = new XmlSerializer(typeof(Data));
-        using (Stream stream = new FileStream(GameUtility.XmlFilePath, FileMode.Open))
+        using (StringReader reader = new StringReader(_xml.text))
         {
-            var data = (Data)deserializer.Deserialize(stream);
-
-
+            var data = (Data)deserializer.Deserialize(reader);
             result = true;
             return data;
         }
     }
-
 }

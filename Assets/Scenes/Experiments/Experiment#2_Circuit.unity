@@ -1407,6 +1407,10 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2134229101666447994, guid: 5ce2758974fdc144297090a345303833, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2235617466988660521, guid: 5ce2758974fdc144297090a345303833, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1829,7 +1833,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4266435707010635962, guid: 5ce2758974fdc144297090a345303833, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
-      value: Conlacdon
+      value: Dongdien
       objectReference: {fileID: 0}
     - target: {fileID: 4356158323543604059, guid: 5ce2758974fdc144297090a345303833, type: 3}
       propertyPath: m_AnchorMax.y
@@ -2649,6 +2653,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d58feaecce0c871458e71b417e1122ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneController
+--- !u!114 &1227902720 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1141527357900944793, guid: 5ce2758974fdc144297090a345303833, type: 3}
+  m_PrefabInstance: {fileID: 1227902715}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1247839537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73bd8472ce0f09b469721de5ea248ddb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheoryDisplayManager
 --- !u!1 &1247839537 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4836475030198817518, guid: 5ce2758974fdc144297090a345303833, type: 3}
@@ -3317,6 +3332,14 @@ PrefabInstance:
     - target: {fileID: 2874394062500059785, guid: 25213f7f98f13d7478673de84a5810dc, type: 3}
       propertyPath: m_Name
       value: _NetworkManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 2967479186151511974, guid: 25213f7f98f13d7478673de84a5810dc, type: 3}
+      propertyPath: uiManager
+      value: 
+      objectReference: {fileID: 1227902720}
+    - target: {fileID: 4961058011172476555, guid: 25213f7f98f13d7478673de84a5810dc, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4961058011172476555, guid: 25213f7f98f13d7478673de84a5810dc, type: 3}
       propertyPath: scrollRect
