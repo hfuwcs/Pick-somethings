@@ -3762,7 +3762,7 @@ PrefabInstance:
       objectReference: {fileID: 1224334487}
     - target: {fileID: 826671049890549183, guid: e19bb872f6e4f3e49b0c9b7d043555f7, type: 3}
       propertyPath: dampingFactor
-      value: 0.09
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 826671049890549183, guid: e19bb872f6e4f3e49b0c9b7d043555f7, type: 3}
       propertyPath: maxSetupAngleDegrees

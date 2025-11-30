@@ -297,6 +297,51 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 5194009284420995461, guid: e0ee04df0dfcebc419ffe849d0f83578, type: 3}
   m_PrefabInstance: {fileID: 8940485616209561242}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &305347176
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 305347178}
+  - component: {fileID: 305347177}
+  m_Layer: 0
+  m_Name: _SceneController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &305347177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 305347176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d58feaecce0c871458e71b417e1122ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SceneController
+  mainMenuSceneName: MainMenu
+--- !u!4 &305347178
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 305347176}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -100, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &493520655
 GameObject:
   m_ObjectHideFlags: 0
@@ -767,6 +812,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 265639956095284035, guid: e0ee04df0dfcebc419ffe849d0f83578, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 305347177}
+    - target: {fileID: 265639956095284035, guid: e0ee04df0dfcebc419ffe849d0f83578, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ReturnToPreviousScene
+      objectReference: {fileID: 0}
+    - target: {fileID: 265639956095284035, guid: e0ee04df0dfcebc419ffe849d0f83578, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: SceneController, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 1036703551066424500, guid: e0ee04df0dfcebc419ffe849d0f83578, type: 3}
       propertyPath: m_Color.a
       value: 0
@@ -774,6 +831,10 @@ PrefabInstance:
     - target: {fileID: 1366851969415282685, guid: e0ee04df0dfcebc419ffe849d0f83578, type: 3}
       propertyPath: m_Name
       value: MainCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 1540927849790123476, guid: e0ee04df0dfcebc419ffe849d0f83578, type: 3}
+      propertyPath: m_Name
+      value: Back_button
       objectReference: {fileID: 0}
     - target: {fileID: 1683381174881873519, guid: e0ee04df0dfcebc419ffe849d0f83578, type: 3}
       propertyPath: m_IsActive
@@ -1061,3 +1122,4 @@ SceneRoots:
   - {fileID: 493520658}
   - {fileID: 3048237820440323501}
   - {fileID: 1368551554}
+  - {fileID: 305347178}
