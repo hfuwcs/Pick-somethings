@@ -52,6 +52,8 @@ public class LightBulb : CircuitComponent
 
     public override void UpdateState(Complex voltageDrop, Complex current)
     {
+        base.UpdateState(voltageDrop, current);
+        
         if (pointLight == null || _bulbMaterialInstance == null) return;
 
         double currentMagnitude = current.Magnitude;
@@ -94,5 +96,18 @@ public class LightBulb : CircuitComponent
         {
             _hasNotified = false;
         }
+    }
+
+    public override IInfoDisplayable.TooltipInfo GetTooltipInfo()
+    {
+        string stateText = _lastCurrent.Magnitude >= minCurrentToGlow ? "SÁNG" : "TẮT";
+        string stateColor = _lastCurrent.Magnitude >= minCurrentToGlow ? "#6BCB77" : "#FF6B6B";
+        string content =
+            $"<color={stateColor}>Trạng thái: {stateText}</color>\n" +
+            $"<color=#FFD700>R: {resistance:F1} Ω</color>\n" +
+            $"<color=#FFA500>U: {_lastVoltageDrop.Magnitude:F2} V</color>\n" +
+            $"<color=#00FFFF>I: {_lastCurrent.Magnitude:F2} A</color>";
+
+        return new IInfoDisplayable.TooltipInfo("BÓNG ĐÈN", content);
     }
 }

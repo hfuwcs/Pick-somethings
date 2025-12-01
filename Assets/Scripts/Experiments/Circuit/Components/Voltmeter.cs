@@ -14,10 +14,20 @@ public class Voltmeter : CircuitComponent
 
     public override void UpdateState(Complex voltageDrop, Complex current)
     {
+        base.UpdateState(voltageDrop, current);
+        
         if (displayValText != null)
         {
             double val = voltageDrop.Magnitude;
             displayValText.text = $"{val:F2} V";
         }
+    }
+
+    public override IInfoDisplayable.TooltipInfo GetTooltipInfo()
+    {
+        string content =
+            $"<color=#FFA500>U: {_lastVoltageDrop.Magnitude:F2} V</color>";
+
+        return new IInfoDisplayable.TooltipInfo("VÔN KẾ", content);
     }
 }

@@ -17,6 +17,7 @@ public class Resistor : CircuitComponent
     }
     public override void UpdateState(Complex voltageDrop, Complex current)
     {
+        base.UpdateState(voltageDrop, current);
     }
     public override IInfoDisplayable.TooltipInfo GetTooltipInfo()
     {

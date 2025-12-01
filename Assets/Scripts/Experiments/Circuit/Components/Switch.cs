@@ -80,7 +80,20 @@ public class Switch : CircuitComponent, IClickable
     /// <summary>
     /// Trạng thái của công tắc không phụ thuộc vào dòng điện chạy qua nó.
     /// </summary>
-    public override void UpdateState(System.Numerics.Complex voltageDrop,System.Numerics.Complex current)
+    public override void UpdateState(System.Numerics.Complex voltageDrop, System.Numerics.Complex current)
     {
+        base.UpdateState(voltageDrop, current);
+    }
+
+    public override IInfoDisplayable.TooltipInfo GetTooltipInfo()
+    {
+        string stateText = _isOpen ? "MỞ" : "ĐÓNG";
+        string stateColor = _isOpen ? "#FF6B6B" : "#6BCB77";
+        string content =
+            $"<color={stateColor}>Trạng thái: {stateText}</color>\n" +
+            $"<color=#FFA500>U: {_lastVoltageDrop.Magnitude:F2} V</color>\n" +
+            $"<color=#00FFFF>I: {_lastCurrent.Magnitude:F2} A</color>";
+
+        return new IInfoDisplayable.TooltipInfo("CÔNG TẮC", content);
     }
 }

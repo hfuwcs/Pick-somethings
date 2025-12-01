@@ -20,7 +20,17 @@ public class PowerSource : CircuitComponent, IMultiPointSnappable
     /// <summary>
     /// Nguồn điện không thay đổi trạng thái dựa trên dòng điện.
     /// </summary>
-    public override void UpdateState(Complex voltageDrop,Complex current)
+    public override void UpdateState(Complex voltageDrop, Complex current)
     {
+        base.UpdateState(voltageDrop, current);
+    }
+
+    public override IInfoDisplayable.TooltipInfo GetTooltipInfo()
+    {
+        string content =
+            $"<color=#FFD700>E: {voltage:F1} V</color>\n" +
+            $"<color=#00FFFF>I: {_lastCurrent.Magnitude:F2} A</color>";
+
+        return new IInfoDisplayable.TooltipInfo("NGUỒN ĐIỆN", content);
     }
 }

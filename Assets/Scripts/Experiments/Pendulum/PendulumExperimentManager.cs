@@ -395,7 +395,6 @@ public class PendulumExperimentManager : ExperimentManagerBase
                 Debug.Log($"[Realistic Mode] Con lắc sẽ dao động theo vật lý thực tế khi bấm Start.");
             }
 
-            // [DASHBOARD] Cập nhật chiều dài ngay khi lắp xong
             if (DashboardManager.Instance != null)
                 DashboardManager.Instance.UpdateStat("Length", "Chiều dài (l)", $"{length:F2} m");
         }

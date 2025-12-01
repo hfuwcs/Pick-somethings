@@ -59,12 +59,27 @@ public abstract class CircuitComponent : MonoBehaviour, IMultiPointSnappable, II
         }
     }
 
+    protected virtual void OnDestroy()
+    {
+        // Khi linh kiện bị phá hủy, tính lại mạch
+        if (CircuitManager.Instance != null)
+        {
+            CircuitManager.Instance.RecalculateCircuit();
+        }
+    }
+
     private void HandleGrabbableStateChanged(GrabbableState newState)
     {
         bool allowWiring = (newState == GrabbableState.Snapped || newState == GrabbableState.Anchored);
 
         if (connectorA != null) connectorA.SetInteractableState(allowWiring);
         if (connectorB != null) connectorB.SetInteractableState(allowWiring);
+
+        // Khi linh kiện được snap/unsnap, tính lại mạch
+        if (CircuitManager.Instance != null)
+        {
+            CircuitManager.Instance.RecalculateCircuit();
+        }
     }
     public virtual void UpdateState(Complex voltageDrop, Complex current)
     {

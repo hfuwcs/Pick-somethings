@@ -1,26 +1,28 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(LineRenderer))]
 public class PendulumVisualizer : MonoBehaviour
 {
     [Header("Settings")]
-    [SerializeField] private Transform wireModel;
-    [SerializeField] private float wireThickness = 0.02f;
+    [SerializeField] private float wireThickness = 0.01f;
     
+    [Tooltip("Số lần lặp lại của Texture trên mỗi mét dây (Tiling)")]
+    [SerializeField] private float textureTilingFactor = 10f; 
+
     private Transform _pivotPoint;
     private Transform _bobConnectorPoint;
+    private LineRenderer _lineRenderer;
 
     private void Awake()
     {
-        if (wireModel != null)
-        {
-            var col = wireModel.GetComponent<Collider>();
-            if (col != null) Destroy(col); 
-            
-            var renderer = wireModel.GetComponent<Renderer>();
-            if (renderer != null) renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-            
-            wireModel.gameObject.SetActive(false);
-        }
+        _lineRenderer = GetComponent<LineRenderer>();
+        
+        _lineRenderer.startWidth = wireThickness;
+        _lineRenderer.endWidth = wireThickness;
+        _lineRenderer.useWorldSpace = true;
+        _lineRenderer.textureMode = LineTextureMode.Tile;
+        _lineRenderer.positionCount = 2;
+        _lineRenderer.enabled = false;
     }
 
     public void StartVisualizing(Transform pivot, Transform bobConnector)
@@ -28,13 +30,13 @@ public class PendulumVisualizer : MonoBehaviour
         _pivotPoint = pivot;
         _bobConnectorPoint = bobConnector;
         
-        if (wireModel != null) wireModel.gameObject.SetActive(true);
+        _lineRenderer.enabled = true;
         this.enabled = true;
     }
 
     public void StopVisualizing()
     {
-        if (wireModel != null) wireModel.gameObject.SetActive(false);
+        _lineRenderer.enabled = false;
         this.enabled = false;
         _pivotPoint = null;
         _bobConnectorPoint = null;
@@ -42,16 +44,18 @@ public class PendulumVisualizer : MonoBehaviour
 
     void LateUpdate()
     {
-        if (_pivotPoint == null || _bobConnectorPoint == null || wireModel == null) return;
+        if (_pivotPoint == null || _bobConnectorPoint == null) return;
 
         Vector3 start = _pivotPoint.position;
         Vector3 end = _bobConnectorPoint.position;
+        _lineRenderer.SetPosition(0, start);
+        _lineRenderer.SetPosition(1, end);
+        
         float distance = Vector3.Distance(start, end);
-
-        wireModel.position = (start + end) / 2f;
-
-        wireModel.up = start - end;
-
-        wireModel.localScale = new Vector3(wireThickness, distance / 2f, wireThickness);
+        Material mat = _lineRenderer.material;
+        if (mat != null)
+        {
+            mat.mainTextureScale = new Vector2(distance * textureTilingFactor, 1);
+        }
     }
 }

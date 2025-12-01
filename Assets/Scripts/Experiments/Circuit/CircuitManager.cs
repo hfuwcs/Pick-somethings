@@ -2,10 +2,17 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Linq;
+using System;
 
 public class CircuitManager : MonoBehaviour
 {
     public static CircuitManager Instance { get; private set; }
+
+    /// <summary>
+    /// Event được phát khi mạch điện được tính toán lại.
+    /// Các component có thể đăng ký để nhận thông báo khi cần cập nhật UI.
+    /// </summary>
+    public static event Action OnCircuitRecalculated;
 
     private void Awake()
     {
@@ -16,11 +23,15 @@ public class CircuitManager : MonoBehaviour
     private void OnEnable()
     {
         WiringManager.OnWireConnected += HandleCircuitChanged;
+        SnapZone.OnComponentSnapped += HandleComponentSnapped;
+        SnapZone.OnComponentUnsnapped += HandleComponentUnsnapped;
     }
 
     private void OnDisable()
     {
         WiringManager.OnWireConnected -= HandleCircuitChanged;
+        SnapZone.OnComponentSnapped -= HandleComponentSnapped;
+        SnapZone.OnComponentUnsnapped -= HandleComponentUnsnapped;
     }
 
     private void HandleCircuitChanged(Connector c1, Connector c2)
@@ -28,10 +39,27 @@ public class CircuitManager : MonoBehaviour
         RecalculateCircuit();
     }
 
+    private void HandleComponentSnapped(CircuitComponent component)
+    {
+        Debug.Log($"[CircuitManager] Linh kiện {component.name} đã được snap. Tính toán lại mạch.");
+        RecalculateCircuit();
+    }
+
+    private void HandleComponentUnsnapped(CircuitComponent component)
+    {
+        Debug.Log($"[CircuitManager] Linh kiện {component.name} đã được unsnap. Tính toán lại mạch.");
+        RecalculateCircuit();
+    }
+
     public void RecalculateCircuit()
     {
         var allComponents = FindObjectsByType<CircuitComponent>(FindObjectsSortMode.None);
-        if (allComponents.Length == 0) return;
+        if (allComponents.Length == 0)
+        {
+            // Phát event ngay cả khi không có component nào
+            OnCircuitRecalculated?.Invoke();
+            return;
+        }
 
         var schematicGen = FindFirstObjectByType<CircuitSchematicGenerator>();
         if (schematicGen != null)
@@ -41,6 +69,10 @@ public class CircuitManager : MonoBehaviour
         CircuitGraph graph = BuildCircuitGraph(allComponents);
         Dictionary<int, Complex> nodeVoltages = SolveCircuit(graph);
         UpdateAllComponents(graph, nodeVoltages);
+
+        // Phát event sau khi tính toán xong
+        OnCircuitRecalculated?.Invoke();
+        Debug.Log("[CircuitManager] Mạch điện đã được tính toán lại.");
     }
 
     private CircuitGraph BuildCircuitGraph(IEnumerable<CircuitComponent> components)
@@ -75,7 +107,6 @@ public class CircuitManager : MonoBehaviour
                 newNode.Connectors.Add(current);
                 nodeMap[current] = newNode;
 
-                // Find connected connectors via wires
                 foreach (var wire in current.ConnectedWires)
                 {
                     if (wire == null) continue;
@@ -96,14 +127,11 @@ public class CircuitManager : MonoBehaviour
             Debug.Log($"[BuildGraph-Nodes] Đã tạo Node ID: {newNode.Id} với {newNode.Connectors.Count} connectors: {string.Join(", ", newNode.Connectors.Select(c => c.name))}");
         }
 
-        // Build branches from components
         foreach (var component in components)
         {
-            // Only create branch if both connectors are in the node map
             if (nodeMap.TryGetValue(component.ConnectorA, out var nodeA) &&
                 nodeMap.TryGetValue(component.ConnectorB, out var nodeB))
             {
-                // Skip short circuit case
                 if (nodeA == nodeB)
                 {
                     Debug.LogWarning($"[BuildGraph-Branches] Linh kiện {component.name} bị ngắn mạch (2 đầu cùng Node {nodeA.Id}), bỏ qua.");

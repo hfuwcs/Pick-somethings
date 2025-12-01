@@ -14,10 +14,20 @@ public class Ammeter : CircuitComponent
 
     public override void UpdateState(Complex voltageDrop, Complex current)
     {
+        base.UpdateState(voltageDrop, current);
+        
         if (displayValText != null)
         {
             double val = current.Magnitude;
             displayValText.text = $"{val:F2} A";
         }
+    }
+
+    public override IInfoDisplayable.TooltipInfo GetTooltipInfo()
+    {
+        string content =
+            $"<color=#00FFFF>I: {_lastCurrent.Magnitude:F2} A</color>";
+
+        return new IInfoDisplayable.TooltipInfo("AMPE KẾ", content);
     }
 }
