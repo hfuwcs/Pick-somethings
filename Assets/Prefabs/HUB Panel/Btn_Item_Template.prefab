@@ -1048,6 +1048,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SpawnManager
   spawnDistance: 1.5
   spawnOrigin: {fileID: 0}
+  maxItemsTotal: 20
 --- !u!1 &5009158593795009602
 GameObject:
   m_ObjectHideFlags: 0

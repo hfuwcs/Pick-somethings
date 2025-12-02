@@ -35,7 +35,7 @@ public struct UIElements
 
     [SerializeField] TextMeshProUGUI scoreText;
     public TextMeshProUGUI ScoreText { get { return scoreText; } }
-    
+
     [Space]
     [SerializeField] Animator resolutionScreenAnimator;
     public Animator ResolutionScreenAnimator { get { return resolutionScreenAnimator; } }
@@ -56,7 +56,7 @@ public struct UIElements
 }
 public class QuizUIManager : MonoBehaviour
 {
-    public enum ResolutionScreenType { Correct, Incorrect, Finish}
+    public enum ResolutionScreenType { Correct, Incorrect, Finish }
 
     [Header("References")]
     [SerializeField] GameEvents events;
@@ -91,7 +91,7 @@ public class QuizUIManager : MonoBehaviour
         UpdateSoreUI();
         resStateParaHash = Animator.StringToHash("ScreenState");
     }
-    void UpdateQuestionUI (Question question)
+    void UpdateQuestionUI(Question question)
     {
         uiElements.QuestionInfoTextObject.text = question.Info;
         CreateAnswer(question);
@@ -99,13 +99,15 @@ public class QuizUIManager : MonoBehaviour
 
     void DisplayResolution(ResolutionScreenType type, int score)
     {
-       UpdateResUI(type, score);
+        UpdateResUI(type, score);
         uiElements.ResolutionScreenAnimator.SetInteger(resStateParaHash, 2);
-        uiElements.MainCanvasGroup.blocksRaycasts = false;
-
-
+        
+        // Chỉ block raycasts nếu KHÔNG phải màn hình Finish
+        // Vì màn hình Finish cần cho phép click các nút Restart/Quit
         if (type != ResolutionScreenType.Finish)
         {
+            uiElements.MainCanvasGroup.blocksRaycasts = false;
+            
             if (IE_DisplayTimeResolution != null)
             {
                 StopCoroutine(IE_DisplayTimeResolution);
@@ -113,10 +115,10 @@ public class QuizUIManager : MonoBehaviour
             IE_DisplayTimeResolution = DisplayTimeResolution();
             StartCoroutine(IE_DisplayTimeResolution);
         }
-        
+
     }
 
-    IEnumerator DisplayTimeResolution ()
+    IEnumerator DisplayTimeResolution()
     {
         yield return new WaitForSeconds(GameUtility.ResolutionDelayTime);
         uiElements.ResolutionScreenAnimator.SetInteger(resStateParaHash, 1);
@@ -140,12 +142,12 @@ public class QuizUIManager : MonoBehaviour
             case ResolutionScreenType.Finish:
                 uiElements.ResolutionBG.color = parameters.FinalBGColor;
                 uiElements.ResolutionStateInfoText.text = "Tổng điểm!";
-                
+
                 StartCoroutine(CalculateScore());
                 uiElements.FinishUIElements.gameObject.SetActive(true);
                 uiElements.HighScoreText.gameObject.SetActive(true);
                 uiElements.HighScoreText.text = ((highScore > events.StartupHighscore) ? "<color=yellow>new</color>" : string.Empty) + "Điểm cao: " + highScore;
-                
+                uiElements.MainCanvasGroup.blocksRaycasts = true;
                 break;
         }
     }
@@ -159,7 +161,7 @@ public class QuizUIManager : MonoBehaviour
 
         var scoreValue = 0;
         var scoreMoreThanZero = events.CurrentFinalScore > 0;
-        while ((scoreMoreThanZero)? scoreValue < events.CurrentFinalScore: scoreValue > events.CurrentFinalScore)
+        while ((scoreMoreThanZero) ? scoreValue < events.CurrentFinalScore : scoreValue > events.CurrentFinalScore)
         {
             scoreValue += scoreMoreThanZero ? 1 : -1;
             uiElements.ResolutionScoreText.text = scoreValue.ToString();

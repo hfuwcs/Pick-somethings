@@ -353,6 +353,7 @@ GameObject:
   - component: {fileID: 493520658}
   - component: {fileID: 493520657}
   - component: {fileID: 493520656}
+  - component: {fileID: 493520659}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -421,6 +422,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &493520659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 493520655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fbdf4af566621943802cbe8fcf298f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIDebugger
 --- !u!224 &524612163 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4305725438580693002, guid: e0ee04df0dfcebc419ffe849d0f83578, type: 3}
