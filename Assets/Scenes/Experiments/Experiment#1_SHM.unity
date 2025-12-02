@@ -412,7 +412,7 @@ PrefabInstance:
       objectReference: {fileID: 1247839537}
     - target: {fileID: 4424753537275115507, guid: 8a861c687a853c64e9f3a833edacf85f, type: 3}
       propertyPath: currentLessonId
-      value: 12
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4424753537275115507, guid: 8a861c687a853c64e9f3a833edacf85f, type: 3}
       propertyPath: controlPanelGroup
