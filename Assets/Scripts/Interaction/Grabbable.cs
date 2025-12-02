@@ -360,8 +360,8 @@ public class Grabbable : MonoBehaviour, IInteractable
                 _rigidbody.useGravity = false; 
                 _rigidbody.interpolation = RigidbodyInterpolation.Interpolate; 
             
-            _rigidbody.linearDamping = 0f; 
-            _rigidbody.angularDamping = 1f;
+            _rigidbody.linearDamping = 10f; 
+            _rigidbody.angularDamping = 10f;
 
                 gameObject.layer = LayerMask.NameToLayer("GrabbedObject");
                 break;

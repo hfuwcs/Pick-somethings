@@ -2885,18 +2885,6 @@ PrefabInstance:
       propertyPath: _uiManager
       value: 
       objectReference: {fileID: 648894670}
-    - target: {fileID: 3410736235170488739, guid: 929fe88d55ced6d4d85ec8a3528640c6, type: 3}
-      propertyPath: _maxGrabDistance
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 3410736235170488739, guid: 929fe88d55ced6d4d85ec8a3528640c6, type: 3}
-      propertyPath: _interactionDistance
-      value: 2.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3410736235170488739, guid: 929fe88d55ced6d4d85ec8a3528640c6, type: 3}
-      propertyPath: _interactionLayerMask.m_Bits
-      value: 320
-      objectReference: {fileID: 0}
     - target: {fileID: 5549040136211127554, guid: 929fe88d55ced6d4d85ec8a3528640c6, type: 3}
       propertyPath: field of view
       value: 60.000004
