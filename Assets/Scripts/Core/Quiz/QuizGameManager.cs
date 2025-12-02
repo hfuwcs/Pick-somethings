@@ -245,36 +245,30 @@ public class QuizGameManager : MonoBehaviour
     }
     void LoadQuestions()
     {
-        // 1. Lấy toàn bộ dữ liệu từ XML
         var fullData = Data.Fetch();
-
-        // 2. Kiểm tra xem người chơi có chọn chủ đề nào không
-        // Nếu SelectedCategory rỗng hoặc là "All" -> Lấy hết câu hỏi
         if (string.IsNullOrEmpty(GameSettings.SelectedCategory) || GameSettings.SelectedCategory == "All")
         {
             data = fullData;
         }
         else
         {
-            // 3. LỌC DỮ LIỆU: Chỉ lấy câu nào có Category trùng với lựa chọn
-            data = new Data(); // Tạo data mới để chứa kết quả lọc
+            data = new Data();
             
             data.Questions = fullData.Questions
                 .Where(q => q.Category == GameSettings.SelectedCategory)
                 .ToArray();
         }
 
-        // 4. Kiểm tra lỗi nếu không tìm thấy câu nào (ví dụ nhập sai tên)
         if (data.Questions == null || data.Questions.Length == 0)
         {
             Debug.LogError("Không tìm thấy câu hỏi nào thuộc chủ đề: " + GameSettings.SelectedCategory);
-            // Fallback: Nếu lỗi thì load tất cả để game không bị đơ
             data = fullData;
         }
     }
 
     public void RestartGame()
     {
+        Debug.Log("Nút bắt đầu lại game");
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
