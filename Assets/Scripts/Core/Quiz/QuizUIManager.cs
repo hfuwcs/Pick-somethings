@@ -101,9 +101,6 @@ public class QuizUIManager : MonoBehaviour
     {
         UpdateResUI(type, score);
         uiElements.ResolutionScreenAnimator.SetInteger(resStateParaHash, 2);
-        
-        // Chỉ block raycasts nếu KHÔNG phải màn hình Finish
-        // Vì màn hình Finish cần cho phép click các nút Restart/Quit
         if (type != ResolutionScreenType.Finish)
         {
             uiElements.MainCanvasGroup.blocksRaycasts = false;
@@ -146,7 +143,23 @@ public class QuizUIManager : MonoBehaviour
                 StartCoroutine(CalculateScore());
                 uiElements.FinishUIElements.gameObject.SetActive(true);
                 uiElements.HighScoreText.gameObject.SetActive(true);
-                uiElements.HighScoreText.text = ((highScore > events.StartupHighscore) ? "<color=yellow>new</color>" : string.Empty) + "Điểm cao: " + highScore;
+                //NẾU ĐIỂM CAO HƠN THÌ NEW.
+                //kHÔNG THÌ CÚT
+                /*
+                if hightScore ? events.StartUpHightscore
+                {
+                new string = "new" + "Điểm cao" + highscore;
+                uiElements.HighScoreText.text = new string
+                }
+                */
+                // var newHighScore = 0;
+                // if (highScore > events.StartupHighscore)
+                // {
+                //     newHighScore = highScore;
+                // }
+                // uiElements.HighScoreText.text = "Điểm cao: "+ newHighScore;
+                
+                uiElements.HighScoreText.text = ((highScore > events.StartupHighscore) ? "" : string.Empty) + "Điểm cao: " + highScore;
                 uiElements.MainCanvasGroup.blocksRaycasts = true;
                 break;
         }
@@ -198,6 +211,6 @@ public class QuizUIManager : MonoBehaviour
 
     void UpdateSoreUI()
     {
-        uiElements.ScoreText.text = "Score: " + events.CurrentFinalScore;
+        uiElements.ScoreText.text = "Điểm: " + events.CurrentFinalScore;
     }
 }

@@ -35,42 +35,25 @@ public class Data
 
     public static Data Fetch(out bool result)
     {
-        // LOG 1: Báo hiệu bắt đầu
-        Debug.Log($"[Data Debug] Đang tìm file '{GameUtility.xmlFileName}' trong Resources...");
-
-        // Load file
         TextAsset _xml = Resources.Load<TextAsset>(GameUtility.xmlFileName);
 
         if (_xml == null)
         {
-            // LOG 2: Báo lỗi nếu không thấy file
-            Debug.LogError($"[Data Debug] LỖI CỰC MẠNH! Resources.Load trả về NULL. Kiểm tra lại tên file hoặc thư mục Assets/Resources.");
             result = false;
             return new Data();
         }
-
-        // LOG 3: Báo hiệu đã thấy file và độ dài nội dung
-        Debug.Log($"[Data Debug] Đã tìm thấy file! Nội dung dài {_xml.text.Length} ký tự.");
-        // Debug.Log(_xml.text); // Bỏ comment dòng này nếu muốn in nội dung ra xem (chỉ nên dùng khi text ngắn)
-
         try
         {
             XmlSerializer deserializer = new XmlSerializer(typeof(Data));
             using (StringReader reader = new StringReader(_xml.text))
             {
                 var data = (Data)deserializer.Deserialize(reader);
-
-                // LOG 4: Báo hiệu Deserialize thành công và số lượng câu hỏi đọc được
-                Debug.Log($"[Data Debug] Đọc XML thành công! Tổng số câu hỏi: {data.Questions.Length}");
-
                 result = true;
                 return data;
             }
         }
         catch (System.Exception ex)
         {
-            // LOG 5: Báo lỗi nếu nội dung XML bị sai cú pháp
-            Debug.LogError($"[Data Debug] Lỗi khi phân tích XML (Deserialize): {ex.Message}");
             result = false;
             return new Data();
         }

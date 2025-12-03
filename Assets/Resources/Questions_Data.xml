@@ -23,7 +23,7 @@
         </Answer>
       </Answers>
       <UseTimer>true</UseTimer>
-      <Timer>10</Timer>
+      <Timer>30</Timer>
       <Type>Multi</Type>
       <AddScore>10</AddScore>
     </Question>
@@ -49,7 +49,7 @@
         </Answer>
       </Answers>
       <UseTimer>true</UseTimer>
-      <Timer>10</Timer>
+      <Timer>30</Timer>
       <Type>Multi</Type>
       <AddScore>10</AddScore>
     </Question>
@@ -75,7 +75,7 @@
         </Answer>
       </Answers>
       <UseTimer>true</UseTimer>
-      <Timer>10</Timer>
+      <Timer>30</Timer>
       <Type>Multi</Type>
       <AddScore>10</AddScore>
     </Question>
@@ -101,7 +101,7 @@
         </Answer>
       </Answers>
       <UseTimer>true</UseTimer>
-      <Timer>10</Timer>
+      <Timer>30</Timer>
       <Type>Multi</Type>
       <AddScore>10</AddScore>
     </Question>
@@ -127,7 +127,7 @@
         </Answer>
       </Answers>
       <UseTimer>true</UseTimer>
-      <Timer>10</Timer>
+      <Timer>30</Timer>
       <Type>Multi</Type>
       <AddScore>10</AddScore>
     </Question>
@@ -153,7 +153,7 @@
         </Answer>
       </Answers>
       <UseTimer>true</UseTimer>
-      <Timer>10</Timer>
+      <Timer>30</Timer>
       <Type>Multi</Type>
       <AddScore>10</AddScore>
     </Question>
@@ -179,7 +179,7 @@
         </Answer>
       </Answers>
       <UseTimer>true</UseTimer>
-      <Timer>10</Timer>
+      <Timer>30</Timer>
       <Type>Multi</Type>
       <AddScore>10</AddScore>
     </Question>
@@ -205,7 +205,7 @@
         </Answer>
       </Answers>
       <UseTimer>true</UseTimer>
-      <Timer>10</Timer>
+      <Timer>30</Timer>
       <Type>Multi</Type>
       <AddScore>10</AddScore>
     </Question>
@@ -231,7 +231,7 @@
         </Answer>
       </Answers>
       <UseTimer>true</UseTimer>
-      <Timer>10</Timer>
+      <Timer>30</Timer>
       <Type>Multi</Type>
       <AddScore>10</AddScore>
     </Question>
@@ -257,7 +257,7 @@
         </Answer>
       </Answers>
       <UseTimer>true</UseTimer>
-      <Timer>10</Timer>
+      <Timer>30</Timer>
       <Type>Multi</Type>
       <AddScore>10</AddScore>
     </Question>
